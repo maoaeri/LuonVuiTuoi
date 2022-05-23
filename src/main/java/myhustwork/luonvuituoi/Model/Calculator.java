@@ -9,5 +9,5 @@ package myhustwork.luonvuituoi.Model;
  * @author vvlalalove193
  */
 public class Calculator {
-    
+    System.out.println("Hello");
 }
