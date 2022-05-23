@@ -6,7 +6,7 @@ package myhustwork.luonvuituoi.Model;
 
 /**
  *
- * @author vvlalalove193
+ * @author vvlalalove193xxx
  */
 public class Transaction {
     
