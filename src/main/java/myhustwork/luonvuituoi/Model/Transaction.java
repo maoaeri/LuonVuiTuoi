@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package myhustwork.luonvuituoi.Model;
 
 class Transaction {
@@ -16,6 +12,7 @@ class Transaction {
 		f.displayFluctuation();
 	}
 }
+
 class Fluctuation {//bien dong so du//
     private double amount;
     private String note;
@@ -40,6 +37,7 @@ class Fluctuation {//bien dong so du//
         System.out.println("Ghi chu:" + note);
     }
 }
+
 class Date {//ngay thang nam//
     private int day;
     private int month;
@@ -58,6 +56,7 @@ class Date {//ngay thang nam//
        System.out.println("Thoi gian:" + day + "/" + month + "/" + year);
     }
 }
+
 class Categories { //hang muc//
     private String type;
     private int result;
@@ -68,6 +67,7 @@ class Categories { //hang muc//
 		System.out.println("Hang muc: " + type);
     }
 }
+
 class BankAcc { //hang muc//
     private String bank;
     public BankAcc(String bank){
