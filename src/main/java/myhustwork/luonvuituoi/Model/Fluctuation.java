@@ -2,11 +2,11 @@ package myhustwork.luonvuituoi.Model;
 
 import java.util.Date;
 import myhustwork.luonvuituoi.Util.DBConnection;
-//import java.sql.Connection;
-//import java.sql.ResultSet;
-//import java.sql.SQLException;
-//
-//import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import java.sql.Statement;
 
 class Fluctuation {//bien dong so du//
     private int ID; //auto-generated
@@ -15,6 +15,10 @@ class Fluctuation {//bien dong so du//
     private Date date;
     private int categoryID;
     private boolean fixed; //co dinh hay khong
+    
+    public static void main(String[] args){
+        
+    }
     
     public Fluctuation(double amount, String note, Date date, int categoryID, boolean fixed) {
         this.amount = amount;

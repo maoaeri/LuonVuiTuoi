@@ -5,7 +5,7 @@
 package myhustwork.luonvuituoi.Model;
 
 /**
- *
+ * 
  * @author vvlalalove193
  */
 public class Calculator {
@@ -23,7 +23,7 @@ public class Calculator {
             i = Transaction.Categories.getResult;
             sumCategories[i] += Transaction.Fluctuation.getAmount;
         }
-        for(int i = o; i < 12; i++) {
+        for(int i = 0; i < 12; i++) {
             percentCategories[i] = sumCategories[i]/sum;
         }
     }
