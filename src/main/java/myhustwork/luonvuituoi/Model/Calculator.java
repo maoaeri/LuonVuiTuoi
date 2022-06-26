@@ -4,27 +4,35 @@
  */
 package myhustwork.luonvuituoi.Model;
 
+// import java.util.Date
+
 /**
  * 
  * @author vvlalalove193
  */
 public class Calculator {
-    System.out.println("Hello");
     public static Boolean WarningBalance(double balance) { //canh bao
         return balance < 0;
     }
-    public static void PercentCategories(int Month) {
+    public static void PercentCategories(Date date1, Date date2) {
         double sum;
-        double[] sumCategories = new double[12];
+        double[] sumCategories = new double[12]; //gia su co 12 CategoryID
         double[] percentCategories = new double[12];
         int i;
-        if(Transaction.Date.getMonth == Month){
-            sum += Transaction.Fluctuation.getAmount;
-            i = Transaction.Categories.getResult;
-            sumCategories[i] += Transaction.Fluctuation.getAmount;
+        if(Fluctuation.Date.after(date1) && Fluctuation.Date.before(date2) ){
+            sum += Fluctuation.getAmount;
+            i = Fluctuation.getCategoryID;
+            sumCategories[i] += Fluctuation.getAmount;
         }
         for(int i = 0; i < 12; i++) {
             percentCategories[i] = sumCategories[i]/sum;
         }
     }
+    public static void SumPerMonth(int Year) {
+        double sum;
+        if(Fluctuation.Date.getYear() == Year) {
+            
+        }
+    }
+    
 }
