@@ -3,8 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package myhustwork.luonvuituoi.Model;
-
-// import java.util.Date
+import java.util.Date;
+import java.util.Calendar;
 
 /**
  * 
@@ -34,5 +34,26 @@ public class Calculator {
             
         }
     }
-    
+    public void Suggestion(){
+        double ThuThanghientai = 0,Chithanghientai = 0,Sodutrongthang = 0;
+        Calendar cal = Calendar.getInstance();
+        Date date = cal.getTime();
+        for(Fluctuation i: arr){ //duyet tat ca cac fluctuation
+            if(i.getDate().get(Calendar.DAY_OF_MONTH) > cal.getActualMinimum(Calendar.DATE) && i.getDate().get(Calendar.DAY_OF_MONTH) < cal.getActualMaximum(Calendar.DATE))
+            {
+                if(i.Category.CategoryType == 1)
+                {
+                    ThuThanghientai += i.getAmount();
+                }
+                else
+                {
+                    Chithanghientai += i.getAmount();
+                }
+            }
+        }
+        Sodutrongthang = ThuThanghientai - Chithanghientai;
+           
+                
+      
+ 
 }

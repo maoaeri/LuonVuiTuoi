@@ -1,16 +1,16 @@
 package myhustwork.luonvuituoi.Model;
 
 import java.util.Date;
+import java.util.Calendar;
 import myhustwork.luonvuituoi.Util.DBConnection;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import java.sql.Statement;
-
-class Fluctuation {//bien dong so du//
+        
+public class Fluctuation extends Money {//bien dong so du//
     private int ID; //auto-generated
-    private double amount;
     private String note;
     private Date date;
     private int categoryID;
@@ -21,7 +21,7 @@ class Fluctuation {//bien dong so du//
     }
     
     public Fluctuation(double amount, String note, Date date, int categoryID, boolean fixed) {
-        this.amount = amount;
+        super(amount);
         this.note = note;
         this.date = date;
         this.categoryID = categoryID;
@@ -43,13 +43,6 @@ class Fluctuation {//bien dong so du//
     public boolean isFixed() {
         return fixed;
     }
-    
-    public double getAmount(){
-        return amount;
-    }
-    public void setAmount(double amount){
-        this.amount = amount;
-    }
     public String getNote(){
         return note;
     }
@@ -57,7 +50,7 @@ class Fluctuation {//bien dong so du//
         this.note = note;
     }
     public void displayFluctuation(){
-        System.out.println("So tien da nhap:" + amount);
+        System.out.println("So tien da nhap:" + getAmount());
         System.out.println("Ghi chu:" + note);
     }
     
