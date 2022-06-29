@@ -10,6 +10,7 @@ package myhustwork.luonvuituoi.Model;
  */
 public class RemainingStuff extends Money{
     //Category cate = new Category()
+    int OrdinalNumbers; // thu tu uu tien mua 
     private String note;
     public String getNote(){
         return note;
