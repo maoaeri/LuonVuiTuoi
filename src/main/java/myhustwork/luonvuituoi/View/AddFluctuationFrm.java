@@ -4,19 +4,52 @@
  */
 package myhustwork.luonvuituoi.View;
 
+import static java.lang.Integer.parseInt;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import javax.swing.AbstractButton;
+import javax.swing.ButtonModel;
 import javax.swing.tree.DefaultMutableTreeNode;
+import myhustwork.luonvuituoi.DTO.CategoryDTO;
+import myhustwork.luonvuituoi.DTO.FluctuationDTO;
 
 /**
  *
  * @author vvlalalove193
  */
 public class AddFluctuationFrm extends javax.swing.JFrame {
+    boolean fixedButtonpressed;
 
     /**
      * Creates new form AddFluctuationForm
      */
     public AddFluctuationFrm() {
         initComponents();
+    }
+    
+    public FluctuationDTO getFluctuationInfor() throws ParseException {
+        FluctuationDTO fluc = new FluctuationDTO();
+        fluc.setAmount(parseInt(txtAmount.getText()));
+        DefaultMutableTreeNode selectedNode1 = (DefaultMutableTreeNode) treCategory.getModel().getRoot() ;
+        String rootType = selectedNode1.getUserObject().toString();
+        int categoryType;
+        switch (rootType) {
+            case "Thu" ->  {
+                categoryType = 1;
+            }
+            case "Chi" ->  {
+                categoryType = 0;
+            }
+        }
+        DefaultMutableTreeNode selectedNode2 = (DefaultMutableTreeNode) treCategory.getLastSelectedPathComponent() ;
+        String categoryName = selectedNode2.getUserObject().toString();
+        fluc.setCategory(new CategoryDTO(categoryType, categoryName));
+        fluc.setDate(toDate(txtDate.getText()));
+        fluc.setNote(txtNote.getText());
+        fluc.setFixed(this.fixedButtonpressed);
+//        System.out.println(parseInt(txtAmount.getText()));
+        return fluc;
     }
 
     /**
@@ -29,7 +62,6 @@ public class AddFluctuationFrm extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        txtAmount = new javax.swing.JTextField();
         txtNote = new javax.swing.JTextField();
         txtDate = new javax.swing.JFormattedTextField();
         radFixed = new javax.swing.JRadioButton();
@@ -42,15 +74,9 @@ public class AddFluctuationFrm extends javax.swing.JFrame {
         btnSubmit = new javax.swing.JButton();
         lblCategory = new javax.swing.JLabel();
         lblCategory2 = new javax.swing.JLabel();
+        txtAmount = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        txtAmount.setText(null);
-        txtAmount.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtAmountActionPerformed(evt);
-            }
-        });
 
         txtNote.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -58,7 +84,14 @@ public class AddFluctuationFrm extends javax.swing.JFrame {
             }
         });
 
+        txtDate.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
+
         radFixed.setText("Cố định");
+        radFixed.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                radFixedStateChanged(evt);
+            }
+        });
 
         lblAmount.setText("Số tiền:");
 
@@ -133,6 +166,8 @@ public class AddFluctuationFrm extends javax.swing.JFrame {
 
         lblCategory2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
+        txtAmount.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0"))));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -152,9 +187,9 @@ public class AddFluctuationFrm extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(radFixed, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtDate, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
-                            .addComponent(txtAmount)
                             .addComponent(txtNote)
-                            .addComponent(lblCategory2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(lblCategory2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtAmount))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -170,30 +205,30 @@ public class AddFluctuationFrm extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap(15, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblAmount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(29, 29, 29)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtNote, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblNote, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(29, 29, 29)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(29, 29, 29)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblCategory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(lblCategory2, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblCategory2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addGap(28, 28, 28)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(radFixed)
                             .addComponent(lblCategory1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                         .addComponent(btnSubmit)
                         .addGap(66, 66, 66))))
         );
@@ -218,10 +253,6 @@ public class AddFluctuationFrm extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtAmountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAmountActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtAmountActionPerformed
-
     private void txtNoteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNoteActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNoteActionPerformed
@@ -232,6 +263,13 @@ public class AddFluctuationFrm extends javax.swing.JFrame {
         lblCategory2.setText(selectedNode.getUserObject().toString());
     }//GEN-LAST:event_treCategoryValueChanged
 
+    private void radFixedStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_radFixedStateChanged
+        // TODO add your handling code here:
+        AbstractButton aButton = (AbstractButton)evt.getSource();
+        ButtonModel aModel = aButton.getModel();
+        this.fixedButtonpressed = aModel.isPressed();
+    }//GEN-LAST:event_radFixedStateChanged
+
     /**
      * @param args the command line arguments
      */
@@ -241,6 +279,7 @@ public class AddFluctuationFrm extends javax.swing.JFrame {
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
+
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -262,6 +301,7 @@ public class AddFluctuationFrm extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new AddFluctuationFrm().setVisible(true);
             }
@@ -280,8 +320,9 @@ public class AddFluctuationFrm extends javax.swing.JFrame {
     private javax.swing.JLabel lblNote;
     private javax.swing.JRadioButton radFixed;
     private javax.swing.JTree treCategory;
-    private javax.swing.JTextField txtAmount;
+    private javax.swing.JFormattedTextField txtAmount;
     private javax.swing.JFormattedTextField txtDate;
     private javax.swing.JTextField txtNote;
     // End of variables declaration//GEN-END:variables
+
 }
