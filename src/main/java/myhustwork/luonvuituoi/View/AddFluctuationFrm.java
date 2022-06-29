@@ -4,15 +4,17 @@
  */
 package myhustwork.luonvuituoi.View;
 
+import java.awt.event.ActionListener;
 import static java.lang.Integer.parseInt;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+//import java.text.SimpleDateFormat;
+//import java.util.Calendar;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import myhustwork.luonvuituoi.DTO.CategoryDTO;
 import myhustwork.luonvuituoi.DTO.FluctuationDTO;
+import static myhustwork.luonvuituoi.DTO.FluctuationDTO.toDate;
 
 /**
  *
@@ -33,12 +35,15 @@ public class AddFluctuationFrm extends javax.swing.JFrame {
         fluc.setAmount(parseInt(txtAmount.getText()));
         DefaultMutableTreeNode selectedNode1 = (DefaultMutableTreeNode) treCategory.getModel().getRoot() ;
         String rootType = selectedNode1.getUserObject().toString();
-        int categoryType;
+        int categoryType = 0;
         switch (rootType) {
             case "Thu" ->  {
                 categoryType = 1;
             }
             case "Chi" ->  {
+                categoryType = 0;
+            }
+            default -> {
                 categoryType = 0;
             }
         }
@@ -50,6 +55,10 @@ public class AddFluctuationFrm extends javax.swing.JFrame {
         fluc.setFixed(this.fixedButtonpressed);
 //        System.out.println(parseInt(txtAmount.getText()));
         return fluc;
+    }
+    
+    public void addSubmitListener(ActionListener log){
+        btnSubmit.addActionListener(log);
     }
 
     /**
@@ -161,6 +170,11 @@ public class AddFluctuationFrm extends javax.swing.JFrame {
         lblCategory1.setText("Cố định hay không:");
 
         btnSubmit.setText("Submit");
+        btnSubmit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSubmitActionPerformed(evt);
+            }
+        });
 
         lblCategory.setText("Hạng mục:");
 
@@ -269,6 +283,10 @@ public class AddFluctuationFrm extends javax.swing.JFrame {
         ButtonModel aModel = aButton.getModel();
         this.fixedButtonpressed = aModel.isPressed();
     }//GEN-LAST:event_radFixedStateChanged
+
+    private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSubmitActionPerformed
 
     /**
      * @param args the command line arguments

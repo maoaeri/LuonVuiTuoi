@@ -9,7 +9,7 @@ package myhustwork.luonvuituoi.DTO;
  * @author vvlalalove193
  */
 public class CategoryDTO {
-    static final int THU = 1,CHI = 0;
+    public static final int THU = 1,CHI = 0;
     int categoryType;
     String categoryName;
 

@@ -66,7 +66,7 @@ public class FluctuationDTO extends MoneyDTO {
     }
     
     public static Date toDate(String str) {
-        Date date;
+        Date date = new Date();
         try {
             date = new SimpleDateFormat("dd/MM/yyyy").parse(str);
         } catch (ParseException ex) {
