@@ -8,8 +8,10 @@ import java.util.Calendar;
  * @author vvlalalove193
  */
 public class Calculator {
-    public static Boolean WarningBalance(double balance) { //canh bao
-        return balance < 0;
+    public static Boolean WarningBalance() { //canh bao
+        double save_per_month = account.getSave_Per_Month(); // account lấy từ database
+        double balance = account.getBalance();
+        return balance - save_per_month < 0;
     }
     
     public static void PercentCategories(Date date1, Date date2) {
@@ -38,13 +40,21 @@ public class Calculator {
         }
         for(Fluctuation i: arr) {
             Calendar cal = Calendar.getInstance();
-            cal.setTime(i.getDate());
+            cal.setTime(i.getDate()); // chuyển Date thành Calendar
             if(Year == cal.get(Calendar.YEAR) ) {
                 int j = cal.get(Calendar.MONTH);
                 if(i.isIncome()) sumIncome[j] += i.getAmount(); // tính tổng thu từng tháng
                 else sumSpending[j] += i.getAmount(); // tổng chi từng tháng
             }
         }
+    }
+    
+    public static double SavingMoney(int n) {
+        double new_save_per_month;
+        double save_per_month = account.getSave_Per_Month();
+        double balance = account.getBalance(); // account lấy từ database
+        new_save_per_month = (save_per_month - balance)/ n + save_per_month;
+        return new_save_per_month;
     }
     
     public void Suggestion(){
