@@ -15,17 +15,19 @@ public class Fluctuation extends Money {//bien dong so du//
     private Date date;
     private int categoryID;
     private boolean fixed; //co dinh hay khong
+    private boolean income; //income = 1 là thu, type = 0 là chi
     
     public static void main(String[] args){
         
     }
     
-    public Fluctuation(double amount, String note, Date date, int categoryID, boolean fixed) {
+    public Fluctuation(double amount, String note, Date date, int categoryID, boolean fixed, boolean income) {
         super(amount);
         this.note = note;
         this.date = date;
         this.categoryID = categoryID;
         this.fixed = fixed;
+        this.income = income;
     }
 
     public int getID() {
@@ -38,6 +40,10 @@ public class Fluctuation extends Money {//bien dong so du//
 
     public int getCategoryID() {
         return categoryID;
+    }
+    
+    public boolean isIncome() {
+        return income;
     }
 
     public boolean isFixed() {

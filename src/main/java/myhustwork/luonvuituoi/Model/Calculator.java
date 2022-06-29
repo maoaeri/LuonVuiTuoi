@@ -1,5 +1,5 @@
-
 package myhustwork.luonvuituoi.Model;
+
 import java.util.Date;
 import java.util.Calendar;
 
@@ -11,26 +11,42 @@ public class Calculator {
     public static Boolean WarningBalance(double balance) { //canh bao
         return balance < 0;
     }
+    
     public static void PercentCategories(Date date1, Date date2) {
-        double sum;
+        double sum = 0;
         double[] sumCategories = new double[12]; //gia su co 12 CategoryID
         double[] percentCategories = new double[12];
-        int i;
-        if(Fluctuation.Date.after(date1) && Fluctuation.Date.before(date2) ){
-            sum += Fluctuation.getAmount;
-            i = Fluctuation.getCategoryID;
-            sumCategories[i] += Fluctuation.getAmount;
-        }
-        for(int i = 0; i < 12; i++) {
-            percentCategories[i] = sumCategories[i]/sum;
+        int j;
+        for(Fluctuation i: arr) {
+            if(i.getDate().after(date1) && i.getDate().before(date2) ){
+                sum += i.getAmount();
+                j = i.getCategoryID();
+                sumCategories[j] += i.getAmount();
+            }
+            for(j = 0; j < 12; j++) {
+                percentCategories[j] = sumCategories[j]/sum;
+            }
         }
     }
+    
     public static void SumPerMonth(int Year) {
-        double sum;
-        if(Fluctuation.Date.getYear() == Year) {
-            
+        double[] sumIncome = new double[13]; // tổng thu của 12 tháng
+        double[] sumSpending = new double[13]; // tổng chi của 12 tháng
+        for(int j = 1; j <= 12; j ++){
+            sumIncome[j] = 0;
+            sumSpending[j] = 0;
+        }
+        for(Fluctuation i: arr) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(i.getDate());
+            if(Year == cal.get(Calendar.YEAR) ) {
+                int j = cal.get(Calendar.MONTH);
+                if(i.isIncome()) sumIncome[j] += i.getAmount(); // tính tổng thu từng tháng
+                else sumSpending[j] += i.getAmount(); // tổng chi từng tháng
+            }
         }
     }
+    
     public void Suggestion(){
         double ThuThanghientai = 0,Chithanghientai = 0,Sodutrongthang = 0;
         Calendar cal = Calendar.getInstance();
@@ -49,8 +65,4 @@ public class Calculator {
             }
         }
         Sodutrongthang = ThuThanghientai - Chithanghientai;
-           
-                
-      
- 
-}
+    }
