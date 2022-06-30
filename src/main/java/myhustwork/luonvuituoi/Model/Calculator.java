@@ -49,12 +49,18 @@ public class Calculator {
         }
     }
     
-    public static double SavingMoney(int n) {
-        double new_save_per_month;
-        double save_per_month = account.getSave_Per_Month();
-        double balance = account.getBalance(); // account lấy từ database
-        new_save_per_month = (save_per_month - balance)/ n + save_per_month;
-        return new_save_per_month;
+    public static double AutoCal() {
+        Calendar cal = Calendar.getInstance();
+        double balance = account.getBalance();
+        if(cal.get(Calendar.DAY_OF_MONTH) == 1){ // sang thang moi
+            for(Fluctuation i: arr) {
+                if(i.isFixed()) {
+                    if(i.isIncome()) balance += i.getAmount();
+                    else balance -= i.getAmount();
+                }
+            }
+        } 
+        return balance;
     }
     
     public void Suggestion(){
