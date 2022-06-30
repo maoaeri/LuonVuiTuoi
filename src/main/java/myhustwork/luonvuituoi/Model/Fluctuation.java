@@ -17,7 +17,36 @@ public class Fluctuation extends Money {//bien dong so du//
     private boolean fixed; //co dinh hay khong
     
     public static void main(String[] args){
-        
+        try {
+            
+            Connection conn = DBConnection.createConnection();
+            String query = "SELECT * FROM main.category";
+
+            // create the java statement
+            Statement st = conn.createStatement();
+
+            // execute the query, and get a java resultset
+            ResultSet rs = st.executeQuery(query);
+
+            // iterate through the java resultset
+            while (rs.next())
+            {
+              int categoryId = rs.getInt("category_id");
+              String categoryName = rs.getString("category_name");
+              int categoryParentId = rs.getInt("category_parent_id");
+              
+              // print the results
+              System.out.format("%s, %s, %s\n", categoryId, categoryName, categoryParentId);
+            }
+            st.close();
+        }
+        catch (SQLException e) {
+            System.err.println("Got an exception! ");
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public Fluctuation() {
     }
     
     public Fluctuation(double amount, String note, Date date, int categoryID, boolean fixed) {

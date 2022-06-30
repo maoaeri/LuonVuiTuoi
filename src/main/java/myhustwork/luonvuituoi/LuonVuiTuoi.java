@@ -5,6 +5,8 @@
 
 package myhustwork.luonvuituoi;
 
+import myhustwork.luonvuituoi.Controller.FluctuationController;
+
 /**
  *
  * @author vvlalalove193
@@ -13,6 +15,8 @@ public class LuonVuiTuoi {
 
     public static void main(String[] args) {
         System.out.println("Hello World!");
-        System.out.println("Dcm MTr");
+        FluctuationController fc = new FluctuationController();
+                System.out.println("Dcm MTr");
+
     }
 }
