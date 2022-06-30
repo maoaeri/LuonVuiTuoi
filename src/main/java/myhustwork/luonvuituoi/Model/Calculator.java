@@ -36,14 +36,14 @@ public class Calculator {
             
         }
     }
-    public void Suggestion(){
+    public void Suggestion(Date date1,Date date2){
         double ThuThanghientai = 0,Chithanghientai = 0,Sodutrongthang = 0;
         
         Calendar cal = Calendar.getInstance();
         Date date = cal.getTime();
         
         for(Fluctuation i: arr){ //duyet tat ca cac fluctuation
-            if(i.getDate().get(Calendar.DAY_OF_MONTH) > cal.getActualMinimum(Calendar.DATE) && i.getDate().get(Calendar.DAY_OF_MONTH) < cal.getActualMaximum(Calendar.DATE))
+            if (i.getDate().after(date1) && i.getDate().before(date2) ){
             {
                 if(i.Category.CategoryType == 1)
                 {
@@ -56,8 +56,7 @@ public class Calculator {
             }
         }
         Sodutrongthang = ThuThanghientai - Chithanghientai;
-        for(RemainingStuff a: arr){// duyet cac mon do can mua
-            if(a.getAmount()<Sodutrongthang)
+        PercentCategories(date1,date2);
         }
     }
         
