@@ -18,18 +18,33 @@ public class Calculator {
     }
     
     public static void PercentCategories(Date date1, Date date2) {
-        double sum = 0;
-        double[] sumCategories = new double[12]; //gia su co 12 CategoryID
-        double[] percentCategories = new double[12];
+        double sumIncome = 0;
+        double sumSpending = 0
+        double[] sumCategoriesIncome = new double[12]; //gia su co 12 CategoryID
+        double[] sumCategoriesSpending = new double[12];
+        double[] percentCategoriesIncome = new double[12];
+        double[] percentCategoriesSpending = new double[12];
         int j;
+        for(int i = 0; i < 12; i++) {
+            sumCategoriesIncome[i] = 0;
+            sumCategoriesSpending[i] = 0;
+        }
         for(Fluctuation i: arr) {
             if(i.getDate().after(date1) && i.getDate().before(date2) ){
-                sum += i.getAmount();
-                j = i.getCategoryID();
-                sumCategories[j] += i.getAmount();
+                if(i.isIncome()) {
+                    sumIncome += i.getAmount();
+                    j = i.getCategoryID();
+                    sumCategoriesIncome[j] += i.getAmount();
+                }
+                else {
+                    sumSpending += i.getAmount();
+                    j = i.getCategoryID();
+                    sumCategoriesSpending[j] += i.getAmount();
+                }
             }
             for(j = 0; j < 12; j++) {
-                percentCategories[j] = sumCategories[j]/sum;
+                percentCategoriesIncome[j] = sumCategoriesIncome[j]/sumIncome;
+                percentCategoriesSpending[j] = sumCategoriesSpending[j]/sumSpending;
             }
         }
     }
