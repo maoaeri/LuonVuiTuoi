@@ -4,6 +4,9 @@
  */
 package myhustwork.luonvuituoi.DTO;
 
+import java.text.DecimalFormat;
+import java.text.ParseException;
+
 /**
  *
  * @author vvlalalove193
@@ -14,6 +17,10 @@ public class MoneyDTO {
     public MoneyDTO() {
     }
 
+    public MoneyDTO(double amount) {
+        this.amount = amount;
+    }
+
     public double getAmount() {
         return amount;
     }
@@ -22,4 +29,14 @@ public class MoneyDTO {
         this.amount = amount;
     }
     
+    /**
+     * 
+     * @param strFormat in String
+     * @return Amount in double
+     * @throws java.text.ParseException
+     */
+    public static double formatAmount(String strFormat) throws ParseException{
+        double d = DecimalFormat.getNumberInstance().parse(strFormat).doubleValue();
+        return d;
+    }
 }
