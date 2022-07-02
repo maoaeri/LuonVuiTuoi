@@ -48,10 +48,20 @@ public class Calculator {
     }
     
     public static void SumPerMonth(int Year) {
-        double sum = 0;
-        for(Fluctuation )
-        if(Fluctuation.Date.getYear() == Year) {
-            
+        double[] sumIncome = new double[13]; // tổng thu của 12 tháng
+        double[] sumSpending = new double[13]; // tổng chi của 12 tháng
+        for(int j = 1; j <= 12; j ++){
+            sumIncome[j] = 0;
+            sumSpending[j] = 0;
+        }
+        for(Fluctuation i: arr) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(i.getDate()); // chuyển Date thành Calendar
+            if(Year == cal.get(Calendar.YEAR) ) {
+                int j = cal.get(Calendar.MONTH);
+                if(i.isIncome()) sumIncome[j] += i.getAmount(); // tính tổng thu từng tháng
+                else sumSpending[j] += i.getAmount(); // tổng chi từng tháng
+            }
         }
     }
     
