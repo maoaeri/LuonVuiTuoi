@@ -17,7 +17,7 @@ public class Calculator {
     }
     public static void PercentCategories(Date date1, Date date2) {
         double sumIncome = 0;
-        double sumSpending = 0
+        double sumSpending = 0;
         double[] sumCategoriesIncome = new double[12]; //gia su co 12 CategoryID
         double[] sumCategoriesSpending = new double[12];
         double[] percentCategoriesIncome = new double[12];
@@ -47,7 +47,6 @@ public class Calculator {
         }
         for(m = 0; m < 12; m++) {
             percentCategories[m] = sumCategories[m]/sum;
-        }
         }
     }   
     public static void SumPerMonth(int Year) {
