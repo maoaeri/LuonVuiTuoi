@@ -52,6 +52,27 @@ public class FluctuationDAO {
         return  categoryId;
     }
     
+    public static CategoryDTO getCategoryDetails(int categoryId) throws SQLException{
+        String query = "SELECT * from main.category where category_id = ?";
+        CategoryDTO cat_details = new CategoryDTO();
+        try {
+            Connection conn = createConnection();
+            PreparedStatement ps = conn.prepareStatement(query);
+            ResultSet rs;
+            ps.setInt(1, categoryId);
+            rs = ps.executeQuery();
+            
+            while (rs.next()){
+                cat_details.setCategoryName(rs.getString("category_name"));
+                cat_details.setCategoryType(rs.getInt("category_type"));
+            }
+            conn.close();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return  cat_details;
+    }    
+    
     public static void addFluctuation(FluctuationDTO fluc){
         
         String query = "INSERT INTO main.fluctuation(fluctuation_amount, fluctuation_note, fluctuation_date, category_id, fluctuation_is_fixed) VALUES(?,?,?,?,?)";
@@ -67,6 +88,26 @@ public class FluctuationDAO {
             conn.close();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+    
+    public static FluctuationDTO[] getAllFluctuations(){
+        FluctuationDTO[] dataset;
+        FluctuationDTO data;
+        String query = "SELECT * from main.fluctuation";
+        try {
+            Connection conn = createConnection();
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(query);
+            while (rs.next()){
+                int flucId = rs.getInt("fluctuation_id");
+                double flucAmount = rs.getDouble("fluctuation_amount");
+                String flucNote = rs.getString("fluctuation_note");
+                Date flucDate = rs.getDate("fluctuation_date");
+                
+            }
+            
+        }
         }
     }
 }
