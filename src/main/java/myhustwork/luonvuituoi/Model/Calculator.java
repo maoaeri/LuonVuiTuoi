@@ -45,10 +45,8 @@ public class Calculator {
                 percentCategoriesSpending[j] = sumCategoriesSpending[j]/sumSpending;
             }
         }
-        for(m = 0; m < 12; m++) {
-            percentCategories[m] = sumCategories[m]/sum;
-        }
-    }   
+    }
+    
     public static void SumPerMonth(int Year) {
         double sum = 0;
         for(Fluctuation )
