@@ -9,7 +9,7 @@ package myhustwork.luonvuituoi.Model;
  * @author DELL
  */
 abstract class Money {
-    private double amount;
+    private double amount;// gia
     public double getAmount(){
         return amount;
     }
