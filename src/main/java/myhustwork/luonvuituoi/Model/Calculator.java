@@ -17,17 +17,36 @@ public class Calculator {
         return balance - save_per_month < 0;
     }
     
-    public static void PercentCategories(Date date1, Date date2) {
-        double sumIncome = 0;
-        double sumSpending = 0
-        double[] sumCategoriesIncome = new double[12]; //gia su co 12 CategoryID
+    public static double[] PercentCategoriesSpending(Date date1, Date date2) {
+        double sumSpending = 0;
         double[] sumCategoriesSpending = new double[12];
-        double[] percentCategoriesIncome = new double[12];
         double[] percentCategoriesSpending = new double[12];
         int j;
         for(int i = 0; i < 12; i++) {
-            sumCategoriesIncome[i] = 0;
             sumCategoriesSpending[i] = 0;
+        }
+        for(Fluctuation i: arr) {
+            if(i.getDate().after(date1) && i.getDate().before(date2) ){
+                if(!i.isIncome()) {
+                    sumSpending += i.getAmount();
+                    j = i.getCategoryID();
+                    sumCategoriesSpending[j] += i.getAmount();
+                }
+            }
+            for(j = 0; j < 12; j++) {
+                percentCategoriesSpending[j] = sumCategoriesSpending[j]/sumSpending;
+            }
+        }
+        return percentCategoriesSpending;
+    }
+    
+    public static double[] PercentCategoriesIncome(Date date1, Date date2) {
+        double sumIncome = 0;
+        double[] sumCategoriesIncome = new double[12]; //gia su co 12 CategoryID
+        double[] percentCategoriesIncome = new double[12];
+        int j;
+        for(int i = 0; i < 12; i++) {
+            sumCategoriesIncome[i] = 0;
         }
         for(Fluctuation i: arr) {
             if(i.getDate().after(date1) && i.getDate().before(date2) ){
@@ -35,25 +54,17 @@ public class Calculator {
                     sumIncome += i.getAmount();
                     j = i.getCategoryID();
                     sumCategoriesIncome[j] += i.getAmount();
-                }
-                else {
-                    sumSpending += i.getAmount();
-                    j = i.getCategoryID();
-                    sumCategoriesSpending[j] += i.getAmount();
-                }
+    
             }
             for(j = 0; j < 12; j++) {
-                percentCategoriesIncome[j] = sumCategoriesIncome[j]/sumIncome;
-                percentCategoriesSpending[j] = sumCategoriesSpending[j]/sumSpending;
-            }
+                percentCategoriesIncome[j] = sumCategoriesIncome[j]/sumIncome;          
         }
+        return percentCategoriesIncome;
     }
     
-    public static void SumPerMonth(int Year) {
-        double[] sumIncome = new double[13]; // tổng thu của 12 tháng
+    public static double[] SumPerMonthSpending(int Year) {
         double[] sumSpending = new double[13]; // tổng chi của 12 tháng
         for(int j = 1; j <= 12; j ++){
-            sumIncome[j] = 0;
             sumSpending[j] = 0;
         }
         for(Fluctuation i: arr) {
@@ -61,12 +72,29 @@ public class Calculator {
             cal.setTime(i.getDate()); // chuyển Date thành Calendar
             if(Year == cal.get(Calendar.YEAR) ) {
                 int j = cal.get(Calendar.MONTH);
-                if(i.isIncome()) sumIncome[j] += i.getAmount(); // tính tổng thu từng tháng
-                else sumSpending[j] += i.getAmount(); // tổng chi từng tháng
+                if(!i.isIncome())
+                    sumSpending[j] += i.getAmount(); // tổng chi từng tháng
             }
         }
+        return sumSpending;
     }
-    
+
+    public static double[] SumPerMonthIncome(int Year) {
+        double[] sumIncome = new double[13]; // tổng thu của 12 tháng
+        for(int j = 1; j <= 12; j ++){
+            sumIncome[j] = 0;
+        }
+        for(Fluctuation i: arr) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(i.getDate()); // chuyển Date thành Calendar
+            if(Year == cal.get(Calendar.YEAR) ) {
+                int j = cal.get(Calendar.MONTH);
+                if(i.isIncome()) sumIncome[j] += i.getAmount(); // tính tổng thu từng tháng
+            }
+        }
+        return sumIncome;
+    }
+
     public static double AutoCal() {
         Calendar cal = Calendar.getInstance();
         double balance = account.getBalance();
