@@ -10,17 +10,23 @@ package myhustwork.luonvuituoi.DTO;
  */
 public class CategoryDTO {
     public static final int THU = 1,CHI = 0;
-    int categoryType;
-    String categoryName;
+    private int categoryType;
+    private int categoryId;
+    private String categoryName;
 
     public CategoryDTO() {
+    }
+
+    public CategoryDTO(int categoryType, int categoryId, String categoryName) {
+        this.categoryType = categoryType;
+        this.categoryId = categoryId;
+        this.categoryName = categoryName;
     }
 
     public CategoryDTO(int categoryType, String categoryName) {
         this.categoryType = categoryType;
         this.categoryName = categoryName;
     }
-    
 
     public int getCategoryType() {
         return categoryType;
@@ -30,6 +36,10 @@ public class CategoryDTO {
         return categoryName;
     }
 
+    public int getCategoryId() {
+        return categoryId;
+    }
+
     public void setCategoryType(int categoryType) {
         this.categoryType = categoryType;
     }
@@ -37,6 +47,16 @@ public class CategoryDTO {
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
     }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
     
-    
+    public boolean isIncome(){
+        if (this.categoryType == THU){
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

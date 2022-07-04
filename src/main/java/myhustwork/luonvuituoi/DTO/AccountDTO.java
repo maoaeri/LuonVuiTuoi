@@ -9,53 +9,53 @@ package myhustwork.luonvuituoi.DTO;
  * @author vvlalalove193
  */
 public class AccountDTO {
-    private String name;
-    private byte age;
-    private String job;
-    private long balance;
-    private long save_per_month; 
+    private static String name;
+    private static byte age;
+    private static String job;
+    private static long balance;
+    private static long save_per_month; 
 
     public AccountDTO() {
     }
 
-    public String getName() {
+    public static String getName() {
         return name;
     }
 
-    public byte getAge() {
+    public static byte getAge() {
         return age;
     }
 
-    public String getJob() {
+    public static String getJob() {
         return job;
     }
 
-    public long getBalance() {
+    public static long getBalance() {
         return balance;
     }
 
-    public long getSave_per_month() {
+    public static long getSave_per_month() {
         return save_per_month;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public static void setName(String name) {
+        AccountDTO.name = name;
     }
 
-    public void setAge(byte age) {
-        this.age = age;
+    public static void setAge(byte age) {
+        AccountDTO.age = age;
     }
 
-    public void setJob(String job) {
-        this.job = job;
+    public static void setJob(String job) {
+        AccountDTO.job = job;
     }
 
-    public void setBalance(long balance) {
-        this.balance = balance;
+    public static void setBalance(long balance) {
+        AccountDTO.balance = balance;
     }
 
-    public void setSave_per_month(long save_per_month) {
-        this.save_per_month = save_per_month;
+    public static void setSave_per_month(long save_per_month) {
+        AccountDTO.save_per_month = save_per_month;
     }
 
 }
