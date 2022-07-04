@@ -4,16 +4,27 @@
  */
 package myhustwork.luonvuituoi.DTO;
 
+import myhustwork.luonvuituoi.Model.Stuff;
+
 /**
  *
  * @author vvlalalove193
  */
-public class RemainingStuffDTO extends MoneyDTO {
+public class StuffDTO extends MoneyDTO implements Comparable<StuffDTO>{
     private CategoryDTO category;
     private String note;
 
-    public RemainingStuffDTO() {
+    public StuffDTO() {
+        super();
     }
+
+    public StuffDTO(CategoryDTO category, String note, double amount) {
+        super(amount);
+        this.category = category;
+        this.note = note;
+    }
+    
+    
 
     public CategoryDTO getCategory() {
         return category;
@@ -31,5 +42,13 @@ public class RemainingStuffDTO extends MoneyDTO {
         this.note = note;
     }
     
-    
+    @Override
+    public int compareTo(StuffDTO stuff){
+        if (super.getAmount() == stuff.getAmount())
+            return 0;
+        else if(super.getAmount() > stuff.getAmount())
+            return 1;
+        else 
+            return -1;
+    }    
 }

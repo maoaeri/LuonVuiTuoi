@@ -56,7 +56,7 @@
                                   <Component id="lblNote" min="-2" pref="96" max="-2" attributes="0"/>
                                   <Component id="lblDate" min="-2" pref="96" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="lblCategory1" min="-2" pref="96" max="-2" attributes="0"/>
+                              <Component id="lblFixed" min="-2" pref="96" max="-2" attributes="0"/>
                               <Component id="lblCategory" min="-2" pref="96" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -115,7 +115,7 @@
                           <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="radFixed" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblCategory1" alignment="3" max="32767" attributes="0"/>
+                              <Component id="lblFixed" alignment="3" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace pref="10" max="32767" attributes="0"/>
                           <Component id="btnSubmit" min="-2" max="-2" attributes="0"/>
@@ -181,7 +181,7 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JLabel" name="lblCategory1">
+        <Component class="javax.swing.JLabel" name="lblFixed">
           <Properties>
             <Property name="text" type="java.lang.String" value="C&#x1ed1; &#x111;&#x1ecb;nh hay kh&#xf4;ng:"/>
           </Properties>

@@ -9,6 +9,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static myhustwork.luonvuituoi.DAO.CategoryDAO.getCategoryDetails;
+import static myhustwork.luonvuituoi.DAO.CategoryDAO.getCategoryId;
 import myhustwork.luonvuituoi.DTO.CategoryDTO;
 import myhustwork.luonvuituoi.DTO.FluctuationDTO;
 import static myhustwork.luonvuituoi.Util.DBConnection.createConnection;
@@ -28,51 +36,9 @@ public class FluctuationDAO {
         a.setCategoryType(CategoryDTO.CHI);
         
         FluctuationDAO b = new FluctuationDAO();
-        b.getCategoryId(a);
+//        b.getCategoryId(a);
     }
-    
-    public static int getCategoryId(CategoryDTO cat) throws SQLException{
-        String query = "SELECT category_id from main.category where category_name = ?";
-        int categoryId = 0;
-        try {
-            Connection conn = createConnection();
-            PreparedStatement ps = conn.prepareStatement(query);
-            ResultSet rs;
-            ps.setString(1, cat.getCategoryName());
-            rs = ps.executeQuery();
-            
-            while (rs.next()){
-                categoryId = rs.getInt("category_id");
-                System.out.println(categoryId);
-            }
-            conn.close();
-        } catch (SQLException e){
-            e.printStackTrace();
-        }
-        return  categoryId;
-    }
-    
-    public static CategoryDTO getCategoryDetails(int categoryId) throws SQLException{
-        String query = "SELECT * from main.category where category_id = ?";
-        CategoryDTO cat_details = new CategoryDTO();
-        try {
-            Connection conn = createConnection();
-            PreparedStatement ps = conn.prepareStatement(query);
-            ResultSet rs;
-            ps.setInt(1, categoryId);
-            rs = ps.executeQuery();
-            
-            while (rs.next()){
-                cat_details.setCategoryName(rs.getString("category_name"));
-                cat_details.setCategoryType(rs.getInt("category_type"));
-            }
-            conn.close();
-        } catch (SQLException e){
-            e.printStackTrace();
-        }
-        return  cat_details;
-    }    
-    
+        
     public static void addFluctuation(FluctuationDTO fluc){
         
         String query = "INSERT INTO main.fluctuation(fluctuation_amount, fluctuation_note, fluctuation_date, category_id, fluctuation_is_fixed) VALUES(?,?,?,?,?)";
@@ -92,8 +58,9 @@ public class FluctuationDAO {
     }
     
     public static FluctuationDTO[] getAllFluctuations(){
-        FluctuationDTO[] dataset;
+        FluctuationDTO[] dataset = null;
         FluctuationDTO data;
+        List<FluctuationDTO> arrlist = new ArrayList<>();
         String query = "SELECT * from main.fluctuation";
         try {
             Connection conn = createConnection();
@@ -104,10 +71,16 @@ public class FluctuationDAO {
                 double flucAmount = rs.getDouble("fluctuation_amount");
                 String flucNote = rs.getString("fluctuation_note");
                 Date flucDate = rs.getDate("fluctuation_date");
-                
+                CategoryDTO flucCat = getCategoryDetails(rs.getInt("category_id"));
+                boolean flucFixed = rs.getBoolean("fluc_is_fixed");
+                data = new FluctuationDTO(flucId, flucNote, flucDate, flucCat, flucFixed, flucAmount);
+                arrlist.add(data);
             }
             
+        } catch (SQLException ex) {
+            Logger.getLogger(FluctuationDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        }
+        dataset = arrlist.toArray(dataset);
+        return dataset;
     }
 }

@@ -5,6 +5,11 @@ import java.util.Calendar;
 
 import java.util.Date;
 import java.util.*;
+import myhustwork.luonvuituoi.DAO.FluctuationDAO;
+import myhustwork.luonvuituoi.DTO.AccountDTO;
+import myhustwork.luonvuituoi.DTO.CategoryDTO;
+import myhustwork.luonvuituoi.DTO.FluctuationDTO;
+import myhustwork.luonvuituoi.DTO.StuffDTO;
 
 
 /**
@@ -12,12 +17,21 @@ import java.util.*;
  * @author vvlalalove193
  */
 public class Calculator {
-    public static Boolean WarningBalance(double balance) { //canh bao
-        return balance < 0;
+    
+    /**
+     * Warning if there's a chance balance < 0
+     * @return 
+     */
+    public static Boolean WarningBalance() { //canh bao
+        double save_per_month = AccountDTO.getSave_per_month(); // account lấy từ database
+        double balance = AccountDTO.getBalance();
+        return balance - save_per_month < 0;
     }
+    
+    
     public static void PercentCategories(Date date1, Date date2) {
         double sumIncome = 0;
-        double sumSpending = 0
+        double sumSpending = 0;
         double[] sumCategoriesIncome = new double[12]; //gia su co 12 CategoryID
         double[] sumCategoriesSpending = new double[12];
         double[] percentCategoriesIncome = new double[12];
@@ -27,16 +41,17 @@ public class Calculator {
             sumCategoriesIncome[i] = 0;
             sumCategoriesSpending[i] = 0;
         }
-        for(Fluctuation i: arr) {
+        FluctuationDTO[] flucArr = FluctuationDAO.getAllFluctuations();
+        for(FluctuationDTO i: flucArr) {
             if(i.getDate().after(date1) && i.getDate().before(date2) ){
-                if(i.isIncome()) {
+                if(i.getCategory().isIncome()) {
                     sumIncome += i.getAmount();
-                    j = i.getCategoryID();
+                    j = i.getCategory().getCategoryId();
                     sumCategoriesIncome[j] += i.getAmount();
                 }
                 else {
                     sumSpending += i.getAmount();
-                    j = i.getCategoryID();
+                    j = i.getCategory().getCategoryId();
                     sumCategoriesSpending[j] += i.getAmount();
                 }
             }
@@ -45,26 +60,38 @@ public class Calculator {
                 percentCategoriesSpending[j] = sumCategoriesSpending[j]/sumSpending;
             }
         }
-        for(m = 0; m < 12; m++) {
-            percentCategories[m] = sumCategories[m]/sum;
-        }
-        }
-    }   
+    } 
+    /**
+     * Tong thu chi hang nam
+     *
+     */  
     public static void SumPerMonth(int Year) {
-        double sum = 0;
-        for(Fluctuation )
-        if(Fluctuation.Date.getYear() == Year) {
-            
+        double[] sumIncome = new double[13]; // tổng thu của 12 tháng
+        double[] sumSpending = new double[13]; // tổng chi của 12 tháng
+        for(int j = 1; j <= 12; j ++){
+            sumIncome[j] = 0;
+            sumSpending[j] = 0;
+        }
+        FluctuationDTO[] flucArr = FluctuationDAO.getAllFluctuations();
+        for(FluctuationDTO i: flucArr) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(i.getDate()); // chuyển Date thành Calendar
+            if(Year == cal.get(Calendar.YEAR) ) {
+                int j = cal.get(Calendar.MONTH);
+                if(i.getCategory().isIncome()) sumIncome[j] += i.getAmount(); // tính tổng thu từng tháng
+                else sumSpending[j] += i.getAmount(); // tổng chi từng tháng
+            }
         }
     }
     
     public static double AutoCal() {
         Calendar cal = Calendar.getInstance();
-        double balance = account.getBalance();
+        double balance = AccountDTO.getBalance();
         if(cal.get(Calendar.DAY_OF_MONTH) == 1){ // sang thang moi
-            for(Fluctuation i: arr) {
+            FluctuationDTO[] flucArr = FluctuationDAO.getAllFluctuations();
+            for(FluctuationDTO i: flucArr) {
                 if(i.isFixed()) {
-                    if(i.isIncome()) balance += i.getAmount();
+                    if(i.getCategory().isIncome()) balance += i.getAmount();
                     else balance -= i.getAmount();
                 }
             }
@@ -72,71 +99,68 @@ public class Calculator {
         return balance;
     }
     
-    public void Suggestion(){
+    public void Suggestion(Date date1,Date date2){
         double ThuThanghientai = 0,Chithanghientai = 0,Sodutrongthang = 0;
         
         Calendar cal = Calendar.getInstance();
         Date date = cal.getTime();
-        
-        for(Fluctuation i: arr){ //duyet tat ca cac fluctuation
-            if (i.getDate().after(date1) && i.getDate().before(date2) ){
-            {
-                if(i.Category.CategoryType == 1)
-                {
+        FluctuationDTO[] flucArr = FluctuationDAO.getAllFluctuations();        
+        for(FluctuationDTO i: flucArr){ //duyet tat ca cac fluctuation
+            if (i.getDate().after(date1) && i.getDate().before(date2) ) {
+                if(i.getCategory().getCategoryType() == CategoryDTO.THU) {
                     ThuThanghientai += i.getAmount();
-                }
-                else
-                {
+                } else {
                     Chithanghientai += i.getAmount();
                 }
             }
-        }
+        }   
         Sodutrongthang = ThuThanghientai - Chithanghientai;
         PercentCategories(date1,date2);
-        }
     }
-    public void Swap(Stuff s1,Stuff s2){ //Dao vi tri 
-        Stuff tmp = new Stuff(s1.getPrice(), s1.getCategoryID(), s1.getNote());
-        s1.setPrice(s2.getPrice()); s1.setCategoryID(s2.getCategoryID()); s1.setNote(s2.getNote());
-        s2.setPrice(tmp.getPrice()); s2.setCategoryID(tmp.getCategoryID()); s2.setNote(tmp.getNote());
+    
+    public void Swap(StuffDTO s1,StuffDTO s2){ //Dao vi tri 
+        StuffDTO tmp = new StuffDTO(s1.getCategory(), s1.getNote(), s1.getAmount());
+        s1.setAmount(s2.getAmount()); s1.setCategory(s2.getCategory()); s1.setNote(s2.getNote());
+        s2.setAmount(tmp.getAmount()); s2.setCategory(tmp.getCategory()); s2.setNote(tmp.getNote());
     }
-    public void StuffSuggestion(){
-        int n;
-        Stuff[] stuff = new Stuff[n]; // n: so stuff can mua
+    
+    public void StuffSuggestion(StuffDTO[] stuff){
+        int n = stuff.length;
+//        StuffDTO[] stuff = new StuffDTO[n]; // n: so stuff can mua
         //Lay ra tu database
         Arrays.sort(stuff);
-        for(Stuff i: stuff){
+        for(StuffDTO i: stuff){
             /*
             20:Suc khoe
             21:Cong viec hoc tap
             22:Giai tri
             25:Tra no
             */
-            if(i.getCategoryID()== 25 && i.getPrice()< account.getBalance() && stuff[0].getCategoryID()!=25){ 
+            if(i.getCategory().getCategoryId()== 25 && i.getAmount()< AccountDTO.getBalance() && stuff[0].getCategory().getCategoryId()!=25){ 
             //Tra no 
                 Swap(i,stuff[0]);
-                if(stuff[2].getCategoryID()==22 || stuff[2].getCategoryID()==21){
+                if(stuff[2].getCategory().getCategoryId()==22 || stuff[2].getCategory().getCategoryId()==21){
                     Arrays.sort(stuff,3,n-1);
                 }
-                else if(stuff[1].getCategoryID()==20){
+                else if(stuff[1].getCategory().getCategoryId()==20){
                     Arrays.sort(stuff,2,n-1);
                 }
                 else{
                     Arrays.sort(stuff,1,n-1);
                 }
             }
-            if(i.getCategoryID()== 20 && i.getPrice()< account.getBalance()){
+            if(i.getCategory().getCategoryId()== 20 && i.getAmount()< AccountDTO.getBalance()){
             //Suc khoe 
                     Swap(i,stuff[1]);
                     Arrays.sort(stuff,2,n-1);   
             }
-            if(i.getCategoryID()== 22 & i.getPrice()< account.getBalance()){
+            if(i.getCategory().getCategoryId()== 22 & i.getAmount()< AccountDTO.getBalance()){
             // Giai tri
-               if(stuff[0].getCategoryID()==25 && stuff[1].getCategoryID()==20){
+               if(stuff[0].getCategory().getCategoryId()==25 && stuff[1].getCategory().getCategoryId()==20){
                    Swap(i,stuff[2]);
                    Arrays.sort(stuff,3,n-1);
                }
-               else if(stuff[0].getCategoryID()!=25 && stuff[1].getCategoryID()==20){
+               else if(stuff[0].getCategory().getCategoryId()!=25 && stuff[1].getCategory().getCategoryId()==20){
                    Swap(i,stuff[0]);
                    Arrays.sort(stuff,2,n-1); 
                }
@@ -145,13 +169,13 @@ public class Calculator {
                    Arrays.sort(stuff,2,n-1);
                }
             }
-            if(i.getCategoryID()==21 && i.getPrice()< 4*stuff[2].getPrice()){
+            if(i.getCategory().getCategoryId()==21 && i.getAmount()< 4*stuff[2].getAmount()){
                 //Cong viec hoc tap
                 Swap(i,stuff[2]);
             }   
         }
-        for(Stuff i: stuff){
-            if(i.getCategoryID()==24) Swap(i,stuff[n-1]);
+        for(StuffDTO i: stuff){
+            if(i.getCategory().getCategoryId()==24) Swap(i,stuff[n-1]);
         }
     }
 }
