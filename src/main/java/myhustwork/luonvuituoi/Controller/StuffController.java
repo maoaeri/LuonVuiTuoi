@@ -8,8 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import myhustwork.luonvuituoi.DAO.StuffDAO;
 import myhustwork.luonvuituoi.DTO.StuffDTO;
-import myhustwork.luonvuituoi.View.AddStuffInfoFrm;
-import myhustwork.luonvuituoi.View.Welcome;
+import myhustwork.luonvuituoi.GUI.StuffGUI;
+import myhustwork.luonvuituoi.GUI.WelcomeGUI;
 
 /**
  *
@@ -17,11 +17,11 @@ import myhustwork.luonvuituoi.View.Welcome;
  */
 public class StuffController {
     private StuffDTO stuff;
-    private AddStuffInfoFrm asf;
-    private Welcome wl;
+    private StuffGUI asf;
+    private WelcomeGUI wl;
     
     public StuffController() {
-        asf = new AddStuffInfoFrm();
+        asf = new StuffGUI();
         asf.setVisible(true);
         asf.addSubmitListener(new AddStuffListener());
     }
