@@ -4,7 +4,7 @@
  */
 package myhustwork.luonvuituoi.DTO;
 
-import myhustwork.luonvuituoi.Model.Stuff;
+import myhustwork.luonvuituoi.BLL.Stuff;
 
 /**
  *

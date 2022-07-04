@@ -8,8 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import myhustwork.luonvuituoi.DAO.FluctuationDAO;
 import myhustwork.luonvuituoi.DTO.FluctuationDTO;
-import myhustwork.luonvuituoi.View.AddFluctuationFrm;
-import myhustwork.luonvuituoi.View.Welcome;
+import myhustwork.luonvuituoi.GUI.FluctuationGUI;
+import myhustwork.luonvuituoi.GUI.WelcomeGUI;
 
 /**
  *
@@ -17,15 +17,15 @@ import myhustwork.luonvuituoi.View.Welcome;
  */
 public class FluctuationController {
     private FluctuationDTO fluctuation;
-    private AddFluctuationFrm aff;
-    private Welcome wl;
+    private FluctuationGUI aff;
+    private WelcomeGUI wl;
     
 
     public FluctuationController() {
-        wl = new Welcome();
+        wl = new WelcomeGUI();
         wl.setVisible(true);
         
-        aff = new AddFluctuationFrm();
+        aff = new FluctuationGUI();
         aff.setVisible(true);
         aff.addSubmitListener(new AddFluctuationListener());
     }
