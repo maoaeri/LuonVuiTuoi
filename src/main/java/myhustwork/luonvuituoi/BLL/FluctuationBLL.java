@@ -17,37 +17,54 @@ public class FluctuationBLL extends Money {//bien dong so du//
         return balance - save_per_month < 0;
     }
     
-    public static void PercentCategories(Date date1, Date date2) {
-        double sumIncome = 0;
-        double sumSpending = 0;
-        double[] sumCategoriesIncome = new double[12]; //gia su co 12 CategoryID
-        double[] sumCategoriesSpending = new double[12];
-        double[] percentCategoriesIncome = new double[12];
-        double[] percentCategoriesSpending = new double[12];
-        int j;
-        for(int i = 0; i < 12; i++) {
-            sumCategoriesIncome[i] = 0;
-            sumCategoriesSpending[i] = 0;
+    public static double[] PercentCategories(Date date1, Date date2) {
+        double[] sumCategories = new double[26]; // có 25 hạng mục 
+        double[] percentCategories = new double[26];
+        for(int j = 1; j <= 25; j++) {
+            sumCategories[j] = 0;
+            percentCategories[j] = -1; // -1 là không tồn tại
         }
         FluctuationDTO[] flucArr = FluctuationDAO.getAllFluctuations();
         for(FluctuationDTO i: flucArr) {
             if(i.getDate().after(date1) && i.getDate().before(date2) ){
-                if(i.getCategory().isIncome()) {
-                    sumIncome += i.getAmount();
-                    j = i.getCategory().getCategoryId();
-                    sumCategoriesIncome[j] += i.getAmount();
+                switch (i.getCategory().getCategoryId()) {
+                    case 3, 4, 5, 6, 7, 8, 9, 12, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25 -> {
+                        int j = i.getCategory().getCategoryId();
+                        sumCategories[j] += i.getAmount();
+                        break;
+                    }
                 }
-                else {
-                    sumSpending += i.getAmount();
-                    j = i.getCategory().getCategoryId();
-                    sumCategoriesSpending[j] += i.getAmount();
-                }
-            }
-            for(j = 0; j < 12; j++) {
-                percentCategoriesIncome[j] = sumCategoriesIncome[j]/sumIncome;
-                percentCategoriesSpending[j] = sumCategoriesSpending[j]/sumSpending;
-            }
+        for(int j = 3; j <=9; j++) {
+            sumCategories[1] += sumCategories[j]; 
         }
+        sumCategories[10] = sumCategories[14] + sumCategories[15] + sumCategories[16] + sumCategories[17] + sumCategories[18];
+        sumCategories[11] = sumCategories[19] + sumCategories[20] + sumCategories[21] + sumCategories[22] + sumCategories[23];
+        sumCategories[13] = sumCategories[24] + sumCategories[25];
+        sumCategories[2] = sumCategories[10] + sumCategories[11] + sumCategories[12] + sumCategories[13];
+        
+        for(int j = 3; j <= 9; j++) {
+            percentCategories[j] = sumCategories[j]/sumCategories[1];
+        }
+        for(int j = 10; j <= 25; j++) {
+            percentCategories[j] = sumCategories[j]/sumCategories[2];
+        }
+        return percentCategories;
+        
+//                if(i.getCategory().isIncome()) {
+//                    sumIncome += i.getAmount();
+//                    j = i.getCategory().getCategoryId();
+//                    sumCategoriesIncome[j] += i.getAmount();
+//                }
+//                else {
+//                    sumSpending += i.getAmount();
+//                    j = i.getCategory().getCategoryId();
+//                    sumCategoriesSpending[j] += i.getAmount();
+//                }
+//            }
+//            for(j = 0; j < 12; j++) {
+//                percentCategoriesIncome[j] = sumCategoriesIncome[j]/sumIncome;
+//                percentCategoriesSpending[j] = sumCategoriesSpending[j]/sumSpending;
+//            }
     } 
     /**
      * sum per month
@@ -85,6 +102,17 @@ public class FluctuationBLL extends Money {//bien dong so du//
             }
         } 
         return balance;
+    }
+    
+    public static int[] SuggestionNextMonth(Date date1, Date date2) {
+        double[] percentCategories = new double[26];
+        percentCategories = PercentCategories(date1, date2);
+        int[] mark = {0, 0, 0, 0};
+        if(percentCategories[10] > 0.6) mark[0] = 1; // = 1 là tiêu quá
+        if(percentCategories[21] > 0.15) mark[1] = 1;
+        if(percentCategories[19] + percentCategories[22] + percentCategories[23] > 0.15) mark[2] = 1;
+        if(1 - percentCategories[10] - percentCategories[21] - percentCategories[19] - percentCategories[22] - percentCategories[23] > 0.1) mark[3] = 1;
+        return mark;
     }
 }
 
