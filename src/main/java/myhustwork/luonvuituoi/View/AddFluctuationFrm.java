@@ -32,7 +32,7 @@ public class AddFluctuationFrm extends javax.swing.JFrame {
     
     public FluctuationDTO getFluctuationInfor() throws ParseException {
         FluctuationDTO fluc = new FluctuationDTO();
-        fluc.setAmount(parseInt(txtAmount.getText()));
+        fluc.setAmount(FluctuationDTO.formatAmount(txtAmount.getText()));
         DefaultMutableTreeNode selectedNode1 = (DefaultMutableTreeNode) treCategory.getModel().getRoot() ;
         String rootType = selectedNode1.getUserObject().toString();
         int categoryType = 0;
