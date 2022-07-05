@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.*;
 import myhustwork.luonvuituoi.DAO.FluctuationDAO;
+import myhustwork.luonvuituoi.DAO.StuffDAO;
 import myhustwork.luonvuituoi.DTO.AccountDTO;
 import myhustwork.luonvuituoi.DTO.CategoryDTO;
 import myhustwork.luonvuituoi.DTO.FluctuationDTO;
@@ -17,6 +18,10 @@ import myhustwork.luonvuituoi.DTO.StuffDTO;
  * @author vvlalalove193
  */
 public class StuffBLL {
+    
+    public StuffDTO[] getAllStuffs(){
+        return StuffDAO.getAllStuffs();
+    }
     
     public void Suggestion(Date date1,Date date2){
         double ThuThanghientai = 0,Chithanghientai = 0,Sodutrongthang = 0;
