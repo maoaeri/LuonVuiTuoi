@@ -2,16 +2,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package myhustwork.luonvuituoi.View;
+package myhustwork.luonvuituoi.GUI;
 
 import java.awt.event.ActionListener;
 import static java.lang.Integer.parseInt;
+import java.sql.SQLException;
 import java.text.ParseException;
 //import java.text.SimpleDateFormat;
 //import java.util.Calendar;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonModel;
 import javax.swing.tree.DefaultMutableTreeNode;
+import myhustwork.luonvuituoi.DAO.CategoryDAO;
 import myhustwork.luonvuituoi.DTO.CategoryDTO;
 import myhustwork.luonvuituoi.DTO.FluctuationDTO;
 import static myhustwork.luonvuituoi.DTO.FluctuationDTO.toDate;
@@ -20,17 +22,17 @@ import static myhustwork.luonvuituoi.DTO.FluctuationDTO.toDate;
  *
  * @author vvlalalove193
  */
-public class AddFluctuationFrm extends javax.swing.JFrame {
+public class FluctuationGUI extends javax.swing.JFrame {
     boolean fixedButtonpressed;
 
     /**
      * Creates new form AddFluctuationForm
      */
-    public AddFluctuationFrm() {
+    public FluctuationGUI() {
         initComponents();
     }
     
-    public FluctuationDTO getFluctuationInfor() throws ParseException {
+    public FluctuationDTO getFluctuationInfor() throws ParseException, SQLException {
         FluctuationDTO fluc = new FluctuationDTO();
         fluc.setAmount(FluctuationDTO.formatAmount(txtAmount.getText()));
         DefaultMutableTreeNode selectedNode1 = (DefaultMutableTreeNode) treCategory.getModel().getRoot() ;
@@ -49,7 +51,9 @@ public class AddFluctuationFrm extends javax.swing.JFrame {
         }
         DefaultMutableTreeNode selectedNode2 = (DefaultMutableTreeNode) treCategory.getLastSelectedPathComponent() ;
         String categoryName = selectedNode2.getUserObject().toString();
-        fluc.setCategory(new CategoryDTO(categoryType, categoryName));
+        CategoryDTO cat = new CategoryDTO(categoryType, categoryName);
+        cat.setCategoryId(CategoryDAO.getCategoryId(cat));
+        fluc.setCategory(cat);
         fluc.setDate(toDate(txtDate.getText()));
         fluc.setNote(txtNote.getText());
         fluc.setFixed(this.fixedButtonpressed);
@@ -79,7 +83,7 @@ public class AddFluctuationFrm extends javax.swing.JFrame {
         lblDate = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         treCategory = new javax.swing.JTree();
-        lblCategory1 = new javax.swing.JLabel();
+        lblFixed = new javax.swing.JLabel();
         btnSubmit = new javax.swing.JButton();
         lblCategory = new javax.swing.JLabel();
         lblCategory2 = new javax.swing.JLabel();
@@ -167,7 +171,7 @@ public class AddFluctuationFrm extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(treCategory);
 
-        lblCategory1.setText("Cố định hay không:");
+        lblFixed.setText("Cố định hay không:");
 
         btnSubmit.setText("Submit");
         btnSubmit.addActionListener(new java.awt.event.ActionListener() {
@@ -195,7 +199,7 @@ public class AddFluctuationFrm extends javax.swing.JFrame {
                                 .addComponent(lblAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(lblNote, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(lblDate, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(lblCategory1, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblFixed, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -241,7 +245,7 @@ public class AddFluctuationFrm extends javax.swing.JFrame {
                         .addGap(28, 28, 28)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(radFixed)
-                            .addComponent(lblCategory1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(lblFixed, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                         .addComponent(btnSubmit)
                         .addGap(66, 66, 66))))
@@ -286,6 +290,11 @@ public class AddFluctuationFrm extends javax.swing.JFrame {
 
     private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
         // TODO add your handling code here:
+        txtAmount.setText("");
+        txtDate.setText("");
+        txtNote.setText("");
+        lblCategory2.setText("");
+        radFixed.setSelected(false);
     }//GEN-LAST:event_btnSubmitActionPerformed
 
     /**
@@ -306,14 +315,16 @@ public class AddFluctuationFrm extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AddFluctuationFrm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FluctuationGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AddFluctuationFrm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FluctuationGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AddFluctuationFrm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FluctuationGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AddFluctuationFrm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FluctuationGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
@@ -321,7 +332,7 @@ public class AddFluctuationFrm extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new AddFluctuationFrm().setVisible(true);
+                new FluctuationGUI().setVisible(true);
             }
         });
     }
@@ -332,9 +343,9 @@ public class AddFluctuationFrm extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblAmount;
     private javax.swing.JLabel lblCategory;
-    private javax.swing.JLabel lblCategory1;
     private javax.swing.JLabel lblCategory2;
     private javax.swing.JLabel lblDate;
+    private javax.swing.JLabel lblFixed;
     private javax.swing.JLabel lblNote;
     private javax.swing.JRadioButton radFixed;
     private javax.swing.JTree treCategory;
