@@ -4,11 +4,23 @@
  */
 package myhustwork.luonvuituoi.GUI;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.text.ParseException;
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.ListCellRenderer;
+import javax.swing.ListModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import myhustwork.luonvuituoi.DAO.CategoryDAO;
+import myhustwork.luonvuituoi.DAO.StuffDAO;
 import myhustwork.luonvuituoi.DTO.CategoryDTO;
 import myhustwork.luonvuituoi.DTO.FluctuationDTO;
 import static myhustwork.luonvuituoi.DTO.FluctuationDTO.toDate;
@@ -53,8 +65,24 @@ public class StuffGUI extends javax.swing.JFrame {
         return stuff;
     }
     
+    public ListModel<StuffDTO> getAllStuffs(){
+        DefaultListModel listmodel = new DefaultListModel<StuffDTO>();
+        StuffDTO[] list = StuffDAO.getAllStuffs();
+        for (StuffDTO i: list) {
+            listmodel.addElement(i);
+        }
+        return listmodel;
+    }
+    
+    public void refreshComponents(){
+        txtAmount.setText("");
+        txtNote.setText("");
+        lblCategory2.setText("");
+        lstStuff.setModel(getAllStuffs());
+    }
+    
     public void addSubmitListener(ActionListener log){
-        btnSubmit.addActionListener(log);
+        btnUpdate.addActionListener(log);
     }
 
     /**
@@ -77,11 +105,13 @@ public class StuffGUI extends javax.swing.JFrame {
         lblCategory = new javax.swing.JLabel();
         txtNote = new javax.swing.JTextField();
         lblNote = new javax.swing.JLabel();
-        btnSubmit = new javax.swing.JButton();
-        btnNext = new javax.swing.JButton();
+        btnUpdate = new javax.swing.JButton();
+        btnAdd = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setFont(new java.awt.Font("Consolas", 0, 12)); // NOI18N
+        setPreferredSize(new java.awt.Dimension(960, 540));
         setResizable(false);
         setSize(new java.awt.Dimension(960, 540));
 
@@ -89,11 +119,9 @@ public class StuffGUI extends javax.swing.JFrame {
         kGradientPanel1.setkGradientFocus(100);
         kGradientPanel1.setkStartColor(new java.awt.Color(255, 255, 255));
 
-        lstStuff.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
+        lstStuff.setModel(getAllStuffs());
+        lstStuff.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        lstStuff.setCellRenderer(new StuffListRenderer());
         jScrollPane1.setViewportView(lstStuff);
 
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Hạng mục");
@@ -162,6 +190,7 @@ public class StuffGUI extends javax.swing.JFrame {
             }
         });
 
+        lblAmount.setLabelFor(txtAmount);
         lblAmount.setText("Giá tiền:");
 
         lblCategory2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -176,17 +205,24 @@ public class StuffGUI extends javax.swing.JFrame {
 
         lblNote.setText("Ghi chú:");
 
-        btnSubmit.setText("Submit");
-        btnSubmit.addActionListener(new java.awt.event.ActionListener() {
+        btnUpdate.setText("Sửa");
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSubmitActionPerformed(evt);
+                btnUpdateActionPerformed(evt);
             }
         });
 
-        btnNext.setText("Next");
-        btnNext.addActionListener(new java.awt.event.ActionListener() {
+        btnAdd.setText("Thêm");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNextActionPerformed(evt);
+                btnAddActionPerformed(evt);
+            }
+        });
+
+        btnDelete.setText("Xóa");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
             }
         });
 
@@ -195,9 +231,9 @@ public class StuffGUI extends javax.swing.JFrame {
         kGradientPanel1Layout.setHorizontalGroup(
             kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kGradientPanel1Layout.createSequentialGroup()
-                .addContainerGap(69, Short.MAX_VALUE)
                 .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(kGradientPanel1Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lblAmount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblCategory, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
@@ -206,57 +242,64 @@ public class StuffGUI extends javax.swing.JFrame {
                         .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lblCategory2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtAmount, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
-                            .addComponent(txtNote)))
+                            .addComponent(txtNote))
+                        .addGap(48, 48, 48))
                     .addGroup(kGradientPanel1Layout.createSequentialGroup()
-                        .addComponent(btnNext)
-                        .addGap(39, 39, 39)
-                        .addComponent(btnSubmit)
-                        .addGap(14, 14, 14)))
-                .addGap(35, 35, 35)
+                        .addGap(19, 19, 19)
+                        .addComponent(btnAdd)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnUpdate)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnDelete)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(52, 52, 52)
+                .addGap(39, 39, 39)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(37, 37, 37))
+                .addGap(396, 396, 396))
         );
         kGradientPanel1Layout.setVerticalGroup(
             kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kGradientPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(72, 72, 72))
             .addGroup(kGradientPanel1Layout.createSequentialGroup()
                 .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(kGradientPanel1Layout.createSequentialGroup()
-                        .addGap(58, 58, 58)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 428, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(kGradientPanel1Layout.createSequentialGroup()
                         .addGap(131, 131, 131)
-                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(kGradientPanel1Layout.createSequentialGroup()
-                                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(txtAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(52, 52, 52)
-                                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(lblCategory2, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
-                                    .addComponent(lblCategory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(48, 48, 48)
-                                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(txtNote, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblNote, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(61, 61, 61)
-                                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(btnSubmit)
-                                    .addComponent(btnNext))))))
-                .addContainerGap(54, Short.MAX_VALUE))
+                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(52, 52, 52)
+                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblCategory2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblCategory, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE))
+                        .addGap(48, 48, 48)
+                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtNote, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblNote, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(61, 61, 61)
+                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnUpdate)
+                            .addComponent(btnAdd)
+                            .addComponent(btnDelete)))
+                    .addGroup(kGradientPanel1Layout.createSequentialGroup()
+                        .addGap(58, 58, 58)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 428, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(55, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(kGradientPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(kGradientPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 954, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(kGradientPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(kGradientPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -276,13 +319,41 @@ public class StuffGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNoteActionPerformed
 
-    private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnSubmitActionPerformed
+        try {
+            StuffDTO stuff = getStuffInfor();
+            StuffDAO.updateStuff(stuff);
+//                aff.showMessage("Thêm thành công!");
+        } catch (Exception x) {
+                x.printStackTrace();
+        }
+        refreshComponents();
+    }//GEN-LAST:event_btnUpdateActionPerformed
 
-    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnNextActionPerformed
+        try {
+            StuffDTO stuff = getStuffInfor();
+            StuffDAO.addStuff(stuff);
+//                aff.showMessage("Thêm thành công!");
+        } catch (Exception x) {
+                x.printStackTrace();
+        }
+        refreshComponents();
+    }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        // TODO add your handling code here:
+        try {
+            StuffDTO stuff = getStuffInfor();
+            StuffDAO.deleteStuff(stuff);
+//                aff.showMessage("Thêm thành công!");
+        } catch (Exception x) {
+                x.printStackTrace();
+        }
+        refreshComponents();
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -319,10 +390,20 @@ public class StuffGUI extends javax.swing.JFrame {
             }
         });
     }
+    
+    public void Run() {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new StuffGUI().setVisible(true);
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnNext;
-    private javax.swing.JButton btnSubmit;
+    private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnUpdate;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private keeptoo.KGradientPanel kGradientPanel1;
@@ -330,9 +411,35 @@ public class StuffGUI extends javax.swing.JFrame {
     private javax.swing.JLabel lblCategory;
     private javax.swing.JLabel lblCategory2;
     private javax.swing.JLabel lblNote;
-    private javax.swing.JList<String> lstStuff;
+    private javax.swing.JList<StuffDTO> lstStuff;
     private javax.swing.JTree treCategory;
     private javax.swing.JFormattedTextField txtAmount;
     private javax.swing.JTextField txtNote;
     // End of variables declaration//GEN-END:variables
 }
+
+class StuffListRenderer extends JPanel implements ListCellRenderer<StuffDTO> {
+    private JLabel lblIcon = new JLabel();
+    private JLabel lblCategoryName = new JLabel();
+    private JLabel lblAmount = new JLabel();
+ 
+ 
+    public StuffListRenderer() {
+        setLayout(new BorderLayout(5, 5));
+        JPanel panelText = new JPanel(new GridLayout(0, 1));
+        panelText.add(lblCategoryName);
+        panelText.add(lblAmount);
+        add(lblIcon, BorderLayout.WEST);
+        add(panelText, BorderLayout.CENTER);
+    }
+ 
+    @Override
+    public Component getListCellRendererComponent(JList<? extends StuffDTO> list, StuffDTO stuff, int index,
+            boolean isSelected, boolean cellHasFocus) {
+ 
+        lblCategoryName.setText(stuff.getCategory().getCategoryName());
+        lblAmount.setText(Double.toString(stuff.getAmount()));
+        lblAmount.setForeground(Color.blue);
+        return this;
+    }
+} 

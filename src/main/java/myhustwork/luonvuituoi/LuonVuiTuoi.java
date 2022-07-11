@@ -7,6 +7,7 @@ package myhustwork.luonvuituoi;
 
 import myhustwork.luonvuituoi.Controller.FluctuationController;
 import myhustwork.luonvuituoi.Controller.StuffController;
+import myhustwork.luonvuituoi.GUI.FluctuationGUI;
 
 /**
  *
@@ -16,7 +17,8 @@ public class LuonVuiTuoi {
 
     public static void main(String[] args) {
         System.out.println("Hello World!");
-        FluctuationController fc = new FluctuationController();
+//        FluctuationController fc = new FluctuationController();
+        FluctuationGUI.RunApp();
         System.out.println("Dcm MTr");
 
     }

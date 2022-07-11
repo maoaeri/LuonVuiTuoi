@@ -14,6 +14,7 @@ import javax.swing.AbstractButton;
 import javax.swing.ButtonModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import myhustwork.luonvuituoi.DAO.CategoryDAO;
+import myhustwork.luonvuituoi.DAO.FluctuationDAO;
 import myhustwork.luonvuituoi.DTO.CategoryDTO;
 import myhustwork.luonvuituoi.DTO.FluctuationDTO;
 import static myhustwork.luonvuituoi.DTO.FluctuationDTO.toDate;
@@ -32,6 +33,14 @@ public class FluctuationGUI extends javax.swing.JFrame {
         initComponents();
     }
     
+    public void refreshComponents(){
+        txtAmount.setText("");
+        txtDate.setText("");
+        txtNote.setText("");
+        lblCategory2.setText("");
+        radFixed.setSelected(false);
+    }
+    
     public FluctuationDTO getFluctuationInfor() throws ParseException, SQLException {
         FluctuationDTO fluc = new FluctuationDTO();
         fluc.setAmount(FluctuationDTO.formatAmount(txtAmount.getText()));
@@ -43,9 +52,6 @@ public class FluctuationGUI extends javax.swing.JFrame {
                 categoryType = 1;
             }
             case "Chi" ->  {
-                categoryType = 0;
-            }
-            default -> {
                 categoryType = 0;
             }
         }
@@ -61,8 +67,10 @@ public class FluctuationGUI extends javax.swing.JFrame {
         return fluc;
     }
     
-    public void addSubmitListener(ActionListener log){
-        btnSubmit.addActionListener(log);
+    public void FluctuationListener(ActionListener log){
+        btnAdd.addActionListener(log);
+        btnUpdate.addActionListener(log);
+        btnUpdate.addActionListener(log);
     }
 
     /**
@@ -84,10 +92,12 @@ public class FluctuationGUI extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         treCategory = new javax.swing.JTree();
         lblFixed = new javax.swing.JLabel();
-        btnSubmit = new javax.swing.JButton();
+        btnAdd = new javax.swing.JButton();
         lblCategory = new javax.swing.JLabel();
         lblCategory2 = new javax.swing.JLabel();
         txtAmount = new javax.swing.JFormattedTextField();
+        btnUpdate = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -173,10 +183,10 @@ public class FluctuationGUI extends javax.swing.JFrame {
 
         lblFixed.setText("Cố định hay không:");
 
-        btnSubmit.setText("Submit");
-        btnSubmit.addActionListener(new java.awt.event.ActionListener() {
+        btnAdd.setText("Thêm");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSubmitActionPerformed(evt);
+                btnAddActionPerformed(evt);
             }
         });
 
@@ -186,14 +196,28 @@ public class FluctuationGUI extends javax.swing.JFrame {
 
         txtAmount.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0"))));
 
+        btnUpdate.setText("Sửa");
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateActionPerformed(evt);
+            }
+        });
+
+        btnDelete.setText("Xóa");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(26, 26, 26)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(lblAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -207,12 +231,14 @@ public class FluctuationGUI extends javax.swing.JFrame {
                             .addComponent(txtDate, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
                             .addComponent(txtNote)
                             .addComponent(lblCategory2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtAmount))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE))
+                            .addComponent(txtAmount)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnSubmit)
-                        .addGap(128, 128, 128)))
+                        .addComponent(btnAdd)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnUpdate)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnDelete)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(53, 53, 53))
         );
@@ -246,9 +272,12 @@ public class FluctuationGUI extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(radFixed)
                             .addComponent(lblFixed, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
-                        .addComponent(btnSubmit)
-                        .addGap(66, 66, 66))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnAdd)
+                            .addComponent(btnUpdate)
+                            .addComponent(btnDelete))
+                        .addGap(64, 64, 64))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -288,14 +317,41 @@ public class FluctuationGUI extends javax.swing.JFrame {
         this.fixedButtonpressed = aModel.isPressed();
     }//GEN-LAST:event_radFixedStateChanged
 
-    private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
-        txtAmount.setText("");
-        txtDate.setText("");
-        txtNote.setText("");
-        lblCategory2.setText("");
-        radFixed.setSelected(false);
-    }//GEN-LAST:event_btnSubmitActionPerformed
+        try {
+            FluctuationDTO fluc = getFluctuationInfor();
+            FluctuationDAO.addFluctuation(fluc);
+//                aff.showMessage("Thêm thành công!");
+        } catch (Exception x) {
+                x.printStackTrace();
+        }
+        refreshComponents();
+    }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        // TODO add your handling code here:
+        try {
+            FluctuationDTO fluc = getFluctuationInfor();
+            FluctuationDAO.updateFluctuation(fluc);
+//                aff.showMessage("Thêm thành công!");
+        } catch (Exception x) {
+                x.printStackTrace();
+        }
+        refreshComponents();
+    }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        // TODO add your handling code here:
+        try {
+            FluctuationDTO fluc = getFluctuationInfor();
+            FluctuationDAO.deleteFluctuation(fluc);
+//                aff.showMessage("Thêm thành công!");
+        } catch (Exception x) {
+                x.printStackTrace();
+        }
+        refreshComponents();
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -336,9 +392,20 @@ public class FluctuationGUI extends javax.swing.JFrame {
             }
         });
     }
+    
+    public void Run() {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new FluctuationGUI().setVisible(true);
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnSubmit;
+    private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnUpdate;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblAmount;
