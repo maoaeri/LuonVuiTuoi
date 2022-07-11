@@ -5,16 +5,8 @@ import java.util.Calendar;
 import myhustwork.luonvuituoi.DAO.FluctuationDAO;
 import myhustwork.luonvuituoi.DTO.AccountDTO;
 import myhustwork.luonvuituoi.DTO.FluctuationDTO;
-import myhustwork.luonvuituoi.DTO.MoneyDTO;
         
-
-
-
-public class FluctuationBLL extends MoneyDTO {//bien dong so du//
-    public static int addFluctuation(FluctuationDTO fluc){
-        int res = FluctuationDAO.addFluctuation(fluc);
-        return res;
-    }
+public class FluctuationBLL extends Money {//bien dong so du//
     /**
      * Warning if there's a chance balance < 0
      * @return 
@@ -25,60 +17,38 @@ public class FluctuationBLL extends MoneyDTO {//bien dong so du//
         return balance - save_per_month < 0;
     }
     
-    public static double[] PercentCategoriesSpending(Date date1, Date date2) {
-        double sumSpending = 0;
-        double[] sumCategoriesSpending = new double[12];
-        double[] percentCategoriesSpending = new double[12];
-        int j;
-        for(int i = 0; i < 12; i++) {
-            sumCategoriesSpending[i] = 0;
+    public static double[] PercentCategories(Date date1, Date date2) {
+        double[] sumCategories = new double[26]; // có 25 hạng mục 
+        double[] percentCategories = new double[26];
+        for(int j = 1; j <= 25; j++) {
+            sumCategories[j] = 0;
+            percentCategories[j] = -1; // -1 là không tồn tại
         }
         FluctuationDTO[] flucArr = FluctuationDAO.getAllFluctuations();
         for(FluctuationDTO i: flucArr) {
             if(i.getDate().after(date1) && i.getDate().before(date2) ){
-                if(!i.getCategory().isIncome()) {
-                    sumSpending += i.getAmount();
-                    j = i.getCategory().getCategoryId();
-                    sumCategoriesSpending[j] += i.getAmount();
+                switch (i.getCategory().getCategoryId()) {
+                    case 3, 4, 5, 6, 7, 8, 9, 12, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25 -> {
+                        int j = i.getCategory().getCategoryId();
+                        sumCategories[j] += i.getAmount();
+                        break;
+                    }
                 }
-            }
-            for(j = 0; j < 12; j++) {
-                percentCategoriesSpending[j] = sumCategoriesSpending[j]/sumSpending;
-            }
+        for(int j = 3; j <=9; j++) {
+            sumCategories[1] += sumCategories[j]; 
         }
-        return percentCategoriesSpending;
-    }
-    
-    public static double[] PercentCategoriesIncome(Date date1, Date date2) {
-        double sumIncome = 0;
-        double[] sumCategoriesIncome = new double[12]; //gia su co 12 CategoryID
-        double[] percentCategoriesIncome = new double[12];
-        int j;
-        for(int i = 0; i < 12; i++) {
-            sumCategoriesIncome[i] = 0;
+        sumCategories[10] = sumCategories[14] + sumCategories[15] + sumCategories[16] + sumCategories[17] + sumCategories[18];
+        sumCategories[11] = sumCategories[19] + sumCategories[20] + sumCategories[21] + sumCategories[22] + sumCategories[23];
+        sumCategories[13] = sumCategories[24] + sumCategories[25];
+        sumCategories[2] = sumCategories[10] + sumCategories[11] + sumCategories[12] + sumCategories[13];
+        
+        for(int j = 3; j <= 9; j++) {
+            percentCategories[j] = sumCategories[j]/sumCategories[1];
         }
-        FluctuationDTO[] flucArr = FluctuationDAO.getAllFluctuations();        
-        for(FluctuationDTO i: flucArr) {
-            if(i.getDate().after(date1) && i.getDate().before(date2) ){
-                if(i.getCategory().isIncome()) {
-                    sumIncome += i.getAmount();
-                    j = i.getCategory().getCategoryId();
-                    sumCategoriesIncome[j] += i.getAmount();
-                }
-            }
-            for(j = 0; j < 12; j++) {
-                percentCategoriesIncome[j] = sumCategoriesIncome[j]/sumIncome;
-            }
+        for(int j = 10; j <= 25; j++) {
+            percentCategories[j] = sumCategories[j]/sumCategories[2];
         }
-
-        return percentCategoriesIncome;
-    }
-    
-
-        }
-     
-    return percentCategories;
-   }
+        return percentCategories;
         
 //                if(i.getCategory().isIncome()) {
 //                    sumIncome += i.getAmount();
@@ -95,47 +65,30 @@ public class FluctuationBLL extends MoneyDTO {//bien dong so du//
 //                percentCategoriesIncome[j] = sumCategoriesIncome[j]/sumIncome;
 //                percentCategoriesSpending[j] = sumCategoriesSpending[j]/sumSpending;
 //            }
-   
-
+    } 
     /**
+     * sum per month
      *
-     * @param Year
-     * @return
-     */
-    public static double[] SumPerMonthSpending(int Year) {
+     */  
+    public static void SumPerMonth(int Year) {
+        double[] sumIncome = new double[13]; // tổng thu của 12 tháng
         double[] sumSpending = new double[13]; // tổng chi của 12 tháng
         for(int j = 1; j <= 12; j ++){
+            sumIncome[j] = 0;
             sumSpending[j] = 0;
         }
-        FluctuationDTO[] flucArr = FluctuationDAO.getAllFluctuations();        
-        for(FluctuationDTO i: flucArr) {
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(i.getDate()); // chuyển Date thành Calendar
-            if(Year == cal.get(Calendar.YEAR) ) {
-                int j = cal.get(Calendar.MONTH);
-                if(!i.getCategory().isIncome())
-                    sumSpending[j] += i.getAmount(); // tổng chi từng tháng
-            }
-        }
-        return sumSpending;
-    }
-
-    public static double[] SumPerMonthIncome(int Year) {
-        double[] sumIncome = new double[13]; // tổng thu của 12 tháng
-        for(int j = 1; j <= 12; j ++){
-            sumIncome[j] = 0;
-        }
-        FluctuationDTO[] flucArr = FluctuationDAO.getAllFluctuations();        
+        FluctuationDTO[] flucArr = FluctuationDAO.getAllFluctuations();
         for(FluctuationDTO i: flucArr) {
             Calendar cal = Calendar.getInstance();
             cal.setTime(i.getDate()); // chuyển Date thành Calendar
             if(Year == cal.get(Calendar.YEAR) ) {
                 int j = cal.get(Calendar.MONTH);
                 if(i.getCategory().isIncome()) sumIncome[j] += i.getAmount(); // tính tổng thu từng tháng
+                else sumSpending[j] += i.getAmount(); // tổng chi từng tháng
             }
         }
-        return sumIncome;
-    }    
+    }
+    
     public static double AutoCal() {
         Calendar cal = Calendar.getInstance();
         double balance = AccountDTO.getBalance();
@@ -150,7 +103,7 @@ public class FluctuationBLL extends MoneyDTO {//bien dong so du//
         } 
         return balance;
     }
-
+    
     public static int[] SuggestionNextMonth(Date date1, Date date2) {
         double[] percentCategories = new double[26];
         percentCategories = PercentCategories(date1, date2);
@@ -160,8 +113,6 @@ public class FluctuationBLL extends MoneyDTO {//bien dong so du//
         if(percentCategories[19] + percentCategories[22] + percentCategories[23] > 0.15) mark[2] = 1;
         if(1 - percentCategories[10] - percentCategories[21] - percentCategories[19] - percentCategories[22] - percentCategories[23] > 0.1) mark[3] = 1;
         return mark;
-        //in ra màn hình: bạn đã tiêu quá (những cái mark[] = 1) , bạn hãy tiêu thêm vào (những cái mark[] = 0)
     }
-
 }
 
