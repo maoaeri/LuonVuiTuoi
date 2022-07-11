@@ -5,14 +5,16 @@ import java.util.Calendar;
 import myhustwork.luonvuituoi.DAO.FluctuationDAO;
 import myhustwork.luonvuituoi.DTO.AccountDTO;
 import myhustwork.luonvuituoi.DTO.FluctuationDTO;
+import myhustwork.luonvuituoi.DTO.MoneyDTO;
         
-public class FluctuationBLL {//bien dong so du//
-    
+
+
+
+public class FluctuationBLL extends MoneyDTO {//bien dong so du//
     public static int addFluctuation(FluctuationDTO fluc){
         int res = FluctuationDAO.addFluctuation(fluc);
         return res;
     }
-    
     /**
      * Warning if there's a chance balance < 0
      * @return 
@@ -68,9 +70,33 @@ public class FluctuationBLL {//bien dong so du//
                 percentCategoriesIncome[j] = sumCategoriesIncome[j]/sumIncome;
             }
         }
+
         return percentCategoriesIncome;
     }
     
+
+        }
+     
+    return percentCategories;
+   }
+        
+//                if(i.getCategory().isIncome()) {
+//                    sumIncome += i.getAmount();
+//                    j = i.getCategory().getCategoryId();
+//                    sumCategoriesIncome[j] += i.getAmount();
+//                }
+//                else {
+//                    sumSpending += i.getAmount();
+//                    j = i.getCategory().getCategoryId();
+//                    sumCategoriesSpending[j] += i.getAmount();
+//                }
+//            }
+//            for(j = 0; j < 12; j++) {
+//                percentCategoriesIncome[j] = sumCategoriesIncome[j]/sumIncome;
+//                percentCategoriesSpending[j] = sumCategoriesSpending[j]/sumSpending;
+//            }
+   
+
     /**
      *
      * @param Year
@@ -124,5 +150,18 @@ public class FluctuationBLL {//bien dong so du//
         } 
         return balance;
     }
+
+    public static int[] SuggestionNextMonth(Date date1, Date date2) {
+        double[] percentCategories = new double[26];
+        percentCategories = PercentCategories(date1, date2);
+        int[] mark = {0, 0, 0, 0};
+        if(percentCategories[10] > 0.6) mark[0] = 1; // = 1 là tiêu quá
+        if(percentCategories[21] > 0.15) mark[1] = 1;
+        if(percentCategories[19] + percentCategories[22] + percentCategories[23] > 0.15) mark[2] = 1;
+        if(1 - percentCategories[10] - percentCategories[21] - percentCategories[19] - percentCategories[22] - percentCategories[23] > 0.1) mark[3] = 1;
+        return mark;
+        //in ra màn hình: bạn đã tiêu quá (những cái mark[] = 1) , bạn hãy tiêu thêm vào (những cái mark[] = 0)
+    }
+
 }
 
