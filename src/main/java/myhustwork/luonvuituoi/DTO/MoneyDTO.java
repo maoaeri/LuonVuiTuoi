@@ -12,31 +12,31 @@ import java.text.ParseException;
  * @author vvlalalove193
  */
 public class MoneyDTO {
-    private double amount;
+    private long amount;
 
     public MoneyDTO() {
     }
 
-    public MoneyDTO(double amount) {
+    public MoneyDTO(long amount) {
         this.amount = amount;
     }
 
-    public double getAmount() {
+    public long getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(long amount) {
         this.amount = amount;
     }
     
     /**
      * 
      * @param strFormat in String
-     * @return Amount in double
+     * @return Amount in long
      * @throws java.text.ParseException
      */
-    public static double formatAmount(String strFormat) throws ParseException{
-        double d = DecimalFormat.getNumberInstance().parse(strFormat).doubleValue();
+    public static long formatAmount(String strFormat) throws ParseException{
+        long d = DecimalFormat.getNumberInstance().parse(strFormat).longValue();
         return d;
     }
 }

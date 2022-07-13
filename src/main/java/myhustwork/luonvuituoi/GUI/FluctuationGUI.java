@@ -5,7 +5,6 @@
 package myhustwork.luonvuituoi.GUI;
 
 import java.awt.event.ActionListener;
-import static java.lang.Integer.parseInt;
 import java.sql.SQLException;
 import java.text.ParseException;
 //import java.text.SimpleDateFormat;
@@ -13,6 +12,7 @@ import java.text.ParseException;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonModel;
 import javax.swing.tree.DefaultMutableTreeNode;
+import myhustwork.luonvuituoi.Controller.FluctuationController;
 import myhustwork.luonvuituoi.DAO.CategoryDAO;
 import myhustwork.luonvuituoi.DAO.FluctuationDAO;
 import myhustwork.luonvuituoi.DTO.CategoryDTO;
@@ -25,11 +25,14 @@ import static myhustwork.luonvuituoi.DTO.FluctuationDTO.toDate;
  */
 public class FluctuationGUI extends javax.swing.JFrame {
     boolean fixedButtonpressed;
-
+    private FluctuationDAO flucDAO;
+    private CategoryDAO catDAO;
     /**
      * Creates new form AddFluctuationForm
      */
     public FluctuationGUI() {
+        flucDAO = new FluctuationDAO();
+        catDAO = new CategoryDAO();
         initComponents();
     }
     
@@ -37,8 +40,9 @@ public class FluctuationGUI extends javax.swing.JFrame {
         txtAmount.setText("");
         txtDate.setText("");
         txtNote.setText("");
-        lblCategory2.setText("");
+        lblCategory.setText("");
         radFixed.setSelected(false);
+        repaint();
     }
     
     public FluctuationDTO getFluctuationInfor() throws ParseException, SQLException {
@@ -58,7 +62,7 @@ public class FluctuationGUI extends javax.swing.JFrame {
         DefaultMutableTreeNode selectedNode2 = (DefaultMutableTreeNode) treCategory.getLastSelectedPathComponent() ;
         String categoryName = selectedNode2.getUserObject().toString();
         CategoryDTO cat = new CategoryDTO(categoryType, categoryName);
-        cat.setCategoryId(CategoryDAO.getCategoryId(cat));
+        cat.setCategoryId(catDAO.getCategoryId(cat));
         fluc.setCategory(cat);
         fluc.setDate(toDate(txtDate.getText()));
         fluc.setNote(txtNote.getText());
@@ -67,10 +71,16 @@ public class FluctuationGUI extends javax.swing.JFrame {
         return fluc;
     }
     
-    public void FluctuationListener(ActionListener log){
+    public void addFluctuationListener(ActionListener log){
         btnAdd.addActionListener(log);
+    }
+    
+    public void updateFluctuationListener(ActionListener log){
         btnUpdate.addActionListener(log);
-        btnUpdate.addActionListener(log);
+    }
+    
+    public void deleteFluctuationListener(ActionListener log){
+        btnDelete.addActionListener(log);
     }
 
     /**
@@ -82,33 +92,38 @@ public class FluctuationGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        txtNote = new javax.swing.JTextField();
+        kGradientPanel1 = new keeptoo.KGradientPanel();
         txtDate = new javax.swing.JFormattedTextField();
         radFixed = new javax.swing.JRadioButton();
-        lblAmount = new javax.swing.JLabel();
-        lblNote = new javax.swing.JLabel();
-        lblDate = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         treCategory = new javax.swing.JTree();
-        lblFixed = new javax.swing.JLabel();
         btnAdd = new javax.swing.JButton();
         lblCategory = new javax.swing.JLabel();
-        lblCategory2 = new javax.swing.JLabel();
         txtAmount = new javax.swing.JFormattedTextField();
         btnUpdate = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
+        lblForm = new javax.swing.JLabel();
+        radNotFixed = new javax.swing.JRadioButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        txtNote = new javax.swing.JTextArea();
+        lblAmount = new javax.swing.JLabel();
+        lblDate = new javax.swing.JLabel();
+        lblCategory1 = new javax.swing.JLabel();
+        lblNote = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        txtNote.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNoteActionPerformed(evt);
-            }
-        });
+        kGradientPanel1.setkEndColor(new java.awt.Color(255, 175, 175));
+        kGradientPanel1.setkGradientFocus(100);
+        kGradientPanel1.setkStartColor(new java.awt.Color(255, 255, 255));
+        kGradientPanel1.setPreferredSize(new java.awt.Dimension(960, 540));
 
+        txtDate.setForeground(new java.awt.Color(255, 51, 51));
         txtDate.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
+        txtDate.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
 
+        radFixed.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        radFixed.setForeground(new java.awt.Color(255, 51, 51));
         radFixed.setText("Cố định");
         radFixed.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -116,12 +131,8 @@ public class FluctuationGUI extends javax.swing.JFrame {
             }
         });
 
-        lblAmount.setText("Số tiền:");
-
-        lblNote.setText("Ghi chú:");
-
-        lblDate.setText("Ngày tháng:");
-
+        treCategory.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        treCategory.setForeground(new java.awt.Color(255, 51, 51));
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Hạng mục");
         javax.swing.tree.DefaultMutableTreeNode treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Thu");
         javax.swing.tree.DefaultMutableTreeNode treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("Lương");
@@ -181,8 +192,9 @@ public class FluctuationGUI extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(treCategory);
 
-        lblFixed.setText("Cố định hay không:");
-
+        btnAdd.setBackground(new java.awt.Color(255, 51, 51));
+        btnAdd.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        btnAdd.setForeground(new java.awt.Color(255, 255, 255));
         btnAdd.setText("Thêm");
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -190,12 +202,33 @@ public class FluctuationGUI extends javax.swing.JFrame {
             }
         });
 
-        lblCategory.setText("Hạng mục:");
+        lblCategory.setBackground(new java.awt.Color(255, 255, 255));
+        lblCategory.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        lblCategory.setForeground(new java.awt.Color(255, 51, 51));
+        lblCategory.setText("Hạng mục");
+        lblCategory.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        lblCategory.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                lblCategoryFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                lblCategoryFocusLost(evt);
+            }
+        });
 
-        lblCategory2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
+        txtAmount.setForeground(new java.awt.Color(255, 51, 51));
         txtAmount.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0"))));
+        txtAmount.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        txtAmount.setPreferredSize(new java.awt.Dimension(438, 34));
+        txtAmount.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtAmountActionPerformed(evt);
+            }
+        });
 
+        btnUpdate.setBackground(new java.awt.Color(255, 51, 51));
+        btnUpdate.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        btnUpdate.setForeground(new java.awt.Color(255, 255, 255));
         btnUpdate.setText("Sửa");
         btnUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -203,6 +236,9 @@ public class FluctuationGUI extends javax.swing.JFrame {
             }
         });
 
+        btnDelete.setBackground(new java.awt.Color(255, 51, 51));
+        btnDelete.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        btnDelete.setForeground(new java.awt.Color(255, 255, 255));
         btnDelete.setText("Xóa");
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -210,104 +246,155 @@ public class FluctuationGUI extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(lblAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lblNote, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lblDate, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(lblFixed, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(radFixed, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtDate, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
-                            .addComponent(txtNote)
-                            .addComponent(lblCategory2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtAmount)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnAdd)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnUpdate)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnDelete)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
+        lblForm.setFont(new java.awt.Font("r0c0i Linotte", 0, 36)); // NOI18N
+        lblForm.setForeground(new java.awt.Color(255, 51, 51));
+        lblForm.setText("Giao dịch");
+
+        radNotFixed.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        radNotFixed.setForeground(new java.awt.Color(255, 51, 51));
+        radNotFixed.setText("Không cố định");
+        radNotFixed.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                radNotFixedStateChanged(evt);
+            }
+        });
+        radNotFixed.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radNotFixedActionPerformed(evt);
+            }
+        });
+
+        txtNote.setColumns(20);
+        txtNote.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        txtNote.setForeground(new java.awt.Color(255, 51, 51));
+        txtNote.setRows(5);
+        jScrollPane2.setViewportView(txtNote);
+
+        lblAmount.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        lblAmount.setForeground(new java.awt.Color(255, 51, 51));
+        lblAmount.setLabelFor(txtAmount);
+        lblAmount.setText("Số tiền");
+
+        lblDate.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        lblDate.setForeground(new java.awt.Color(255, 51, 51));
+        lblDate.setLabelFor(txtAmount);
+        lblDate.setText("Ngày tháng");
+
+        lblCategory1.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        lblCategory1.setForeground(new java.awt.Color(255, 51, 51));
+        lblCategory1.setLabelFor(txtAmount);
+        lblCategory1.setText("Hạng mục");
+
+        lblNote.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        lblNote.setForeground(new java.awt.Color(255, 51, 51));
+        lblNote.setLabelFor(txtAmount);
+        lblNote.setText("Ghi chú");
+
+        javax.swing.GroupLayout kGradientPanel1Layout = new javax.swing.GroupLayout(kGradientPanel1);
+        kGradientPanel1.setLayout(kGradientPanel1Layout);
+        kGradientPanel1Layout.setHorizontalGroup(
+            kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kGradientPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(lblForm)
+                .addGap(387, 387, 387))
+            .addGroup(kGradientPanel1Layout.createSequentialGroup()
+                .addGap(47, 47, 47)
+                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(lblAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblCategory1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblNote, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
+                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(kGradientPanel1Layout.createSequentialGroup()
+                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(48, 48, 48)
+                        .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(kGradientPanel1Layout.createSequentialGroup()
+                        .addComponent(radFixed, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(radNotFixed, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(53, 53, 53))
+                .addGap(51, 51, 51))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(46, 46, 46)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(15, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblAmount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtNote, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblNote, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(29, 29, 29)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(29, 29, 29)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblCategory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(lblCategory2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addGap(28, 28, 28)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(radFixed)
-                            .addComponent(lblFixed, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnAdd)
-                            .addComponent(btnUpdate)
-                            .addComponent(btnDelete))
-                        .addGap(64, 64, 64))))
+        kGradientPanel1Layout.setVerticalGroup(
+            kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(kGradientPanel1Layout.createSequentialGroup()
+                .addGap(36, 36, 36)
+                .addComponent(lblForm)
+                .addGap(28, 28, 28)
+                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(kGradientPanel1Layout.createSequentialGroup()
+                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblAmount))
+                        .addGap(18, 18, 18)
+                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblDate))
+                        .addGap(18, 18, 18)
+                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblCategory1))
+                        .addGap(18, 18, 18)
+                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(radFixed, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(radNotFixed, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblNote))
+                        .addGap(26, 26, 26)
+                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(48, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(kGradientPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(kGradientPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtNoteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNoteActionPerformed
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtNoteActionPerformed
+        refreshComponents();
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        // TODO add your handling code here:
+        refreshComponents();
+    }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        // TODO add your handling code here:
+        refreshComponents();
+    }//GEN-LAST:event_btnAddActionPerformed
 
     private void treCategoryValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_treCategoryValueChanged
         // TODO add your handling code here:
         DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) treCategory.getLastSelectedPathComponent();
-        lblCategory2.setText(selectedNode.getUserObject().toString());
+        lblCategory.setText(selectedNode.getUserObject().toString());
     }//GEN-LAST:event_treCategoryValueChanged
 
     private void radFixedStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_radFixedStateChanged
@@ -317,41 +404,32 @@ public class FluctuationGUI extends javax.swing.JFrame {
         this.fixedButtonpressed = aModel.isPressed();
     }//GEN-LAST:event_radFixedStateChanged
 
-    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+    private void radNotFixedStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_radNotFixedStateChanged
         // TODO add your handling code here:
-        try {
-            FluctuationDTO fluc = getFluctuationInfor();
-            FluctuationDAO.addFluctuation(fluc);
-//                aff.showMessage("Thêm thành công!");
-        } catch (Exception x) {
-                x.printStackTrace();
-        }
-        refreshComponents();
-    }//GEN-LAST:event_btnAddActionPerformed
+        AbstractButton aButton = (AbstractButton)evt.getSource();
+        ButtonModel aModel = aButton.getModel();
+        this.fixedButtonpressed = !aModel.isPressed();
+    }//GEN-LAST:event_radNotFixedStateChanged
 
-    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+    private void radNotFixedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radNotFixedActionPerformed
         // TODO add your handling code here:
-        try {
-            FluctuationDTO fluc = getFluctuationInfor();
-            FluctuationDAO.updateFluctuation(fluc);
-//                aff.showMessage("Thêm thành công!");
-        } catch (Exception x) {
-                x.printStackTrace();
-        }
-        refreshComponents();
-    }//GEN-LAST:event_btnUpdateActionPerformed
+    }//GEN-LAST:event_radNotFixedActionPerformed
 
-    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+    private void lblCategoryFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_lblCategoryFocusGained
         // TODO add your handling code here:
-        try {
-            FluctuationDTO fluc = getFluctuationInfor();
-            FluctuationDAO.deleteFluctuation(fluc);
-//                aff.showMessage("Thêm thành công!");
-        } catch (Exception x) {
-                x.printStackTrace();
+        lblCategory.setText("");
+    }//GEN-LAST:event_lblCategoryFocusGained
+
+    private void lblCategoryFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_lblCategoryFocusLost
+        // TODO add your handling code here:
+        if (lblCategory.getText().equals("")){
+            lblCategory.setText("Hạng mục");
         }
-        refreshComponents();
-    }//GEN-LAST:event_btnDeleteActionPerformed
+    }//GEN-LAST:event_lblCategoryFocusLost
+
+    private void txtAmountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAmountActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtAmountActionPerformed
 
     /**
      * @param args the command line arguments
@@ -406,19 +484,21 @@ public class FluctuationGUI extends javax.swing.JFrame {
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnUpdate;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private keeptoo.KGradientPanel kGradientPanel1;
     private javax.swing.JLabel lblAmount;
     private javax.swing.JLabel lblCategory;
-    private javax.swing.JLabel lblCategory2;
+    private javax.swing.JLabel lblCategory1;
     private javax.swing.JLabel lblDate;
-    private javax.swing.JLabel lblFixed;
+    private javax.swing.JLabel lblForm;
     private javax.swing.JLabel lblNote;
     private javax.swing.JRadioButton radFixed;
+    private javax.swing.JRadioButton radNotFixed;
     private javax.swing.JTree treCategory;
     private javax.swing.JFormattedTextField txtAmount;
     private javax.swing.JFormattedTextField txtDate;
-    private javax.swing.JTextField txtNote;
+    private javax.swing.JTextArea txtNote;
     // End of variables declaration//GEN-END:variables
 
 }

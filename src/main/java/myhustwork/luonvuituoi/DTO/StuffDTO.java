@@ -19,7 +19,7 @@ public class StuffDTO extends MoneyDTO implements Comparable<StuffDTO>{
         super();
     }
 
-    public StuffDTO(int ID, CategoryDTO category, String note, double amount) {
+    public StuffDTO(int ID, CategoryDTO category, String note, long amount) {
         super(amount);
         this.ID = ID;
         this.category = category;

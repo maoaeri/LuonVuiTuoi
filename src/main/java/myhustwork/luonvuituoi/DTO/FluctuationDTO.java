@@ -25,7 +25,7 @@ public class FluctuationDTO extends MoneyDTO {
     public FluctuationDTO() {
     }
 
-    public FluctuationDTO(int ID, String note, Date date, CategoryDTO category, boolean fixed, double amount) {
+    public FluctuationDTO(int ID, String note, Date date, CategoryDTO category, boolean fixed, long amount) {
         super(amount);
         this.ID = ID;
         this.note = note;

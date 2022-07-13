@@ -4,6 +4,12 @@
  */
 package myhustwork.luonvuituoi.GUI;
 
+import java.awt.Graphics;
+import java.awt.Shape;
+import java.awt.geom.RoundRectangle2D;
+import javax.swing.JFormattedTextField;
+import javax.swing.JTextField;
+
 /**
  *
  * @author vvlalalove193
@@ -26,21 +32,245 @@ public class AccountGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        kGradientPanel1 = new keeptoo.KGradientPanel();
+        lblForm = new javax.swing.JLabel();
+        txtName = new RoundedJTextField();
+        cmbAge = new javax.swing.JComboBox<>();
+        lblAge = new javax.swing.JLabel();
+        txtJob = new RoundedJTextField();
+        txtBalance = new RoundedJTextField();
+        txtExpectedSavePerMonth = new RoundedJTextField();
+        btnSave = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setFont(new java.awt.Font("Maiandra GD", 0, 10)); // NOI18N
+        setSize(new java.awt.Dimension(960, 540));
+
+        kGradientPanel1.setFont(new java.awt.Font("r0c0i Linotte", 0, 14)); // NOI18N
+        kGradientPanel1.setkEndColor(new java.awt.Color(255, 175, 175));
+        kGradientPanel1.setkGradientFocus(100);
+        kGradientPanel1.setkStartColor(new java.awt.Color(255, 255, 255));
+        kGradientPanel1.setPreferredSize(new java.awt.Dimension(960, 540));
+
+        lblForm.setFont(new java.awt.Font("Monotype Corsiva", 0, 36)); // NOI18N
+        lblForm.setForeground(new java.awt.Color(255, 51, 51));
+        lblForm.setText("Thông tin cá nhân");
+
+        txtName.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        txtName.setForeground(new java.awt.Color(255, 51, 51));
+        txtName.setText("Họ và tên");
+        txtName.setPreferredSize(new java.awt.Dimension(438, 34));
+        txtName.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtNameFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtNameFocusLost(evt);
+            }
+        });
+        txtName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNameActionPerformed(evt);
+            }
+        });
+
+        cmbAge.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        cmbAge.setForeground(new java.awt.Color(255, 51, 51));
+        cmbAge.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99", "100" }));
+
+        lblAge.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        lblAge.setForeground(new java.awt.Color(255, 51, 51));
+        lblAge.setLabelFor(cmbAge);
+        lblAge.setText("Tuổi");
+        lblAge.setMaximumSize(new java.awt.Dimension(26324, 34));
+        lblAge.setPreferredSize(new java.awt.Dimension(38, 34));
+
+        txtJob.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        txtJob.setForeground(new java.awt.Color(255, 51, 51));
+        txtJob.setText("Nghề nghiệp");
+        txtJob.setToolTipText("");
+        txtJob.setPreferredSize(new java.awt.Dimension(438, 34));
+        txtJob.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtJobFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtJobFocusLost(evt);
+            }
+        });
+        txtJob.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtJobActionPerformed(evt);
+            }
+        });
+
+        txtBalance.setForeground(new java.awt.Color(255, 51, 51));
+        txtBalance.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0"))));
+        txtBalance.setText("Số dư hiện tại");
+        txtBalance.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        txtBalance.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtBalanceFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtBalanceFocusLost(evt);
+            }
+        });
+        txtBalance.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBalanceActionPerformed(evt);
+            }
+        });
+
+        txtExpectedSavePerMonth.setForeground(new java.awt.Color(255, 51, 51));
+        txtExpectedSavePerMonth.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0"))));
+        txtExpectedSavePerMonth.setText("Số tiền dự định tiết kiệm hàng tháng");
+        txtExpectedSavePerMonth.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        txtExpectedSavePerMonth.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtExpectedSavePerMonthFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtExpectedSavePerMonthFocusLost(evt);
+            }
+        });
+        txtExpectedSavePerMonth.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtExpectedSavePerMonthActionPerformed(evt);
+            }
+        });
+
+        btnSave.setBackground(new java.awt.Color(255, 51, 51));
+        btnSave.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        btnSave.setForeground(new java.awt.Color(255, 255, 255));
+        btnSave.setText("Lưu");
+        btnSave.setPreferredSize(new java.awt.Dimension(75, 34));
+
+        javax.swing.GroupLayout kGradientPanel1Layout = new javax.swing.GroupLayout(kGradientPanel1);
+        kGradientPanel1.setLayout(kGradientPanel1Layout);
+        kGradientPanel1Layout.setHorizontalGroup(
+            kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(kGradientPanel1Layout.createSequentialGroup()
+                .addGap(362, 362, 362)
+                .addComponent(lblForm)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kGradientPanel1Layout.createSequentialGroup()
+                .addContainerGap(260, Short.MAX_VALUE)
+                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(txtName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(kGradientPanel1Layout.createSequentialGroup()
+                            .addComponent(lblAge, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cmbAge, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtJob, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtExpectedSavePerMonth, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(txtBalance)))
+                .addGap(262, 262, 262))
+        );
+        kGradientPanel1Layout.setVerticalGroup(
+            kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(kGradientPanel1Layout.createSequentialGroup()
+                .addGap(51, 51, 51)
+                .addComponent(lblForm)
+                .addGap(18, 18, 18)
+                .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbAge, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblAge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(txtJob, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(txtBalance, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(txtExpectedSavePerMonth, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(63, 63, 63)
+                .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(91, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(kGradientPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(kGradientPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void txtNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNameActionPerformed
+
+    private void txtNameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNameFocusGained
+        // TODO add your handling code here:
+        txtName.setText("");
+    }//GEN-LAST:event_txtNameFocusGained
+
+    private void txtNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNameFocusLost
+        // TODO add your handling code here:
+        if (txtName.getText().equals("")){
+            txtName.setText("Họ và tên");
+        }
+    }//GEN-LAST:event_txtNameFocusLost
+
+    private void txtJobFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtJobFocusGained
+        // TODO add your handling code here:
+        txtJob.setText("");
+
+    }//GEN-LAST:event_txtJobFocusGained
+
+    private void txtJobFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtJobFocusLost
+        // TODO add your handling code here:
+        if (txtJob.getText().equals("")){
+            txtJob.setText("Nghề nghiệp");
+        }
+    }//GEN-LAST:event_txtJobFocusLost
+
+    private void txtJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtJobActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtJobActionPerformed
+
+    private void txtExpectedSavePerMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtExpectedSavePerMonthActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtExpectedSavePerMonthActionPerformed
+
+    private void txtBalanceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBalanceFocusGained
+        // TODO add your handling code here:
+        txtBalance.setText("");
+    }//GEN-LAST:event_txtBalanceFocusGained
+
+    private void txtBalanceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBalanceFocusLost
+        // TODO add your handling code here:
+        if (txtBalance.getText().equals("")){
+            txtBalance.setText("Số dư hiện tại");
+        }
+    }//GEN-LAST:event_txtBalanceFocusLost
+
+    private void txtExpectedSavePerMonthFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtExpectedSavePerMonthFocusGained
+        // TODO add your handling code here:
+        txtExpectedSavePerMonth.setText("");
+    }//GEN-LAST:event_txtExpectedSavePerMonthFocusGained
+
+    private void txtExpectedSavePerMonthFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtExpectedSavePerMonthFocusLost
+        // TODO add your handling code here:
+        if (txtExpectedSavePerMonth.getText().equals("")){
+            txtExpectedSavePerMonth.setText("Số tiền dự định tiết kiệm hàng tháng");
+        }
+    }//GEN-LAST:event_txtExpectedSavePerMonthFocusLost
+
+    private void txtBalanceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBalanceActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtBalanceActionPerformed
 
     /**
      * @param args the command line arguments
@@ -78,5 +308,44 @@ public class AccountGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnSave;
+    private javax.swing.JComboBox<String> cmbAge;
+    private keeptoo.KGradientPanel kGradientPanel1;
+    private javax.swing.JLabel lblAge;
+    private javax.swing.JLabel lblForm;
+    private javax.swing.JFormattedTextField txtBalance;
+    private javax.swing.JFormattedTextField txtExpectedSavePerMonth;
+    private javax.swing.JTextField txtJob;
+    private javax.swing.JTextField txtName;
     // End of variables declaration//GEN-END:variables
+}
+
+
+class RoundedJTextField extends JFormattedTextField {
+    private Shape shape;
+    
+    public RoundedJTextField() {
+        setOpaque(false);
+    }
+    
+    @Override
+    protected void paintComponent(Graphics g) {
+        g.setColor(getBackground());
+        g.fillRoundRect(0, 0, getWidth()-1, getHeight()-1, 15, 15);
+        super.paintComponent(g);
+    }
+    
+    @Override
+    protected void paintBorder(Graphics g) {
+        g.setColor(getForeground());
+        g.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, 15, 15);
+    }
+    
+    @Override
+    public boolean contains(int x, int y) {
+        if (shape == null || !shape.getBounds().equals(getBounds())) {
+            shape = new RoundRectangle2D.Float(0, 0, getWidth()-1, getHeight()-1, 15, 15);
+        }
+        return shape.contains(x, y);
+    }
 }

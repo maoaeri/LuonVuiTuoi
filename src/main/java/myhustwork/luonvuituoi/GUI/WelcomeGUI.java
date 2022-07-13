@@ -5,6 +5,7 @@
 package myhustwork.luonvuituoi.GUI;
 
 import java.awt.Image;
+import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
@@ -31,6 +32,10 @@ public class WelcomeGUI extends javax.swing.JFrame {
         Image imgScale = img.getScaledInstance(label.getWidth(), label.getHeight(), Image.SCALE_SMOOTH);
         ImageIcon scaledIcon = new ImageIcon(imgScale);
         label.setIcon(scaledIcon);
+    }
+    
+    public void StartListener(ActionListener log){
+        btnStart.addActionListener(log);
     }
 
     /**

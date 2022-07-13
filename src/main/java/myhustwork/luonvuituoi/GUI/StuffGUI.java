@@ -5,12 +5,13 @@
 package myhustwork.luonvuituoi.GUI;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -31,12 +32,16 @@ import myhustwork.luonvuituoi.DTO.StuffDTO;
  * @author vvlalalove193
  */
 public class StuffGUI extends javax.swing.JFrame {
-
+    private CategoryDAO catDAO;
+    private StuffDAO stuffDAO;
     /**
      * Creates new form AddStuffInfoFrm
      */
     public StuffGUI() {
+        catDAO = new CategoryDAO();
+        stuffDAO = new StuffDAO();
         initComponents();
+
     }
     
     public StuffDTO getStuffInfor() throws ParseException, SQLException {
@@ -59,7 +64,7 @@ public class StuffGUI extends javax.swing.JFrame {
         DefaultMutableTreeNode selectedNode2 = (DefaultMutableTreeNode) treCategory.getLastSelectedPathComponent() ;
         String categoryName = selectedNode2.getUserObject().toString();
         CategoryDTO cat = new CategoryDTO(categoryType, categoryName);
-        cat.setCategoryId(CategoryDAO.getCategoryId(cat));
+        cat.setCategoryId(catDAO.getCategoryId(cat));
         stuff.setCategory(cat);
         stuff.setNote(txtNote.getText());
         return stuff;
@@ -67,14 +72,19 @@ public class StuffGUI extends javax.swing.JFrame {
     
     public ListModel<StuffDTO> getAllStuffs(){
         DefaultListModel listmodel = new DefaultListModel<StuffDTO>();
-        StuffDTO[] list = StuffDAO.getAllStuffs();
+        StuffDTO[] list = null;
+        try {
+            list = stuffDAO.getAll();
+        } catch (SQLException ex) {
+            Logger.getLogger(StuffGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
         for (StuffDTO i: list) {
             listmodel.addElement(i);
         }
         return listmodel;
     }
     
-    public void refreshComponents(){
+    public void refreshComponents() throws SQLException{
         txtAmount.setText("");
         txtNote.setText("");
         lblCategory2.setText("");
@@ -111,7 +121,6 @@ public class StuffGUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setFont(new java.awt.Font("Consolas", 0, 12)); // NOI18N
-        setPreferredSize(new java.awt.Dimension(960, 540));
         setResizable(false);
         setSize(new java.awt.Dimension(960, 540));
 
@@ -190,6 +199,8 @@ public class StuffGUI extends javax.swing.JFrame {
             }
         });
 
+        lblAmount.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        lblAmount.setForeground(new java.awt.Color(255, 51, 51));
         lblAmount.setLabelFor(txtAmount);
         lblAmount.setText("Giá tiền:");
 
@@ -236,7 +247,7 @@ public class StuffGUI extends javax.swing.JFrame {
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lblAmount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblCategory, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
+                            .addComponent(lblCategory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblNote, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(34, 34, 34)
                         .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -323,36 +334,36 @@ public class StuffGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         try {
             StuffDTO stuff = getStuffInfor();
-            StuffDAO.updateStuff(stuff);
+            stuffDAO.update(stuff);
 //                aff.showMessage("Thêm thành công!");
         } catch (Exception x) {
                 x.printStackTrace();
         }
-        refreshComponents();
+//        refreshComponents();
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
         try {
             StuffDTO stuff = getStuffInfor();
-            StuffDAO.addStuff(stuff);
+            stuffDAO.add(stuff);
 //                aff.showMessage("Thêm thành công!");
         } catch (Exception x) {
                 x.printStackTrace();
         }
-        refreshComponents();
+//        refreshComponents();
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         // TODO add your handling code here:
         try {
             StuffDTO stuff = getStuffInfor();
-            StuffDAO.deleteStuff(stuff);
+            stuffDAO.delete(stuff);
 //                aff.showMessage("Thêm thành công!");
         } catch (Exception x) {
                 x.printStackTrace();
         }
-        refreshComponents();
+//        refreshComponents();
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     /**
@@ -422,13 +433,14 @@ class StuffListRenderer extends JPanel implements ListCellRenderer<StuffDTO> {
     private JLabel lblIcon = new JLabel();
     private JLabel lblCategoryName = new JLabel();
     private JLabel lblAmount = new JLabel();
- 
+    private JLabel lblNote = new JLabel();
  
     public StuffListRenderer() {
         setLayout(new BorderLayout(5, 5));
         JPanel panelText = new JPanel(new GridLayout(0, 1));
         panelText.add(lblCategoryName);
         panelText.add(lblAmount);
+        panelText.add(lblNote);
         add(lblIcon, BorderLayout.WEST);
         add(panelText, BorderLayout.CENTER);
     }
@@ -438,8 +450,14 @@ class StuffListRenderer extends JPanel implements ListCellRenderer<StuffDTO> {
             boolean isSelected, boolean cellHasFocus) {
  
         lblCategoryName.setText(stuff.getCategory().getCategoryName());
+        lblCategoryName.setFont(new java.awt.Font("r0c0i Linotte", 0, 18));
+//        lblCategoryName.setForeground(new java.awt.Color(255, 51,51));
         lblAmount.setText(Double.toString(stuff.getAmount()));
-        lblAmount.setForeground(Color.blue);
+        lblAmount.setFont(new java.awt.Font("r0c0i Linotte", 0, 18));
+        lblAmount.setForeground(new java.awt.Color(255, 51, 51));
+        lblNote.setText(stuff.getNote());
+        lblNote.setFont(new java.awt.Font("r0c0i Linotte", 0, 18));
+        lblNote.setForeground(new java.awt.Color(255, 51,51));
         return this;
     }
 } 

@@ -23,7 +23,7 @@ import static myhustwork.luonvuituoi.Util.DBConnection.createConnection;
  *
  * @author vvlalalove193
  */
-public class FluctuationDAO {
+public class FluctuationDAO implements DAOInterface<FluctuationDTO>{
 
     public FluctuationDAO() {
     }
@@ -37,29 +37,26 @@ public class FluctuationDAO {
 //        b.getCategoryId(a);
     }
         
-    public static int addFluctuation(FluctuationDTO fluc){
+    @Override
+    public int add(FluctuationDTO fluc) throws SQLException {
         int res = 0;
         String query = "INSERT INTO main.fluctuation(fluctuation_amount, fluctuation_note, fluctuation_date, category_id, fluctuation_is_fixed) VALUES(?,?,?,?,?)";
-        try {
-            Connection conn = createConnection();
-            PreparedStatement ps = conn.prepareStatement(query);
-            ps.setDouble(1, fluc.getAmount());
-            ps.setString(2, fluc.getNote());
-            ps.setDate(3, new java.sql.Date(fluc.getDate().getTime()));
-            ps.setInt(4, fluc.getCategory().getCategoryId());
-            ps.setBoolean(5, fluc.isFixed());
-            res = ps.executeUpdate();
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        Connection conn = createConnection();
+        PreparedStatement ps = conn.prepareStatement(query);
+        ps.setDouble(1, fluc.getAmount());
+        ps.setString(2, fluc.getNote());
+        ps.setDate(3, new java.sql.Date(fluc.getDate().getTime()));
+        ps.setInt(4, fluc.getCategory().getCategoryId());
+        ps.setBoolean(5, fluc.isFixed());
+        res = ps.executeUpdate();
+        conn.close();
         return res;
     }
     
-    public static int updateFluctuation(FluctuationDTO fluc){
+    @Override
+    public int update(FluctuationDTO fluc) throws SQLException{
         int res = 0;
         String query = "UPDATE main.fluctuation SET fluctuation_amount = ?, fluctuation_note = ?, fluctuation_date = ?, category_id = ?, fluctuation_is_fixed = ? WHERE fluctuation_id = ?";
-        try {
             Connection conn = createConnection();
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setDouble(1, fluc.getAmount());
@@ -70,54 +67,45 @@ public class FluctuationDAO {
             ps.setInt(6, fluc.getID());
             res = ps.executeUpdate();
             conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         return res;
     }
     
-    public static int deleteFluctuation(FluctuationDTO fluc){
+    @Override
+    public int delete(FluctuationDTO fluc) throws SQLException{
         int res = 0;
         String query = "DELETE FROM main.fluctuation WHERE fluctuation_id = ?";
-        try {
             Connection conn = createConnection();
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1, fluc.getID());
             res = ps.executeUpdate();
             conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         return res;
     }
     
-    public static FluctuationDTO getFluctuation(int id){
+    @Override
+    public FluctuationDTO get(int id) throws SQLException{
         FluctuationDTO fluc = new FluctuationDTO();
         String query = "SELECT * FROM main.fluctuation LEFT JOIN main.category ON main.fluctuation.category_id = main.category.category_id WHERE fluctuation_id = ?";
-        try {
             Connection conn = createConnection();
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1, id);
             ps.executeUpdate();
             conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         return fluc;
     }
     
-    public static FluctuationDTO[] getAllFluctuations(){
+    @Override
+    public FluctuationDTO[] getAll() throws SQLException{
         FluctuationDTO[] dataset = null;
         FluctuationDTO data;
         List<FluctuationDTO> arrlist = new ArrayList<>();
-        String query = "SELECT * FROM main.fluctuation LEFT JOIN main.category ON main.fluctuation.category_id = main.category.category_id";
-        try {
+        String query = "SELECT * FROM main.fluctuation LEFT JOIN main.category ON main.fluctuation.category_id = main.category.category_id ORDER BY fluctuation_id DESC";
             Connection conn = createConnection();
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query);
             while (rs.next()){
                 int flucId = rs.getInt("fluctuation_id");
-                double flucAmount = rs.getDouble("fluctuation_amount");
+                long flucAmount = rs.getLong("fluctuation_amount");
                 String flucNote = rs.getString("fluctuation_note");
                 Date flucDate = rs.getDate("fluctuation_date");
                 CategoryDTO flucCat = new CategoryDTO(rs.getInt("category_type"), rs.getInt("category_id"), rs.getString("category_name"));
@@ -125,10 +113,6 @@ public class FluctuationDAO {
                 data = new FluctuationDTO(flucId, flucNote, flucDate, flucCat, flucFixed, flucAmount);
                 arrlist.add(data);
             }
-            
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         dataset = arrlist.toArray(dataset);
         return dataset;
     }
