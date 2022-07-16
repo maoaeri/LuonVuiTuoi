@@ -163,7 +163,7 @@ public class MainGUI extends javax.swing.JFrame {
         );
 
         lstFluc.setModel(getAllFlucs());
-        lstStuff.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        lstFluc.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         lstFluc.setCellRenderer(new FluctuationListRenderer());
         scrPnlFluc.setViewportView(lstFluc);
 
@@ -353,4 +353,43 @@ public class MainGUI extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 }
 
-
+class FluctuationListRenderer extends JPanel implements ListCellRenderer<FluctuationDTO> {
+    private JLabel lblIcon = new JLabel();
+//    private JLabel lblCategoryName = new JLabel();
+    private JLabel lblAmount = new JLabel();
+    private JLabel lblNote = new JLabel();
+ 
+    public FluctuationListRenderer() {
+        setLayout(new BorderLayout(5, 5));
+        JPanel panelText = new JPanel(new GridLayout(0, 1));
+//        panelText.add(lblCategoryName);
+        panelText.add(lblAmount);
+        panelText.add(lblNote);
+        add(lblIcon, BorderLayout.WEST);
+        add(panelText, BorderLayout.CENTER);
+    }
+ 
+    @Override
+    public Component getListCellRendererComponent(JList<? extends FluctuationDTO> list, FluctuationDTO fluc, int index,
+            boolean isSelected, boolean cellHasFocus) {
+        lblIcon.setSize(new Dimension(50,50));
+        
+        String imgUrl = "D:\\Pj\\LuonVuiTuoi\\src\\main\\java\\myhustwork\\luonvuituoi\\images\\CategoryIcon\\" + String.valueOf(fluc.getCategory().getCategoryId() + ".png");
+        
+        ImageIcon img = new ImageIcon(imgUrl);
+        lblIcon.setIcon(img);
+        GUIRelated.scaleImage(imgUrl, lblIcon);
+        
+        
+//        lblCategoryName.setText(stuff.getCategory().getCategoryName());
+//        lblCategoryName.setFont(new java.awt.Font("r0c0i Linotte", 0, 18));
+//        lblCategoryName.setForeground(new java.awt.Color(255, 51,51));
+        lblAmount.setText(Double.toString(fluc.getAmount()));
+        lblAmount.setFont(new java.awt.Font("r0c0i Linotte", 0, 18));
+        lblAmount.setForeground(new java.awt.Color(255, 51, 51));
+        lblNote.setText(fluc.getNote());
+        lblNote.setFont(new java.awt.Font("r0c0i Linotte", 0, 18));
+        lblNote.setForeground(new java.awt.Color(255, 51,51));
+        return this;
+    }
+} 

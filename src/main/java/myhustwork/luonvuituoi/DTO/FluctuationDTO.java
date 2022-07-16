@@ -22,11 +22,12 @@ public class FluctuationDTO extends MoneyDTO {
     private LocalDate date;
     private CategoryDTO category;
     private boolean fixed; //co dinh hay khong
+    private int accountId;
 
     public FluctuationDTO() {
     }
 
-    public FluctuationDTO(int ID, String note, LocalDate date, CategoryDTO category, boolean fixed, long amount) {
+    public FluctuationDTO(int ID, String note, LocalDate date, CategoryDTO category, boolean fixed, long amount, int accountId) {
         super(amount);
         this.ID = ID;
         this.note = note;
@@ -53,6 +54,14 @@ public class FluctuationDTO extends MoneyDTO {
 
     public boolean isFixed() {
         return fixed;
+    }
+
+    public int getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
     }
 
     public void setID(int ID) {

@@ -8,6 +8,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import myhustwork.luonvuituoi.DTO.AccountDTO;
@@ -35,12 +38,10 @@ public class AccountDAO implements DAOInterface<AccountDTO> {
     @Override
     public int add(AccountDTO acc) throws SQLException {
         int res = 0;
-        String query = "INSERT INTO main.account(account_name, account_age, account_job, account_balance, account_save_per_month) VALUES(?,?,?,?,?)";
+        String query = "INSERT INTO main.account(account_name, account_balance, account_save_per_month) VALUES(?,?,?,?,?)";
         Connection conn = createConnection();
         PreparedStatement ps = conn.prepareStatement(query);
         ps.setString(1, acc.getName());
-        ps.setInt(2, acc.getAge());
-        ps.setString(3, acc.getJob());
         ps.setLong(4, acc.getBalance());
         ps.setLong(5, acc.getSave_per_month());
         res = ps.executeUpdate();
@@ -51,12 +52,10 @@ public class AccountDAO implements DAOInterface<AccountDTO> {
     @Override
     public int update(AccountDTO acc) throws SQLException {
         int res = 0;
-        String query = "UPDATE main.account SET account_name = ?, account_age = ?, account_balance = ?, account_save_per_month = ? WHERE account_id = ?";
+        String query = "UPDATE main.account SET account_name = ?, account_balance = ?, account_save_per_month = ? WHERE account_id = ?";
             Connection conn = createConnection();
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setString(1, acc.getName());
-            ps.setInt(2, acc.getAge());
-            ps.setString(3, acc.getJob());
             ps.setLong(4, acc.getBalance());
             ps.setLong(5, acc.getSave_per_month());
             ps.setInt(6, acc.getId());
@@ -85,8 +84,6 @@ public class AccountDAO implements DAOInterface<AccountDTO> {
             while (rs.next()){
                 acc = new AccountDTO();
                 acc.setName(rs.getString("account_name"));
-                acc.setAge(rs.getByte("account_age"));
-                acc.setJob(rs.getString("account_job"));
                 acc.setBalance(rs.getLong("account_balance"));
                 acc.setSave_per_month(rs.getLong("account_save_per_month"));
             }
@@ -100,7 +97,22 @@ public class AccountDAO implements DAOInterface<AccountDTO> {
 
     @Override
     public AccountDTO[] getAll() throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-    
+        AccountDTO[] dataset = null;
+        AccountDTO acc;
+        List<AccountDTO> arrlist = new ArrayList<>();
+        String query = "SELECT * FROM main.fluctuation LEFT JOIN main.category ON main.fluctuation.category_id = main.category.category_id ORDER BY fluctuation_id DESC";
+            Connection conn = createConnection();
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(query);
+            while (rs.next()){
+                acc = new AccountDTO();
+                acc.setName(rs.getString("account_name"));
+                acc.setBalance(rs.getLong("account_balance"));
+                acc.setSave_per_month(rs.getLong("account_save_per_month"));
+                arrlist.add(acc);
+            }
+        dataset = arrlist.toArray(new AccountDTO[arrlist.size()]);
+        return dataset;
+    }    
 }
+    
