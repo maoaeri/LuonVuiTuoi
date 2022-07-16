@@ -103,22 +103,25 @@ public class FluctuationBLL {//bien dong so du//
     /**
      * sum per month
      *
+     * @param Year
+     * @return 
+     * @throws java.sql.SQLException 
      */  
-    public void SumPerMonth(int Year) throws SQLException {
-        double[] sumIncome = new double[13]; // tổng thu của 12 tháng
-        double[] sumSpending = new double[13]; // tổng chi của 12 tháng
-        for(int j = 1; j <= 12; j ++){
-            sumIncome[j] = 0;
-            sumSpending[j] = 0;
+    public double[][] SumPerMonth(int Year) throws SQLException {
+        double[][] sum = new double[2][13]; // tổng thu của 12 tháng
+        for(int j = 0; j <= 1; j ++){
+            for(int k = 1; k <= 12; k++)
+                sum[j][k] = 0;
         }
         FluctuationDTO[] flucArr = flucDAO.getAll();
         for(FluctuationDTO i: flucArr) {
             if(Year == i.getDate().getYear() ) {
                 int j = i.getDate().getMonthValue();
-                if(i.getCategory().isIncome()) sumIncome[j] += i.getAmount(); // tính tổng thu từng tháng
-                else sumSpending[j] += i.getAmount(); // tổng chi từng tháng
+                if(i.getCategory().isIncome()) sum[1][j] += i.getAmount(); // tính tổng thu từng tháng - Thu = !
+                else sum[0][j] += i.getAmount(); // tổng chi từng tháng - Chi = 0
             }
         }
+        return sum;
     }
     
     public double AutoCal() throws SQLException {
