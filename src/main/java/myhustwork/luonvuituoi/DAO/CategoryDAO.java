@@ -47,7 +47,7 @@ public class CategoryDAO implements DAOInterface<CategoryDTO>{
     @Override
     public CategoryDTO get(int categoryId) throws SQLException{
         String query = "SELECT * from main.category where category_id = ?";
-        CategoryDTO cat_details = new CategoryDTO();
+        CategoryDTO cat_details = null;
             Connection conn = createConnection();
             PreparedStatement ps = conn.prepareStatement(query);
             ResultSet rs;
@@ -55,6 +55,7 @@ public class CategoryDAO implements DAOInterface<CategoryDTO>{
             rs = ps.executeQuery();
             
             while (rs.next()){
+                cat_details = new CategoryDTO();
                 cat_details.setCategoryName(rs.getString("category_name"));
                 cat_details.setCategoryType(rs.getInt("category_type"));
             }

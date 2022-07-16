@@ -66,16 +66,19 @@ public class StuffDAO implements DAOInterface<StuffDTO>{
     }
     
     public StuffDTO get(int id) throws SQLException{
-        StuffDTO stuff = new StuffDTO();
+        StuffDTO stuff = null;
         String query = "SELECT * FROM main.stuff LEFT JOIN main.category ON main.stuff.category_id = main.category.category_id WHERE stuff_id = ?";
             Connection conn = createConnection();
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            stuff.setID(rs.getInt("stuff_id"));
-            stuff.setAmount(rs.getLong("stuff_amount"));
-            stuff.setCategory(new CategoryDTO(rs.getInt("category_type"), rs.getInt("category_id"), rs.getString("category_name")));
-            stuff.setNote("stuff_note");
+            while (rs.next()){
+                stuff = new StuffDTO();
+                stuff.setID(rs.getInt("stuff_id"));
+                stuff.setAmount(rs.getLong("stuff_amount"));
+                stuff.setCategory(new CategoryDTO(rs.getInt("category_type"), rs.getInt("category_id"), rs.getString("category_name")));
+                stuff.setNote("stuff_note");
+            }
             conn.close();
         return stuff;
     }

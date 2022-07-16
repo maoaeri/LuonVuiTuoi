@@ -1,11 +1,14 @@
 package myhustwork.luonvuituoi.BLL;
 
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Calendar;
 
 import java.util.Date;
 import java.util.*;
-import static myhustwork.luonvuituoi.BLL.FluctuationBLL.PercentCategories;
+import myhustwork.luonvuituoi.BLL.FluctuationBLL;
+import myhustwork.luonvuituoi.DAO.AccountDAO;
 import myhustwork.luonvuituoi.DAO.FluctuationDAO;
 import myhustwork.luonvuituoi.DAO.StuffDAO;
 import myhustwork.luonvuituoi.DTO.AccountDTO;
@@ -18,19 +21,30 @@ import myhustwork.luonvuituoi.DTO.StuffDTO;
  * @author vvlalalove193
  */
 public class StuffBLL {
-
-    public StuffDTO[] getAllStuffs() {
-        return StuffDAO.getAllStuffs();
+    private StuffDAO stuffDAO;
+    private FluctuationDAO flucDAO;
+    private FluctuationBLL flucBLL;
+    private AccountDAO accDAO;
+    
+    public StuffBLL() {
+        stuffDAO = new StuffDAO();
+        accDAO = new AccountDAO();
+        flucDAO = new FluctuationDAO();
+        flucBLL = new FluctuationBLL();
     }
 
-    public void Suggestion(Date date1, Date date2) {
+    public StuffDTO[] getAllStuffs() throws SQLException {
+        return stuffDAO.getAll();
+    }
+
+    public void Suggestion(LocalDate date1, LocalDate date2) throws SQLException {
         double ThuThanghientai = 0, Chithanghientai = 0, Sodutrongthang = 0;
 
         Calendar cal = Calendar.getInstance();
         Date date = cal.getTime();
-        FluctuationDTO[] flucArr = FluctuationDAO.getAllFluctuations();
+        FluctuationDTO[] flucArr = flucDAO.getAll();
         for (FluctuationDTO i : flucArr) { //duyet tat ca cac fluctuation
-            if (i.getDate().after(date1) && i.getDate().before(date2)) {
+            if (i.getDate().isAfter(date1) && i.getDate().isBefore(date2)) {
                 if (i.getCategory().getCategoryType() == CategoryDTO.THU) {
                     ThuThanghientai += i.getAmount();
                 } else {
@@ -39,7 +53,7 @@ public class StuffBLL {
             }
         }
         Sodutrongthang = ThuThanghientai - Chithanghientai;
-        FluctuationBLL.PercentCategories(date1, date2);
+        flucBLL.PercentCategories(date1, date2);
     }
 
     public void Swap(StuffDTO s1, StuffDTO s2) { //Dao vi tri 
@@ -53,6 +67,7 @@ public class StuffBLL {
     }
 
     public void StuffSuggestion(StuffDTO[] stuff) {
+        AccountDTO acc = accDAO.get(1);
         int n = stuff.length;
 //        StuffDTO[] stuff = new StuffDTO[n]; // n: so stuff can mua
         //Lay ra tu database
@@ -64,7 +79,7 @@ public class StuffBLL {
             22:Giai tri
             25:Tra no
              */
-            if (i.getCategory().getCategoryId() == 25 && i.getAmount() < AccountDTO.getBalance() && stuff[0].getCategory().getCategoryId() != 25) {
+            if (i.getCategory().getCategoryId() == 25 && i.getAmount() < acc.getBalance() && stuff[0].getCategory().getCategoryId() != 25) {
                 //Tra no 
                 Swap(i, stuff[0]);
                 if (stuff[2].getCategory().getCategoryId() == 22 || stuff[2].getCategory().getCategoryId() == 21) {
@@ -75,12 +90,12 @@ public class StuffBLL {
                     Arrays.sort(stuff, 1, n - 1);
                 }
             }
-            if (i.getCategory().getCategoryId() == 20 && i.getAmount() < AccountDTO.getBalance()) {
+            if (i.getCategory().getCategoryId() == 20 && i.getAmount() < acc.getBalance()) {
                 //Suc khoe 
                 Swap(i, stuff[1]);
                 Arrays.sort(stuff, 2, n - 1);
             }
-            if (i.getCategory().getCategoryId() == 22 & i.getAmount() < AccountDTO.getBalance()) {
+            if (i.getCategory().getCategoryId() == 22 & i.getAmount() < acc.getBalance()) {
                 // Giai tri
                 if (stuff[0].getCategory().getCategoryId() == 25 && stuff[1].getCategory().getCategoryId() == 20) {
                     Swap(i, stuff[2]);
@@ -105,9 +120,9 @@ public class StuffBLL {
         }
     }
 
-    public static int[] SuggestionNextMonth(Date date1, Date date2) {
+    public int[] SuggestionNextMonth(LocalDate date1, LocalDate date2) throws SQLException {
         double[] percentCategories = new double[26];
-        percentCategories = PercentCategories(date1, date2);
+        percentCategories = flucBLL.PercentCategories(date1, date2);
         int[] mark = {0, 0, 0, 0};
         if (percentCategories[10] > 0.6) {
             mark[0] = 1; // = 1 là tiêu quá

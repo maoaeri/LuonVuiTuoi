@@ -6,6 +6,7 @@ package myhustwork.luonvuituoi.DTO;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
@@ -18,14 +19,14 @@ import java.util.logging.Logger;
 public class FluctuationDTO extends MoneyDTO {
     private int ID; //auto-generated
     private String note;
-    private Date date;
+    private LocalDate date;
     private CategoryDTO category;
     private boolean fixed; //co dinh hay khong
 
     public FluctuationDTO() {
     }
 
-    public FluctuationDTO(int ID, String note, Date date, CategoryDTO category, boolean fixed, long amount) {
+    public FluctuationDTO(int ID, String note, LocalDate date, CategoryDTO category, boolean fixed, long amount) {
         super(amount);
         this.ID = ID;
         this.note = note;
@@ -42,7 +43,7 @@ public class FluctuationDTO extends MoneyDTO {
         return note;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
@@ -62,7 +63,7 @@ public class FluctuationDTO extends MoneyDTO {
         this.note = note;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -74,14 +75,6 @@ public class FluctuationDTO extends MoneyDTO {
         this.fixed = fixed;
     }
     
-    public static Date toDate(String str) {
-        Date date = new Date();
-        try {
-            date = new SimpleDateFormat("dd/MM/yyyy").parse(str);
-        } catch (ParseException ex) {
-            Logger.getLogger(FluctuationDTO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return date;
-    }
+    
     
 }

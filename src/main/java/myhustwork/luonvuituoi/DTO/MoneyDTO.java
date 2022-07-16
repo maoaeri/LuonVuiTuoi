@@ -29,14 +29,4 @@ public class MoneyDTO {
         this.amount = amount;
     }
     
-    /**
-     * 
-     * @param strFormat in String
-     * @return Amount in long
-     * @throws java.text.ParseException
-     */
-    public static long formatAmount(String strFormat) throws ParseException{
-        long d = DecimalFormat.getNumberInstance().parse(strFormat).longValue();
-        return d;
-    }
 }

@@ -24,8 +24,8 @@ import myhustwork.luonvuituoi.DAO.CategoryDAO;
 import myhustwork.luonvuituoi.DAO.StuffDAO;
 import myhustwork.luonvuituoi.DTO.CategoryDTO;
 import myhustwork.luonvuituoi.DTO.FluctuationDTO;
-import static myhustwork.luonvuituoi.DTO.FluctuationDTO.toDate;
 import myhustwork.luonvuituoi.DTO.StuffDTO;
+import myhustwork.luonvuituoi.Util.Converter;
 
 /**
  *
@@ -46,7 +46,7 @@ public class StuffGUI extends javax.swing.JFrame {
     
     public StuffDTO getStuffInfor() throws ParseException, SQLException {
         StuffDTO stuff = new StuffDTO();
-        stuff.setAmount(FluctuationDTO.formatAmount(txtAmount.getText()));
+        stuff.setAmount(Converter.formatAmount(txtAmount.getText()));
         DefaultMutableTreeNode selectedNode1 = (DefaultMutableTreeNode) treCategory.getModel().getRoot() ;
         String rootType = selectedNode1.getUserObject().toString();
         int categoryType = 0;

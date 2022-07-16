@@ -4,58 +4,70 @@
  */
 package myhustwork.luonvuituoi.DTO;
 
+import java.text.DecimalFormat;
+import java.text.ParseException;
+
 /**
  *
  * @author vvlalalove193
  */
 public class AccountDTO {
-    private static String name;
-    private static byte age;
-    private static String job;
-    private static long balance;
-    private static long save_per_month; 
+    private int Id;
+    private String name;
+    private byte age;
+    private String job;
+    private long balance;
+    private long save_per_month; 
 
     public AccountDTO() {
     }
+    
+    public int getId() {
+        return Id;
+    }
 
-    public static String getName() {
+    public String getName() {
         return name;
     }
 
-    public static byte getAge() {
+    public byte getAge() {
         return age;
     }
 
-    public static String getJob() {
+    public String getJob() {
         return job;
     }
 
-    public static long getBalance() {
+    public long getBalance() {
         return balance;
     }
 
-    public static long getSave_per_month() {
+    public long getSave_per_month() {
         return save_per_month;
     }
 
-    public static void setName(String name) {
-        AccountDTO.name = name;
+    public void setId(int Id) {
+        this.Id = Id;
     }
 
-    public static void setAge(byte age) {
-        AccountDTO.age = age;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public static void setJob(String job) {
-        AccountDTO.job = job;
+    public void setAge(byte age) {
+        this.age = age;
     }
 
-    public static void setBalance(long balance) {
-        AccountDTO.balance = balance;
+    public void setJob(String job) {
+        this.job = job;
     }
 
-    public static void setSave_per_month(long save_per_month) {
-        AccountDTO.save_per_month = save_per_month;
+    public void setBalance(long balance) {
+        this.balance = balance;
+    }
+
+    public void setSave_per_month(long save_per_month) {
+        this.save_per_month = save_per_month;
     }
 
 }

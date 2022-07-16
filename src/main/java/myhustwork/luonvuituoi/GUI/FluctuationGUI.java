@@ -17,7 +17,7 @@ import myhustwork.luonvuituoi.DAO.CategoryDAO;
 import myhustwork.luonvuituoi.DAO.FluctuationDAO;
 import myhustwork.luonvuituoi.DTO.CategoryDTO;
 import myhustwork.luonvuituoi.DTO.FluctuationDTO;
-import static myhustwork.luonvuituoi.DTO.FluctuationDTO.toDate;
+import myhustwork.luonvuituoi.Util.Converter;
 
 /**
  *
@@ -42,12 +42,12 @@ public class FluctuationGUI extends javax.swing.JFrame {
         txtNote.setText("");
         lblCategory.setText("");
         radFixed.setSelected(false);
-        repaint();
+        radNotFixed.setSelected(false);
     }
     
     public FluctuationDTO getFluctuationInfor() throws ParseException, SQLException {
         FluctuationDTO fluc = new FluctuationDTO();
-        fluc.setAmount(FluctuationDTO.formatAmount(txtAmount.getText()));
+        fluc.setAmount(Converter.formatAmount(txtAmount.getText()));
         DefaultMutableTreeNode selectedNode1 = (DefaultMutableTreeNode) treCategory.getModel().getRoot() ;
         String rootType = selectedNode1.getUserObject().toString();
         int categoryType = 0;
@@ -64,7 +64,7 @@ public class FluctuationGUI extends javax.swing.JFrame {
         CategoryDTO cat = new CategoryDTO(categoryType, categoryName);
         cat.setCategoryId(catDAO.getCategoryId(cat));
         fluc.setCategory(cat);
-        fluc.setDate(toDate(txtDate.getText()));
+        fluc.setDate(Converter.toDate(txtDate.getText()));
         fluc.setNote(txtNote.getText());
         fluc.setFixed(this.fixedButtonpressed);
 //        System.out.println(parseInt(txtAmount.getText()));

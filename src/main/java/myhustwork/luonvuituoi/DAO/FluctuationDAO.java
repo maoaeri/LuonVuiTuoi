@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -45,7 +46,7 @@ public class FluctuationDAO implements DAOInterface<FluctuationDTO>{
         PreparedStatement ps = conn.prepareStatement(query);
         ps.setDouble(1, fluc.getAmount());
         ps.setString(2, fluc.getNote());
-        ps.setDate(3, new java.sql.Date(fluc.getDate().getTime()));
+        ps.setDate(3, java.sql.Date.valueOf(fluc.getDate()));
         ps.setInt(4, fluc.getCategory().getCategoryId());
         ps.setBoolean(5, fluc.isFixed());
         res = ps.executeUpdate();
@@ -61,7 +62,7 @@ public class FluctuationDAO implements DAOInterface<FluctuationDTO>{
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setDouble(1, fluc.getAmount());
             ps.setString(2, fluc.getNote());
-            ps.setDate(3, new java.sql.Date(fluc.getDate().getTime()));
+            ps.setDate(3, java.sql.Date.valueOf(fluc.getDate()));
             ps.setInt(4, fluc.getCategory().getCategoryId());
             ps.setBoolean(5, fluc.isFixed());
             ps.setInt(6, fluc.getID());
@@ -84,12 +85,22 @@ public class FluctuationDAO implements DAOInterface<FluctuationDTO>{
     
     @Override
     public FluctuationDTO get(int id) throws SQLException{
-        FluctuationDTO fluc = new FluctuationDTO();
+        FluctuationDTO fluc = null;
         String query = "SELECT * FROM main.fluctuation LEFT JOIN main.category ON main.fluctuation.category_id = main.category.category_id WHERE fluctuation_id = ?";
             Connection conn = createConnection();
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1, id);
-            ps.executeUpdate();
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                fluc = new FluctuationDTO();
+                int flucId = rs.getInt("fluctuation_id");
+                long flucAmount = rs.getLong("fluctuation_amount");
+                String flucNote = rs.getString("fluctuation_note");
+                LocalDate flucDate = rs.getDate("fluctuation_date").toLocalDate();
+                CategoryDTO flucCat = new CategoryDTO(rs.getInt("category_type"), rs.getInt("category_id"), rs.getString("category_name"));
+                boolean flucFixed = rs.getBoolean("fluc_is_fixed");
+                fluc = new FluctuationDTO(flucId, flucNote, flucDate, flucCat, flucFixed, flucAmount);
+            }
             conn.close();
         return fluc;
     }
@@ -107,7 +118,7 @@ public class FluctuationDAO implements DAOInterface<FluctuationDTO>{
                 int flucId = rs.getInt("fluctuation_id");
                 long flucAmount = rs.getLong("fluctuation_amount");
                 String flucNote = rs.getString("fluctuation_note");
-                Date flucDate = rs.getDate("fluctuation_date");
+                LocalDate flucDate = rs.getDate("fluctuation_date").toLocalDate();
                 CategoryDTO flucCat = new CategoryDTO(rs.getInt("category_type"), rs.getInt("category_id"), rs.getString("category_name"));
                 boolean flucFixed = rs.getBoolean("fluc_is_fixed");
                 data = new FluctuationDTO(flucId, flucNote, flucDate, flucCat, flucFixed, flucAmount);

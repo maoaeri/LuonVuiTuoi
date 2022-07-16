@@ -5,10 +5,12 @@
 package myhustwork.luonvuituoi.GUI;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import javax.swing.JLabel;
 import myhustwork.luonvuituoi.BLL.FluctuationBLL;
 import myhustwork.luonvuituoi.DAO.CategoryDAO;
 import myhustwork.luonvuituoi.DTO.CategoryDTO;
+import myhustwork.luonvuituoi.Util.DateRelated;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -97,8 +99,17 @@ public class MainGUI extends javax.swing.JFrame {
 
     public DefaultPieDataset getDataset() throws SQLException{
         DefaultPieDataset dataset = new DefaultPieDataset();
+        
+        //get categories
         CategoryDTO[] listCategory = null;
         listCategory = catDAO.getAll();
+        
+        //get percentages
+        LocalDate localdate = LocalDate.now();
+        LocalDate firstDayOfMonth = DateRelated.getFirstDayOfMonth(localdate);
+        LocalDate lastDayOfMonth = DateRelated.getLastDayOfMonth(localdate);
+        double[] percentages = flucBLL.PercentCategories(firstDayOfMonth, lastDayOfMonth);
+        
         for (CategoryDTO cat: listCategory){
             
         }
