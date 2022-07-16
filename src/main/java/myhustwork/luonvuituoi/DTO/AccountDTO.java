@@ -14,8 +14,6 @@ import java.text.ParseException;
 public class AccountDTO {
     private int Id;
     private String name;
-    private byte age;
-    private String job;
     private long balance;
     private long save_per_month; 
 
@@ -28,14 +26,6 @@ public class AccountDTO {
 
     public String getName() {
         return name;
-    }
-
-    public byte getAge() {
-        return age;
-    }
-
-    public String getJob() {
-        return job;
     }
 
     public long getBalance() {
@@ -52,14 +42,6 @@ public class AccountDTO {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setAge(byte age) {
-        this.age = age;
-    }
-
-    public void setJob(String job) {
-        this.job = job;
     }
 
     public void setBalance(long balance) {

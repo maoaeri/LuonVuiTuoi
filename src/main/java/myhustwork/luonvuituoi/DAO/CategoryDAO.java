@@ -91,11 +91,12 @@ public class CategoryDAO implements DAOInterface<CategoryDTO>{
                 int catId = rs.getInt("category_id");
                 String catName = rs.getString("category_name");
                 int catType = rs.getInt("category_type");
-                data = new CategoryDTO(catType, catId, catName);
+                int catParentId = rs.getInt("category_parent_id");
+                data = new CategoryDTO(catType, catId, catName, catParentId);
                 arrlist.add(data);
             }
-        dataset = arrlist.toArray(dataset);
-        return dataset;    
+        dataset = arrlist.toArray(new CategoryDTO[arrlist.size()]);
+        return dataset;
     }
 
 }

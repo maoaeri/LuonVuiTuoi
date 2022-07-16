@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import myhustwork.luonvuituoi.DAO.AccountDAO;
 import myhustwork.luonvuituoi.DAO.FluctuationDAO;
 import myhustwork.luonvuituoi.DTO.AccountDTO;
@@ -19,6 +21,19 @@ public class FluctuationBLL {//bien dong so du//
         accDAO = new AccountDAO();
     }
     
+    public static void main(String[] args) {
+        FluctuationBLL flucBLL = new FluctuationBLL();
+        double[] a = null;
+        try {
+            a = flucBLL.PercentCategories(LocalDate.MIN, LocalDate.MAX);
+        } catch (SQLException ex) {
+            Logger.getLogger(FluctuationBLL.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        for (double i: a){
+            System.err.println(i);
+        }
+    }
+    
     /**
      * Warning if there's a chance balance < 0
      * @return 
@@ -29,6 +44,7 @@ public class FluctuationBLL {//bien dong so du//
         double balance = acc.getBalance();
         return balance - save_per_month < 0;
     }
+
     
     public double[] PercentCategories(LocalDate date1, LocalDate date2) throws SQLException {
         double[] sumCategories = new double[26]; // có 25 hạng mục 
@@ -41,9 +57,9 @@ public class FluctuationBLL {//bien dong so du//
         for(FluctuationDTO i: flucArr) {
             if(i.getDate().isAfter(date1) && i.getDate().isBefore(date2) ){
                 switch (i.getCategory().getCategoryId()) {
-                    case 3, 4, 5, 6, 7, 8, 9, 12, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25 -> {
+                    case 1,2,3, 4, 5, 6, 7, 8, 9,10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25 -> {
                         int j = i.getCategory().getCategoryId();
-                        sumCategories[j] += i.getAmount();
+                        sumCategories[j] += i.getAmount();                   
                         break;
                     }
                 }
@@ -52,17 +68,20 @@ public class FluctuationBLL {//bien dong so du//
         for(int j = 3; j <=9; j++) {
             sumCategories[1] += sumCategories[j]; 
         }
-        sumCategories[10] = sumCategories[14] + sumCategories[15] + sumCategories[16] + sumCategories[17] + sumCategories[18];
-        sumCategories[11] = sumCategories[19] + sumCategories[20] + sumCategories[21] + sumCategories[22] + sumCategories[23];
-        sumCategories[13] = sumCategories[24] + sumCategories[25];
-        sumCategories[2] = sumCategories[10] + sumCategories[11] + sumCategories[12] + sumCategories[13];
+        sumCategories[10] = sumCategories[10] + sumCategories[14] + sumCategories[15] + sumCategories[16] + sumCategories[17] + sumCategories[18];
+        sumCategories[11] = sumCategories[11] + sumCategories[19] + sumCategories[20] + sumCategories[21] + sumCategories[22] + sumCategories[23];
+        sumCategories[13] = sumCategories[13] + sumCategories[24] + sumCategories[25];
+        sumCategories[2] = sumCategories[2] + sumCategories[10] + sumCategories[11] + sumCategories[12] + sumCategories[13];
         
         for(int j = 3; j <= 9; j++) {
-            percentCategories[j] = sumCategories[j]/sumCategories[1];
+            percentCategories[j] = (sumCategories[j]/sumCategories[1])*100;
         }
         for(int j = 10; j <= 25; j++) {
-            percentCategories[j] = sumCategories[j]/sumCategories[2];
+            percentCategories[j] = (sumCategories[j]/sumCategories[2])*100;
         }
+//        for(int j = 1; j <= 25; j++) {
+//            System.err.println(j + " " + sumCategories[j]);
+//        }
         return percentCategories;
         
 //                if(i.getCategory().isIncome()) {
@@ -80,7 +99,7 @@ public class FluctuationBLL {//bien dong so du//
 //                percentCategoriesIncome[j] = sumCategoriesIncome[j]/sumIncome;
 //                percentCategoriesSpending[j] = sumCategoriesSpending[j]/sumSpending;
 //            }
-    } 
+    }
     /**
      * sum per month
      *

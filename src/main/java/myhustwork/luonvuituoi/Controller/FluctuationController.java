@@ -29,8 +29,8 @@ public class FluctuationController{
         
         flucGUI.setVisible(true);
         flucGUI.addFluctuationListener(new btnAddListener());
-        flucGUI.addFluctuationListener(new btnUpdateListener());
-        flucGUI.addFluctuationListener(new btnDeleteListener());
+        flucGUI.updateFluctuationListener(new btnUpdateListener());
+        flucGUI.deleteFluctuationListener(new btnDeleteListener());
     }
     
     class btnAddListener implements ActionListener{

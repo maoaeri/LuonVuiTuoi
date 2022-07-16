@@ -18,8 +18,8 @@ public class LuonVuiTuoi {
 
     public static void main(String[] args) {
         System.out.println("Hello World!");
-//        FluctuationController fc = new FluctuationController();
-        MainController mc = new MainController();
+        FluctuationController fc = new FluctuationController();
+//        MainController mc = new MainController();
 //        FluctuationGUI.RunApp();
         System.out.println("Dcm MTr");
 

@@ -8,6 +8,7 @@ import java.awt.Image;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import myhustwork.luonvuituoi.Util.GUIRelated;
 
 /**
  *
@@ -20,19 +21,12 @@ public class WelcomeGUI extends javax.swing.JFrame {
      */
     public WelcomeGUI() {
         initComponents();
-        scaleImage("D:\\Pj\\LuonVuiTuoi\\src\\main\\java\\myhustwork\\luonvuituoi\\images\\retouch_2022062810064090.png", logo1);
-        scaleImage("D:\\Pj\\LuonVuiTuoi\\src\\main\\java\\myhustwork\\luonvuituoi\\images\\retouch_2022062810064090.png", logo2);
-        scaleImage("D:\\Pj\\LuonVuiTuoi\\src\\main\\java\\myhustwork\\luonvuituoi\\images\\retouch_2022062810064090.png", logo3);
-
+        GUIRelated.scaleImage("D:\\Pj\\LuonVuiTuoi\\src\\main\\java\\myhustwork\\luonvuituoi\\images\\retouch_2022062810064090.png", logo1);
+        GUIRelated.scaleImage("D:\\Pj\\LuonVuiTuoi\\src\\main\\java\\myhustwork\\luonvuituoi\\images\\retouch_2022062810064090.png", logo2);
+        GUIRelated.scaleImage("D:\\Pj\\LuonVuiTuoi\\src\\main\\java\\myhustwork\\luonvuituoi\\images\\retouch_2022062810064090.png", logo3);
     }
     
-    public void scaleImage(String url, JLabel label){
-        ImageIcon icon = new ImageIcon(url);
-        Image img = icon.getImage();
-        Image imgScale = img.getScaledInstance(label.getWidth(), label.getHeight(), Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon = new ImageIcon(imgScale);
-        label.setIcon(scaledIcon);
-    }
+
     
     public void StartListener(ActionListener log){
         btnStart.addActionListener(log);

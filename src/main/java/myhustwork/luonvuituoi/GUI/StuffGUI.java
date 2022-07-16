@@ -6,6 +6,7 @@ package myhustwork.luonvuituoi.GUI;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -16,9 +17,12 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import myhustwork.luonvuituoi.DAO.CategoryDAO;
 import myhustwork.luonvuituoi.DAO.StuffDAO;
@@ -26,6 +30,7 @@ import myhustwork.luonvuituoi.DTO.CategoryDTO;
 import myhustwork.luonvuituoi.DTO.FluctuationDTO;
 import myhustwork.luonvuituoi.DTO.StuffDTO;
 import myhustwork.luonvuituoi.Util.Converter;
+import myhustwork.luonvuituoi.Util.GUIRelated;
 
 /**
  *
@@ -34,18 +39,29 @@ import myhustwork.luonvuituoi.Util.Converter;
 public class StuffGUI extends javax.swing.JFrame {
     private CategoryDAO catDAO;
     private StuffDAO stuffDAO;
+    private int stuffID;
+//    private StuffDTO stuff;
     /**
      * Creates new form AddStuffInfoFrm
      */
     public StuffGUI() {
         catDAO = new CategoryDAO();
         stuffDAO = new StuffDAO();
+        stuffID = -1;
         initComponents();
+    }
 
+    public void displayStuff(StuffDTO stuff){
+        txtAmount.setText(Long.toString(stuff.getAmount()));
+        txtNote.setText(stuff.getNote());
+        lblCategory2.setText(stuff.getCategory().getCategoryName());
     }
     
     public StuffDTO getStuffInfor() throws ParseException, SQLException {
         StuffDTO stuff = new StuffDTO();
+        if (stuffID != -1){
+            stuff.setID(stuffID);
+        }
         stuff.setAmount(Converter.formatAmount(txtAmount.getText()));
         DefaultMutableTreeNode selectedNode1 = (DefaultMutableTreeNode) treCategory.getModel().getRoot() ;
         String rootType = selectedNode1.getUserObject().toString();
@@ -76,7 +92,7 @@ public class StuffGUI extends javax.swing.JFrame {
         try {
             list = stuffDAO.getAll();
         } catch (SQLException ex) {
-            Logger.getLogger(StuffGUI.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
         }
         for (StuffDTO i: list) {
             listmodel.addElement(i);
@@ -91,8 +107,16 @@ public class StuffGUI extends javax.swing.JFrame {
         lstStuff.setModel(getAllStuffs());
     }
     
-    public void addSubmitListener(ActionListener log){
+    public void addStuffListener(ActionListener log){
+        btnAdd.addActionListener(log);
+    }
+    
+    public void updateFluctuationListener(ActionListener log){
         btnUpdate.addActionListener(log);
+    }
+    
+    public void deleteFluctuationListener(ActionListener log){
+        btnDelete.addActionListener(log);
     }
 
     /**
@@ -118,6 +142,7 @@ public class StuffGUI extends javax.swing.JFrame {
         btnUpdate = new javax.swing.JButton();
         btnAdd = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
+        lblFrm = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setFont(new java.awt.Font("Consolas", 0, 12)); // NOI18N
@@ -127,10 +152,16 @@ public class StuffGUI extends javax.swing.JFrame {
         kGradientPanel1.setkEndColor(new java.awt.Color(255, 175, 175));
         kGradientPanel1.setkGradientFocus(100);
         kGradientPanel1.setkStartColor(new java.awt.Color(255, 255, 255));
+        kGradientPanel1.setPreferredSize(new java.awt.Dimension(960, 540));
 
         lstStuff.setModel(getAllStuffs());
         lstStuff.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         lstStuff.setCellRenderer(new StuffListRenderer());
+        lstStuff.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                lstStuffValueChanged(evt);
+            }
+        });
         jScrollPane1.setViewportView(lstStuff);
 
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Hạng mục");
@@ -206,6 +237,8 @@ public class StuffGUI extends javax.swing.JFrame {
 
         lblCategory2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
+        lblCategory.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        lblCategory.setForeground(new java.awt.Color(255, 51, 51));
         lblCategory.setText("Hạng mục:");
 
         txtNote.addActionListener(new java.awt.event.ActionListener() {
@@ -214,8 +247,13 @@ public class StuffGUI extends javax.swing.JFrame {
             }
         });
 
+        lblNote.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        lblNote.setForeground(new java.awt.Color(255, 51, 51));
         lblNote.setText("Ghi chú:");
 
+        btnUpdate.setBackground(new java.awt.Color(255, 51, 51));
+        btnUpdate.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        btnUpdate.setForeground(new java.awt.Color(255, 255, 255));
         btnUpdate.setText("Sửa");
         btnUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -223,6 +261,9 @@ public class StuffGUI extends javax.swing.JFrame {
             }
         });
 
+        btnAdd.setBackground(new java.awt.Color(255, 51, 51));
+        btnAdd.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        btnAdd.setForeground(new java.awt.Color(255, 255, 255));
         btnAdd.setText("Thêm");
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -230,6 +271,9 @@ public class StuffGUI extends javax.swing.JFrame {
             }
         });
 
+        btnDelete.setBackground(new java.awt.Color(255, 51, 51));
+        btnDelete.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        btnDelete.setForeground(new java.awt.Color(255, 255, 255));
         btnDelete.setText("Xóa");
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -237,80 +281,83 @@ public class StuffGUI extends javax.swing.JFrame {
             }
         });
 
+        lblFrm.setFont(new java.awt.Font("r0c0i Linotte", 0, 36)); // NOI18N
+        lblFrm.setForeground(new java.awt.Color(255, 51, 51));
+        lblFrm.setText("Đồ dùng cần mua");
+
         javax.swing.GroupLayout kGradientPanel1Layout = new javax.swing.GroupLayout(kGradientPanel1);
         kGradientPanel1.setLayout(kGradientPanel1Layout);
         kGradientPanel1Layout.setHorizontalGroup(
             kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kGradientPanel1Layout.createSequentialGroup()
-                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addContainerGap(113, Short.MAX_VALUE)
+                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(kGradientPanel1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lblAmount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblCategory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblNote, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(34, 34, 34)
-                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblNote, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblCategory))
+                        .addGap(51, 51, 51)
+                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblCategory2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtAmount, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
-                            .addComponent(txtNote))
-                        .addGap(48, 48, 48))
+                            .addComponent(txtNote)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kGradientPanel1Layout.createSequentialGroup()
+                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(55, 55, 55)
+                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(kGradientPanel1Layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(btnAdd)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnUpdate)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnDelete)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(396, 396, 396))
+                        .addComponent(lblAmount)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(42, 42, 42)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(61, 61, 61))
+            .addGroup(kGradientPanel1Layout.createSequentialGroup()
+                .addGap(334, 334, 334)
+                .addComponent(lblFrm, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         kGradientPanel1Layout.setVerticalGroup(
             kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kGradientPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(72, 72, 72))
             .addGroup(kGradientPanel1Layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addComponent(lblFrm)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
                 .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(kGradientPanel1Layout.createSequentialGroup()
-                        .addGap(131, 131, 131)
                         .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(52, 52, 52)
-                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lblCategory2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblCategory, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE))
-                        .addGap(48, 48, 48)
+                            .addComponent(lblAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblCategory2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(22, 22, 22)
                         .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtNote, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblNote, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(61, 61, 61)
+                        .addGap(39, 39, 39)
                         .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnUpdate)
-                            .addComponent(btnAdd)
-                            .addComponent(btnDelete)))
-                    .addGroup(kGradientPanel1Layout.createSequentialGroup()
-                        .addGap(58, 58, 58)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 428, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(55, Short.MAX_VALUE))
+                            .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(30, 30, 30)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 416, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(32, 32, 32))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(kGradientPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 954, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(kGradientPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(kGradientPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(kGradientPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -366,6 +413,12 @@ public class StuffGUI extends javax.swing.JFrame {
 //        refreshComponents();
     }//GEN-LAST:event_btnDeleteActionPerformed
 
+    private void lstStuffValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstStuffValueChanged
+        // TODO add your handling code here:
+        displayStuff(lstStuff.getSelectedValue());
+        this.stuffID = lstStuff.getSelectedValue().getID();
+    }//GEN-LAST:event_lstStuffValueChanged
+
     /**
      * @param args the command line arguments
      */
@@ -402,14 +455,14 @@ public class StuffGUI extends javax.swing.JFrame {
         });
     }
     
-    public void Run() {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new StuffGUI().setVisible(true);
-            }
-        });
-    }
+//    public void Run() {
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                new StuffGUI().setVisible(true);
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
@@ -421,6 +474,7 @@ public class StuffGUI extends javax.swing.JFrame {
     private javax.swing.JLabel lblAmount;
     private javax.swing.JLabel lblCategory;
     private javax.swing.JLabel lblCategory2;
+    private javax.swing.JLabel lblFrm;
     private javax.swing.JLabel lblNote;
     private javax.swing.JList<StuffDTO> lstStuff;
     private javax.swing.JTree treCategory;
@@ -448,16 +502,33 @@ class StuffListRenderer extends JPanel implements ListCellRenderer<StuffDTO> {
     @Override
     public Component getListCellRendererComponent(JList<? extends StuffDTO> list, StuffDTO stuff, int index,
             boolean isSelected, boolean cellHasFocus) {
- 
+//        lblIcon.setPreferredSize(new Dimension(100, 100));
+        lblIcon.setSize(new Dimension(50,50));
+        String imgUrl = "D:\\Pj\\LuonVuiTuoi\\src\\main\\java\\myhustwork\\luonvuituoi\\images\\CategoryIcon\\" + String.valueOf(stuff.getCategory().getCategoryId()) + ".png";
+        
+        ImageIcon img = new ImageIcon(imgUrl);
+        lblIcon.setIcon(img);
+        GUIRelated.scaleImage(imgUrl, lblIcon);
+        
         lblCategoryName.setText(stuff.getCategory().getCategoryName());
-        lblCategoryName.setFont(new java.awt.Font("r0c0i Linotte", 0, 18));
+        lblCategoryName.setFont(new java.awt.Font("r0c0i Linotte", 0, 16));
 //        lblCategoryName.setForeground(new java.awt.Color(255, 51,51));
-        lblAmount.setText(Double.toString(stuff.getAmount()));
-        lblAmount.setFont(new java.awt.Font("r0c0i Linotte", 0, 18));
+        lblAmount.setText(Long.toString(stuff.getAmount()));
+        lblAmount.setFont(new java.awt.Font("r0c0i Linotte", 0, 16));
         lblAmount.setForeground(new java.awt.Color(255, 51, 51));
         lblNote.setText(stuff.getNote());
-        lblNote.setFont(new java.awt.Font("r0c0i Linotte", 0, 18));
+        lblNote.setFont(new java.awt.Font("r0c0i Linotte", 0, 16));
         lblNote.setForeground(new java.awt.Color(255, 51,51));
+        
+        if (isSelected) {
+            FluctuationGUI a = new FluctuationGUI();
+            System.err.println(stuff.getID());
+//            a.setVisible(isSelected);
+//            a.setDefaultCloseOperation(a.DISPOSE_ON_CLOSE);
+//            isSelected = false;
+            StuffGUI stuffGUI = new StuffGUI();
+//            stuffGUI.setVisible(true);
+        }
         return this;
     }
-} 
+}

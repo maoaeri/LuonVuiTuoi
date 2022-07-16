@@ -4,6 +4,10 @@
  */
 package myhustwork.luonvuituoi.GUI;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -11,13 +15,24 @@ import java.text.ParseException;
 //import java.util.Calendar;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonModel;
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.ListCellRenderer;
+import javax.swing.ListModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import myhustwork.luonvuituoi.Controller.FluctuationController;
 import myhustwork.luonvuituoi.DAO.CategoryDAO;
 import myhustwork.luonvuituoi.DAO.FluctuationDAO;
+import myhustwork.luonvuituoi.DAO.StuffDAO;
 import myhustwork.luonvuituoi.DTO.CategoryDTO;
 import myhustwork.luonvuituoi.DTO.FluctuationDTO;
+import myhustwork.luonvuituoi.DTO.StuffDTO;
 import myhustwork.luonvuituoi.Util.Converter;
+import myhustwork.luonvuituoi.Util.GUIRelated;
 
 /**
  *
@@ -27,12 +42,14 @@ public class FluctuationGUI extends javax.swing.JFrame {
     boolean fixedButtonpressed;
     private FluctuationDAO flucDAO;
     private CategoryDAO catDAO;
+    private StuffDAO stuffDAO;
     /**
      * Creates new form AddFluctuationForm
      */
     public FluctuationGUI() {
         flucDAO = new FluctuationDAO();
         catDAO = new CategoryDAO();
+        stuffDAO = new StuffDAO();
         initComponents();
     }
     
@@ -502,3 +519,44 @@ public class FluctuationGUI extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
 }
+
+class FluctuationListRenderer extends JPanel implements ListCellRenderer<FluctuationDTO> {
+    private JLabel lblIcon = new JLabel();
+//    private JLabel lblCategoryName = new JLabel();
+    private JLabel lblAmount = new JLabel();
+    private JLabel lblNote = new JLabel();
+ 
+    public FluctuationListRenderer() {
+        setLayout(new BorderLayout(5, 5));
+        JPanel panelText = new JPanel(new GridLayout(0, 1));
+//        panelText.add(lblCategoryName);
+        panelText.add(lblAmount);
+        panelText.add(lblNote);
+        add(lblIcon, BorderLayout.WEST);
+        add(panelText, BorderLayout.CENTER);
+    }
+ 
+    @Override
+    public Component getListCellRendererComponent(JList<? extends FluctuationDTO> list, FluctuationDTO fluc, int index,
+            boolean isSelected, boolean cellHasFocus) {
+        lblIcon.setSize(new Dimension(50,50));
+        
+        String imgUrl = "D:\\Pj\\LuonVuiTuoi\\src\\main\\java\\myhustwork\\luonvuituoi\\images\\CategoryIcon\\" + String.valueOf(fluc.getCategory().getCategoryId() + ".png");
+        
+        ImageIcon img = new ImageIcon(imgUrl);
+        lblIcon.setIcon(img);
+        GUIRelated.scaleImage(imgUrl, lblIcon);
+        
+        
+//        lblCategoryName.setText(stuff.getCategory().getCategoryName());
+//        lblCategoryName.setFont(new java.awt.Font("r0c0i Linotte", 0, 18));
+//        lblCategoryName.setForeground(new java.awt.Color(255, 51,51));
+        lblAmount.setText(Double.toString(fluc.getAmount()));
+        lblAmount.setFont(new java.awt.Font("r0c0i Linotte", 0, 18));
+        lblAmount.setForeground(new java.awt.Color(255, 51, 51));
+        lblNote.setText(fluc.getNote());
+        lblNote.setFont(new java.awt.Font("r0c0i Linotte", 0, 18));
+        lblNote.setForeground(new java.awt.Color(255, 51,51));
+        return this;
+    }
+} 

@@ -120,11 +120,11 @@ public class FluctuationDAO implements DAOInterface<FluctuationDTO>{
                 String flucNote = rs.getString("fluctuation_note");
                 LocalDate flucDate = rs.getDate("fluctuation_date").toLocalDate();
                 CategoryDTO flucCat = new CategoryDTO(rs.getInt("category_type"), rs.getInt("category_id"), rs.getString("category_name"));
-                boolean flucFixed = rs.getBoolean("fluc_is_fixed");
+                boolean flucFixed = rs.getBoolean("fluctuation_is_fixed");
                 data = new FluctuationDTO(flucId, flucNote, flucDate, flucCat, flucFixed, flucAmount);
                 arrlist.add(data);
             }
-        dataset = arrlist.toArray(dataset);
+        dataset = arrlist.toArray(new FluctuationDTO[arrlist.size()]);
         return dataset;
     }
 }
