@@ -66,7 +66,7 @@ public class StuffBLL {
         s2.setNote(tmp.getNote());
     }
 
-    public void StuffSuggestion(StuffDTO[] stuff) {
+    public StuffDTO[] StuffSuggestion(StuffDTO[] stuff) {
         AccountDTO acc = accDAO.get(1);
         int n = stuff.length;
 //        StuffDTO[] stuff = new StuffDTO[n]; // n: so stuff can mua
@@ -118,6 +118,7 @@ public class StuffBLL {
                 Swap(i, stuff[n - 1]);
             }
         }
+    return stuff;
     }
 
     public int[] SuggestionNextMonth(LocalDate date1, LocalDate date2) throws SQLException {
