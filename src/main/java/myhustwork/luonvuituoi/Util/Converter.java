@@ -33,6 +33,13 @@ public class Converter {
         LocalDate localDate = LocalDate.parse(date, formatter);
         return localDate;
     }
+    
+    public static String fromLocalDatetoString(LocalDate date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        String str = date.format(formatter);
+        return str;
+    }
     /**
      * Convert from text format "#,###" to long int
      * @param strFormat

@@ -23,6 +23,7 @@ public class FluctuationDTO extends MoneyDTO {
     private CategoryDTO category;
     private boolean fixed; //co dinh hay khong
     private int accountId;
+    private long preAmount; //amount before update, if not update, is = 0
 
     public FluctuationDTO() {
     }
@@ -34,6 +35,7 @@ public class FluctuationDTO extends MoneyDTO {
         this.date = date;
         this.category = category;
         this.fixed = fixed;
+        this.accountId = accountId;
     }
 
     public int getID() {
@@ -58,6 +60,14 @@ public class FluctuationDTO extends MoneyDTO {
 
     public int getAccountId() {
         return accountId;
+    }
+
+    public long getPreAmount() {
+        return preAmount;
+    }
+
+    public void setPreAmount(long preAmount) {
+        this.preAmount = preAmount;
     }
 
     public void setAccountId(int accountId) {

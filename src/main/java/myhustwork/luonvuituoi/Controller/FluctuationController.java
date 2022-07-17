@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import myhustwork.luonvuituoi.DAO.FluctuationDAO;
 import myhustwork.luonvuituoi.DTO.FluctuationDTO;
 import myhustwork.luonvuituoi.GUI.FluctuationGUI;
+import myhustwork.luonvuituoi.BLL.FluctuationBLL;
 
 /**
  *
@@ -21,16 +22,38 @@ import myhustwork.luonvuituoi.GUI.FluctuationGUI;
  */
 public class FluctuationController{
     private FluctuationGUI flucGUI;
+    private FluctuationBLL flucBLL;
     private FluctuationDAO flucDAO;
     
     public FluctuationController() {
         flucGUI = new FluctuationGUI();
         flucDAO = new FluctuationDAO();
+        flucBLL = new FluctuationBLL();
         
         flucGUI.setVisible(true);
-        flucGUI.addFluctuationListener(new btnAddListener());
-        flucGUI.updateFluctuationListener(new btnUpdateListener());
-        flucGUI.deleteFluctuationListener(new btnDeleteListener());
+        flucGUI.addListener(new btnAddListener());
+        flucGUI.updateListener(new btnUpdateListener());
+        flucGUI.deleteListener(new btnDeleteListener());
+    }
+    
+    public FluctuationController(int flucId) {
+        flucGUI = new FluctuationGUI();
+        flucDAO = new FluctuationDAO();
+        flucBLL = new FluctuationBLL();
+        
+        FluctuationDTO fluc = new FluctuationDTO();
+        try {
+            fluc = flucDAO.get(flucId);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(flucGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+        flucGUI.display(fluc);
+        
+        flucGUI.setVisible(true);
+        flucGUI.addListener(new btnAddListener());
+        flucGUI.updateListener(new btnUpdateListener());
+        flucGUI.deleteListener(new btnDeleteListener());
     }
     
     class btnAddListener implements ActionListener{
@@ -39,13 +62,16 @@ public class FluctuationController{
         public void actionPerformed(ActionEvent e) {
             int res = 0;
             try {
-                FluctuationDTO fluc = flucGUI.getFluctuationInfor();
+                FluctuationDTO fluc = flucGUI.getInfor();
                 res = flucDAO.add(fluc);
+                flucBLL.CalculateBalance(fluc, "add");
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(flucGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
                 return;
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(flucGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
                 return;
             }
             if (res == 0){
@@ -61,12 +87,15 @@ public class FluctuationController{
         public void actionPerformed(ActionEvent e) {
             int res = 0;
             try {
-                FluctuationDTO fluc = flucGUI.getFluctuationInfor();
+                FluctuationDTO fluc = flucGUI.getInfor();
                 res = flucDAO.update(fluc);
+                flucBLL.CalculateBalance(fluc, "update");
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(flucGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(flucGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
             }
             if (res == 0){
                 System.out.print(res);
@@ -80,12 +109,15 @@ public class FluctuationController{
         public void actionPerformed(ActionEvent e) {
             int res = 0;
             try {
-                FluctuationDTO fluc = flucGUI.getFluctuationInfor();
+                FluctuationDTO fluc = flucGUI.getInfor();
                 res = flucDAO.delete(fluc);
+                flucBLL.CalculateBalance(fluc, "delete");
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(flucGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(flucGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
             }
             if (res == 0){
                 System.out.print(res);
