@@ -22,6 +22,7 @@ import myhustwork.luonvuituoi.GUI.StuffGUI;
 public class StuffController {
     private StuffGUI stuffGUI;
     private StuffDAO stuffDAO;
+    int stuffId;
     
     public StuffController() {
         stuffGUI = new StuffGUI();

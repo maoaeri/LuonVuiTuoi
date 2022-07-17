@@ -24,6 +24,7 @@ public class FluctuationController{
     private FluctuationGUI flucGUI;
     private FluctuationBLL flucBLL;
     private FluctuationDAO flucDAO;
+    int flucId;
     
     public FluctuationController() {
         flucGUI = new FluctuationGUI();
@@ -32,14 +33,15 @@ public class FluctuationController{
         
         flucGUI.setVisible(true);
         flucGUI.addListener(new btnAddListener());
-        flucGUI.updateListener(new btnUpdateListener());
-        flucGUI.deleteListener(new btnDeleteListener());
+//        flucGUI.updateListener(new btnUpdateListener());
+//        flucGUI.deleteListener(new btnDeleteListener());
     }
     
     public FluctuationController(int flucId) {
         flucGUI = new FluctuationGUI();
         flucDAO = new FluctuationDAO();
         flucBLL = new FluctuationBLL();
+        this.flucId = flucId;
         
         FluctuationDTO fluc = new FluctuationDTO();
         try {
@@ -88,8 +90,10 @@ public class FluctuationController{
             int res = 0;
             try {
                 FluctuationDTO fluc = flucGUI.getInfor();
-                res = flucDAO.update(fluc);
+                fluc.setID(flucId);
                 flucBLL.CalculateBalance(fluc, "update");
+                res = flucDAO.update(fluc);
+                
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(flucGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
                 ex.printStackTrace();
@@ -110,8 +114,10 @@ public class FluctuationController{
             int res = 0;
             try {
                 FluctuationDTO fluc = flucGUI.getInfor();
-                res = flucDAO.delete(fluc);
+                fluc.setID(flucId);
                 flucBLL.CalculateBalance(fluc, "delete");
+                res = flucDAO.delete(fluc);
+                
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(flucGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
                 ex.printStackTrace();

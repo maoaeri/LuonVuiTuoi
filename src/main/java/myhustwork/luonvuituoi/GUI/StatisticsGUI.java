@@ -8,21 +8,17 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.tree.DefaultMutableTreeNode;
 import myhustwork.luonvuituoi.DTO.CategoryDTO;
 import myhustwork.luonvuituoi.DAO.CategoryDAO;
 import myhustwork.luonvuituoi.DTO.DatasetDTO;
 import myhustwork.luonvuituoi.Util.DateRelated;
 import myhustwork.luonvuituoi.BLL.FluctuationBLL;
-import myhustwork.luonvuituoi.DTO.FluctuationDTO;
 import myhustwork.luonvuituoi.Util.Converter;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -43,6 +39,7 @@ public class StatisticsGUI extends javax.swing.JFrame {
     public StatisticsGUI() {
         flucBLL = new FluctuationBLL();
         catDAO = new CategoryDAO();
+        this.setTitle("LuonVuiTuoi");
         initComponents();
     }
 

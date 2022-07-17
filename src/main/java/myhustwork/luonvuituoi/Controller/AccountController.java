@@ -61,9 +61,11 @@ public class AccountController {
                 res = accDAO.add(acc);
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(accGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
                 return;
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(accGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
                 return;
             }
             if (res == 0){
@@ -83,8 +85,12 @@ public class AccountController {
                 res = accDAO.update(acc);
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(accGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+                return;
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(accGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+                return;
             }
             if (res == 0){
                 System.out.print(res);
@@ -102,8 +108,12 @@ public class AccountController {
                 res = accDAO.delete(acc);
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(accGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+                return;
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(accGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+                return;
             }
             if (res == 0){
                 System.out.print(res);

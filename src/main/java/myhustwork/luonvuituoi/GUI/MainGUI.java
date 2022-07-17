@@ -14,8 +14,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -71,6 +69,7 @@ public class MainGUI extends javax.swing.JFrame {
         accDAO = new AccountDAO();
         stuffBLL = new StuffBLL();
         accId = 1;
+        this.setTitle("LuonVuiTuoi");
         initComponents();
     }
 
@@ -245,6 +244,11 @@ public class MainGUI extends javax.swing.JFrame {
         );
 
         tbPnl.setToolTipText("");
+        tbPnl.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                tbPnlStateChanged(evt);
+            }
+        });
 
         lstFluc.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         lstFluc.setModel(getAllFlucs());
@@ -446,13 +450,13 @@ public class MainGUI extends javax.swing.JFrame {
 
     private void lstFlucValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstFlucValueChanged
         // TODO add your handling code here:
-        this.setFlucId(lstFluc.getSelectedValue().getID());
-        System.err.println(this.getFlucId());
+        this.setFlucId(lstFluc.getSelectedValue().getID()); 
     }//GEN-LAST:event_lstFlucValueChanged
 
     private void lstStuffValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstStuffValueChanged
         // TODO add your handling code here:
         this.setStuffId(lstStuff.getSelectedValue().getID());
+        
     }//GEN-LAST:event_lstStuffValueChanged
 
     private void btnStatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStatActionPerformed
@@ -489,6 +493,13 @@ public class MainGUI extends javax.swing.JFrame {
         }
         JOptionPane.showMessageDialog(this, message, "Đề xuất", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnSuggestActionPerformed
+
+    private void tbPnlStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tbPnlStateChanged
+        // TODO add your handling code here:
+        lstStuff.setModel(getAllStuffs());
+        lstFluc.setModel(getAllFlucs());
+        lstAccount.setModel(getAllAccounts());
+    }//GEN-LAST:event_tbPnlStateChanged
 
     public DefaultPieDataset[] getDataset(){
         DefaultPieDataset[] dataset = new DefaultPieDataset[2];

@@ -56,6 +56,7 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
         catDAO = new CategoryDAO();
         stuffDAO = new StuffDAO();
         accDAO = new AccountDAO();
+        this.setTitle("LuonVuiTuoi");
         initComponents();
     }
     
@@ -106,6 +107,9 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
         fluc.setNote(txtNote.getText());
         fluc.setFixed(this.fixedButtonpressed);
 //        System.out.println(parseInt(txtAmount.getText()));
+        fluc.setAccountId(this.accId);
+        System.out.println(this.accId);
+        System.err.println(fluc.getAccountId());
         return fluc;
     }
     
@@ -517,6 +521,7 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
     private void lstAccountValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstAccountValueChanged
         // TODO add your handling code here:
         accId = lstAccount.getSelectedValue().getId();
+        System.out.println(accId);
     }//GEN-LAST:event_lstAccountValueChanged
 
     /**

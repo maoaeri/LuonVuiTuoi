@@ -28,12 +28,12 @@ public class AccountDAO implements DAOInterface<AccountDTO> {
     @Override
     public int add(AccountDTO acc) throws SQLException {
         int res = 0;
-        String query = "INSERT INTO main.account(account_name, account_balance, account_save_per_month) VALUES(?,?,?,?,?)";
+        String query = "INSERT INTO main.account(account_name, account_balance, account_save_per_month) VALUES(?,?,?)";
         Connection conn = createConnection();
         PreparedStatement ps = conn.prepareStatement(query);
         ps.setString(1, acc.getName());
-        ps.setLong(4, acc.getBalance());
-        ps.setLong(5, acc.getSave_per_month());
+        ps.setLong(2, acc.getBalance());
+        ps.setLong(3, acc.getSave_per_month());
         res = ps.executeUpdate();
         conn.close();
         return res;
@@ -46,17 +46,24 @@ public class AccountDAO implements DAOInterface<AccountDTO> {
             Connection conn = createConnection();
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setString(1, acc.getName());
-            ps.setLong(4, acc.getBalance());
-            ps.setLong(5, acc.getSave_per_month());
-            ps.setInt(6, acc.getId());
+            ps.setLong(2, acc.getBalance());
+            ps.setLong(3, acc.getSave_per_month());
+            ps.setInt(4, acc.getId());
             res = ps.executeUpdate();
             conn.close();
         return res;
     }
 
     @Override
-    public int delete(AccountDTO t) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public int delete(AccountDTO acc) throws SQLException {
+        int res = 0;
+        String query = "DELETE FROM main.account WHERE account_id = ?";
+            Connection conn = createConnection();
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1, acc.getId());
+            res = ps.executeUpdate();
+            conn.close();
+        return res;
     }
 
     @Override
@@ -72,6 +79,7 @@ public class AccountDAO implements DAOInterface<AccountDTO> {
             
             while (rs.next()){
                 acc = new AccountDTO();
+                acc.setId(id);
                 acc.setName(rs.getString("account_name"));
                 acc.setBalance(rs.getLong("account_balance"));
                 acc.setSave_per_month(rs.getLong("account_save_per_month"));
@@ -91,6 +99,7 @@ public class AccountDAO implements DAOInterface<AccountDTO> {
             ResultSet rs = st.executeQuery(query);
             while (rs.next()){
                 acc = new AccountDTO();
+                acc.setId(rs.getInt("account_id"));
                 acc.setName(rs.getString("account_name"));
                 acc.setBalance(rs.getLong("account_balance"));
                 acc.setSave_per_month(rs.getLong("account_save_per_month"));
