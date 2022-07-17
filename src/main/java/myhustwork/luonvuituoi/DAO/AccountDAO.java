@@ -24,16 +24,6 @@ public class AccountDAO implements DAOInterface<AccountDTO> {
     
     public AccountDAO(){
     }
-    
-    public static void main(String[] args){
-        AccountDTO acc = null;
-        AccountDAO ad = new AccountDAO();
-        acc = ad.get(1);
-        System.out.print(acc);
-        if (acc == null){
-            System.out.print("hihi");
-        }
-    }
 
     @Override
     public int add(AccountDTO acc) throws SQLException {
@@ -70,11 +60,10 @@ public class AccountDAO implements DAOInterface<AccountDTO> {
     }
 
     @Override
-    public AccountDTO get(int id){
+    public AccountDTO get(int id) throws SQLException{
 
             String query = "SELECT * from main.account where account_id = ?";
             AccountDTO acc = null;
-        try {
             Connection conn = createConnection();
             PreparedStatement ps = conn.prepareStatement(query);
             ResultSet rs;
@@ -88,10 +77,6 @@ public class AccountDAO implements DAOInterface<AccountDTO> {
                 acc.setSave_per_month(rs.getLong("account_save_per_month"));
             }
             conn.close();
-  
-        } catch (SQLException ex) {
-            Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
         return acc; 
     }
 
@@ -100,7 +85,7 @@ public class AccountDAO implements DAOInterface<AccountDTO> {
         AccountDTO[] dataset = null;
         AccountDTO acc;
         List<AccountDTO> arrlist = new ArrayList<>();
-        String query = "SELECT * FROM main.fluctuation LEFT JOIN main.category ON main.fluctuation.category_id = main.category.category_id ORDER BY fluctuation_id DESC";
+        String query = "SELECT * FROM main.account";
             Connection conn = createConnection();
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query);

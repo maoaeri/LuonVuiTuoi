@@ -77,7 +77,7 @@ public class StuffDAO implements DAOInterface<StuffDTO>{
                 stuff.setID(rs.getInt("stuff_id"));
                 stuff.setAmount(rs.getLong("stuff_amount"));
                 stuff.setCategory(new CategoryDTO(rs.getInt("category_type"), rs.getInt("category_id"), rs.getString("category_name")));
-                stuff.setNote("stuff_note");
+                stuff.setNote(rs.getString("stuff_note"));
             }
             conn.close();
         return stuff;

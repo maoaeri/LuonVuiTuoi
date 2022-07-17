@@ -66,8 +66,12 @@ public class StuffBLL {
         s2.setNote(tmp.getNote());
     }
 
-    public StuffDTO[] StuffSuggestion(StuffDTO[] stuff) {
-        AccountDTO acc = accDAO.get(1);
+    public StuffDTO[] StuffSuggestion(StuffDTO[] stuff) throws SQLException {
+        AccountDTO[] acc = accDAO.getAll();
+        long balance = 0;
+        for (AccountDTO i: acc){
+            balance += i.getBalance();
+        }
         int n = stuff.length;
 //        StuffDTO[] stuff = new StuffDTO[n]; // n: so stuff can mua
         //Lay ra tu database
@@ -79,7 +83,7 @@ public class StuffBLL {
             22:Giai tri
             25:Tra no
              */
-            if (i.getCategory().getCategoryId() == 25 && i.getAmount() < acc.getBalance() && stuff[0].getCategory().getCategoryId() != 25) {
+            if (i.getCategory().getCategoryId() == 25 && i.getAmount() < balance && stuff[0].getCategory().getCategoryId() != 25) {
                 //Tra no 
                 Swap(i, stuff[0]);
                 if (stuff[2].getCategory().getCategoryId() == 22 || stuff[2].getCategory().getCategoryId() == 21) {
@@ -90,12 +94,12 @@ public class StuffBLL {
                     Arrays.sort(stuff, 1, n - 1);
                 }
             }
-            if (i.getCategory().getCategoryId() == 20 && i.getAmount() < acc.getBalance()) {
+            if (i.getCategory().getCategoryId() == 20 && i.getAmount() < balance) {
                 //Suc khoe 
                 Swap(i, stuff[1]);
                 Arrays.sort(stuff, 2, n - 1);
             }
-            if (i.getCategory().getCategoryId() == 22 & i.getAmount() < acc.getBalance()) {
+            if (i.getCategory().getCategoryId() == 22 & i.getAmount() < balance) {
                 // Giai tri
                 if (stuff[0].getCategory().getCategoryId() == 25 && stuff[1].getCategory().getCategoryId() == 20) {
                     Swap(i, stuff[2]);

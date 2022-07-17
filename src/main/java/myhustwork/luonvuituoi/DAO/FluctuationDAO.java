@@ -41,7 +41,7 @@ public class FluctuationDAO implements DAOInterface<FluctuationDTO>{
     @Override
     public int add(FluctuationDTO fluc) throws SQLException {
         int res = 0;
-        String query = "INSERT INTO main.fluctuation(fluctuation_amount, fluctuation_note, fluctuation_date, category_id, fluctuation_is_fixed, account_id) VALUES(?,?,?,?,?, ?)";
+        String query = "INSERT INTO main.fluctuation(fluctuation_amount, fluctuation_note, fluctuation_date, category_id, fluctuation_is_fixed, account_id, pre_amount) VALUES(?,?,?,?,?, ?, ?)";
         Connection conn = createConnection();
         PreparedStatement ps = conn.prepareStatement(query);
         ps.setDouble(1, fluc.getAmount());
@@ -50,6 +50,7 @@ public class FluctuationDAO implements DAOInterface<FluctuationDTO>{
         ps.setInt(4, fluc.getCategory().getCategoryId());
         ps.setBoolean(5, fluc.isFixed());
         ps.setInt(6, fluc.getAccountId());
+        ps.setLong(7, 0);
         res = ps.executeUpdate();
         conn.close();
         return res;
@@ -58,7 +59,7 @@ public class FluctuationDAO implements DAOInterface<FluctuationDTO>{
     @Override
     public int update(FluctuationDTO fluc) throws SQLException{
         int res = 0;
-        String query = "UPDATE main.fluctuation SET fluctuation_amount = ?, fluctuation_note = ?, fluctuation_date = ?, category_id = ?, fluctuation_is_fixed = ?, account_id = ? WHERE fluctuation_id = ?";
+        String query = "UPDATE main.fluctuation SET fluctuation_amount = ?, fluctuation_note = ?, fluctuation_date = ?, category_id = ?, fluctuation_is_fixed = ?, account_id = ?, pre_amount = ? WHERE fluctuation_id = ?";
             Connection conn = createConnection();
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setDouble(1, fluc.getAmount());
@@ -68,6 +69,7 @@ public class FluctuationDAO implements DAOInterface<FluctuationDTO>{
             ps.setBoolean(5, fluc.isFixed());
             ps.setInt(7, fluc.getID());
             ps.setInt(6, fluc.getAccountId());
+            ps.setLong(8, get(fluc.getID()).getAmount());
             res = ps.executeUpdate();
             conn.close();
         return res;
@@ -100,9 +102,10 @@ public class FluctuationDAO implements DAOInterface<FluctuationDTO>{
                 String flucNote = rs.getString("fluctuation_note");
                 LocalDate flucDate = rs.getDate("fluctuation_date").toLocalDate();
                 CategoryDTO flucCat = new CategoryDTO(rs.getInt("category_type"), rs.getInt("category_id"), rs.getString("category_name"));
-                boolean flucFixed = rs.getBoolean("fluc_is_fixed");
+                boolean flucFixed = rs.getBoolean("fluctuation_is_fixed");
                 int flucAccountId = rs.getInt("account_id");
                 fluc = new FluctuationDTO(flucId, flucNote, flucDate, flucCat, flucFixed, flucAmount, flucAccountId);
+                fluc.setPreAmount(rs.getLong("pre_amount"));
             }
             conn.close();
         return fluc;
@@ -126,6 +129,7 @@ public class FluctuationDAO implements DAOInterface<FluctuationDTO>{
                 boolean flucFixed = rs.getBoolean("fluctuation_is_fixed");
                 int flucAccountId = rs.getInt("account_id");
                 data = new FluctuationDTO(flucId, flucNote, flucDate, flucCat, flucFixed, flucAmount, flucAccountId);
+                data.setPreAmount(rs.getLong("pre_amount"));
                 arrlist.add(data);
             }
         dataset = arrlist.toArray(new FluctuationDTO[arrlist.size()]);

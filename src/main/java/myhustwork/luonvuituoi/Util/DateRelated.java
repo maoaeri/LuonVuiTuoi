@@ -28,4 +28,12 @@ public class DateRelated {
     public static LocalDate getFirstDayOfMonth(LocalDate date){
         return date.withDayOfMonth(1);
     }
+    
+    public static LocalDate getFirstDayOfYear(int year){
+        return LocalDate.of(year, 1, 1);
+    }
+    
+    public static LocalDate getLastDayOfYear(int year){
+        return LocalDate.of(year, 12, 31);
+    }
 }

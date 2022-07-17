@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import javax.swing.JOptionPane;
 import myhustwork.luonvuituoi.DAO.AccountDAO;
-import myhustwork.luonvuituoi.DAO.AccountDTO;
+import myhustwork.luonvuituoi.DTO.AccountDTO;
 import myhustwork.luonvuituoi.DTO.AccountDTO;
 import myhustwork.luonvuituoi.GUI.AccountGUI;
 
@@ -25,6 +25,25 @@ public class AccountController {
     public AccountController() {
         accGUI = new AccountGUI();
         accDAO = new AccountDAO();
+        
+        accGUI.setVisible(true);
+        accGUI.addListener(new btnAddListener());
+        accGUI.updateListener(new btnUpdateListener());
+        accGUI.deleteListener(new btnDeleteListener());
+    }
+    
+    public AccountController(int accId) {
+        accGUI = new AccountGUI();
+        accDAO = new AccountDAO();
+        
+        AccountDTO acc = new AccountDTO();
+        try {
+            acc = accDAO.get(accId);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(accGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+       accGUI.display(acc);
         
         accGUI.setVisible(true);
         accGUI.addListener(new btnAddListener());
