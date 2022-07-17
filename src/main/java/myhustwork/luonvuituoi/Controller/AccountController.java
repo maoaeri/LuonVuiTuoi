@@ -9,26 +9,27 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.text.ParseException;
 import javax.swing.JOptionPane;
-import myhustwork.luonvuituoi.DAO.StuffDAO;
-import myhustwork.luonvuituoi.DTO.StuffDTO;
-import myhustwork.luonvuituoi.GUI.StuffGUI;
+import myhustwork.luonvuituoi.DAO.AccountDAO;
+import myhustwork.luonvuituoi.DAO.AccountDTO;
+import myhustwork.luonvuituoi.DTO.AccountDTO;
+import myhustwork.luonvuituoi.GUI.AccountGUI;
 
 /**
  *
  * @author vvlalalove193
  */
-public class StuffController {
-    private StuffGUI stuffGUI;
-    private StuffDAO stuffDAO;
+public class AccountController {
+    private AccountGUI accGUI;
+    private AccountDAO accDAO;
     
-    public StuffController() {
-        stuffGUI = new StuffGUI();
-        stuffDAO = new StuffDAO();
+    public AccountController() {
+        accGUI = new AccountGUI();
+        accDAO = new AccountDAO();
         
-        stuffGUI.setVisible(true);
-        stuffGUI.addListener(new btnAddListener());
-        stuffGUI.updateListener(new btnUpdateListener());
-        stuffGUI.deleteListener(new btnDeleteListener());
+        accGUI.setVisible(true);
+        accGUI.addListener(new btnAddListener());
+        accGUI.updateListener(new btnUpdateListener());
+        accGUI.deleteListener(new btnDeleteListener());
     }
     
     class btnAddListener implements ActionListener{
@@ -37,13 +38,13 @@ public class StuffController {
         public void actionPerformed(ActionEvent e) {
             int res = 0;
             try {
-                StuffDTO stuff = stuffGUI.getInfor();
-                res = stuffDAO.add(stuff);
+                AccountDTO acc = accGUI.getInfor();
+                res = accDAO.add(acc);
             } catch (ParseException ex) {
-                JOptionPane.showMessageDialog(stuffGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(accGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(stuffGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(accGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             if (res == 0){
@@ -59,12 +60,12 @@ public class StuffController {
         public void actionPerformed(ActionEvent e) {
             int res = 0;
             try {
-                StuffDTO stuff = stuffGUI.getInfor();
-                res = stuffDAO.update(stuff);
+                AccountDTO acc = accGUI.getInfor();
+                res = accDAO.update(acc);
             } catch (ParseException ex) {
-                JOptionPane.showMessageDialog(stuffGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(accGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
             } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(stuffGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(accGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
             }
             if (res == 0){
                 System.out.print(res);
@@ -78,12 +79,12 @@ public class StuffController {
         public void actionPerformed(ActionEvent e) {
             int res = 0;
             try {
-                StuffDTO stuff = stuffGUI.getInfor();
-                res = stuffDAO.delete(stuff);
+                AccountDTO acc = accGUI.getInfor();
+                res = accDAO.delete(acc);
             } catch (ParseException ex) {
-                JOptionPane.showMessageDialog(stuffGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(accGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
             } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(stuffGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(accGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
             }
             if (res == 0){
                 System.out.print(res);

@@ -36,7 +36,7 @@ import myhustwork.luonvuituoi.Util.GUIRelated;
  *
  * @author vvlalalove193
  */
-public class StuffGUI extends javax.swing.JFrame {
+public class StuffGUI extends javax.swing.JFrame implements InforInterface<StuffDTO>{
     private CategoryDAO catDAO;
     private StuffDAO stuffDAO;
     private int stuffID;
@@ -57,7 +57,8 @@ public class StuffGUI extends javax.swing.JFrame {
         lblCategory2.setText(stuff.getCategory().getCategoryName());
     }
     
-    public StuffDTO getStuffInfor() throws ParseException, SQLException {
+    @Override
+    public StuffDTO getInfor() throws ParseException, SQLException {
         StuffDTO stuff = new StuffDTO();
         if (stuffID != -1){
             stuff.setID(stuffID);
@@ -100,22 +101,26 @@ public class StuffGUI extends javax.swing.JFrame {
         return listmodel;
     }
     
-    public void refreshComponents() throws SQLException{
+    @Override
+    public void refreshComponents(){
         txtAmount.setText("");
         txtNote.setText("");
         lblCategory2.setText("");
         lstStuff.setModel(getAllStuffs());
     }
     
-    public void addStuffListener(ActionListener log){
+    @Override
+    public void addListener(ActionListener log){
         btnAdd.addActionListener(log);
     }
     
-    public void updateFluctuationListener(ActionListener log){
+    @Override
+    public void updateListener(ActionListener log){
         btnUpdate.addActionListener(log);
     }
     
-    public void deleteFluctuationListener(ActionListener log){
+    @Override
+    public void deleteListener(ActionListener log){
         btnDelete.addActionListener(log);
     }
 
@@ -379,38 +384,17 @@ public class StuffGUI extends javax.swing.JFrame {
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         // TODO add your handling code here:
-        try {
-            StuffDTO stuff = getStuffInfor();
-            stuffDAO.update(stuff);
-//                aff.showMessage("Thêm thành công!");
-        } catch (Exception x) {
-                x.printStackTrace();
-        }
-//        refreshComponents();
+        refreshComponents();
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
-        try {
-            StuffDTO stuff = getStuffInfor();
-            stuffDAO.add(stuff);
-//                aff.showMessage("Thêm thành công!");
-        } catch (Exception x) {
-                x.printStackTrace();
-        }
-//        refreshComponents();
+        refreshComponents();
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         // TODO add your handling code here:
-        try {
-            StuffDTO stuff = getStuffInfor();
-            stuffDAO.delete(stuff);
-//                aff.showMessage("Thêm thành công!");
-        } catch (Exception x) {
-                x.printStackTrace();
-        }
-//        refreshComponents();
+        refreshComponents();
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void lstStuffValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstStuffValueChanged

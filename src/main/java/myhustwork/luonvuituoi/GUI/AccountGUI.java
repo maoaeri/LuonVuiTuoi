@@ -4,44 +4,60 @@
  */
 package myhustwork.luonvuituoi.GUI;
 
-import java.awt.Graphics;
-import java.awt.Shape;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.geom.RoundRectangle2D;
 import static java.lang.Byte.parseByte;
 import static java.lang.Integer.parseInt;
 import java.sql.SQLException;
 import java.text.ParseException;
-import javax.swing.JFormattedTextField;
-import javax.swing.JTextField;
+import javax.swing.*;
 import myhustwork.luonvuituoi.DTO.AccountDTO;
 import myhustwork.luonvuituoi.Util.Converter;
+import myhustwork.luonvuituoi.Util.GUIRelated;
 
 /**
  *
  * @author vvlalalove193
  */
-public class AddAccountGUI extends javax.swing.JFrame {
+public class AccountGUI extends javax.swing.JFrame implements InforInterface<AccountDTO>{
 
     /**
      * Creates new form AccountGUI
      */
-    public AddAccountGUI() {
+    public AccountGUI() {
         initComponents();
     }
     
-    public AccountDTO getFluctuationInfor() throws ParseException, SQLException {
+    @Override
+    public AccountDTO getInfor() throws ParseException, SQLException {
         AccountDTO acc = new AccountDTO();
         acc.setName(txtName.getText());
-        acc.setAge(parseByte(cmbAge.getSelectedItem().toString()));
-        acc.setJob(txtJob.getText());
         acc.setBalance(Converter.formatAmount(txtBalance.getText()));
         acc.setSave_per_month(Converter.formatAmount(txtExpectedSavePerMonth.getText()));
         return acc;
     }
     
-    public void addFluctuationListener(ActionListener log){
-        btnSubmit.addActionListener(log);
+    @Override
+    public void refreshComponents(){
+        txtName.setText("");
+        txtBalance.setText("");
+        txtExpectedSavePerMonth.setText("");
+    }
+    
+    @Override
+    public void addListener(ActionListener log){
+        btnAdd.addActionListener(log);
+    }
+    
+    @Override
+    public void updateListener(ActionListener log){
+        btnUpdate.addActionListener(log);
+    }
+    
+    @Override
+    public void deleteListener(ActionListener log){
+        btnDelete.addActionListener(log);
     }
 
     /**
@@ -56,16 +72,14 @@ public class AddAccountGUI extends javax.swing.JFrame {
         kGradientPanel1 = new keeptoo.KGradientPanel();
         lblForm = new javax.swing.JLabel();
         txtName = new RoundedJTextField();
-        cmbAge = new javax.swing.JComboBox<>();
-        lblAge = new javax.swing.JLabel();
-        txtJob = new RoundedJTextField();
         txtBalance = new RoundedJTextField();
         txtExpectedSavePerMonth = new RoundedJTextField();
-        btnSubmit = new javax.swing.JButton();
         lblName = new javax.swing.JLabel();
         lblBalance = new javax.swing.JLabel();
         lblSavePerMonth = new javax.swing.JLabel();
-        lblJob = new javax.swing.JLabel();
+        btnAdd = new javax.swing.JButton();
+        btnUpdate = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setFont(new java.awt.Font("Maiandra GD", 0, 10)); // NOI18N
@@ -77,9 +91,9 @@ public class AddAccountGUI extends javax.swing.JFrame {
         kGradientPanel1.setkStartColor(new java.awt.Color(255, 255, 255));
         kGradientPanel1.setPreferredSize(new java.awt.Dimension(960, 540));
 
-        lblForm.setFont(new java.awt.Font("Monotype Corsiva", 0, 36)); // NOI18N
+        lblForm.setFont(new java.awt.Font("r0c0i Linotte", 0, 36)); // NOI18N
         lblForm.setForeground(new java.awt.Color(255, 51, 51));
-        lblForm.setText("Thông tin cá nhân");
+        lblForm.setText("Thông tin tài khoản");
 
         txtName.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
         txtName.setForeground(new java.awt.Color(255, 51, 51));
@@ -87,27 +101,6 @@ public class AddAccountGUI extends javax.swing.JFrame {
         txtName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtNameActionPerformed(evt);
-            }
-        });
-
-        cmbAge.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
-        cmbAge.setForeground(new java.awt.Color(255, 51, 51));
-        cmbAge.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99", "100" }));
-
-        lblAge.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
-        lblAge.setForeground(new java.awt.Color(255, 51, 51));
-        lblAge.setLabelFor(cmbAge);
-        lblAge.setText("Tuổi");
-        lblAge.setMaximumSize(new java.awt.Dimension(26324, 34));
-        lblAge.setPreferredSize(new java.awt.Dimension(38, 34));
-
-        txtJob.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
-        txtJob.setForeground(new java.awt.Color(255, 51, 51));
-        txtJob.setToolTipText("");
-        txtJob.setPreferredSize(new java.awt.Dimension(438, 34));
-        txtJob.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtJobActionPerformed(evt);
             }
         });
 
@@ -129,20 +122,9 @@ public class AddAccountGUI extends javax.swing.JFrame {
             }
         });
 
-        btnSubmit.setBackground(new java.awt.Color(255, 51, 51));
-        btnSubmit.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
-        btnSubmit.setForeground(new java.awt.Color(255, 255, 255));
-        btnSubmit.setText("Lưu");
-        btnSubmit.setPreferredSize(new java.awt.Dimension(75, 34));
-        btnSubmit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSubmitActionPerformed(evt);
-            }
-        });
-
         lblName.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
         lblName.setForeground(new java.awt.Color(255, 51, 51));
-        lblName.setText("Họ và tên");
+        lblName.setText("Tên tài khoản");
 
         lblBalance.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
         lblBalance.setForeground(new java.awt.Color(255, 51, 51));
@@ -152,9 +134,35 @@ public class AddAccountGUI extends javax.swing.JFrame {
         lblSavePerMonth.setForeground(new java.awt.Color(255, 51, 51));
         lblSavePerMonth.setText("Số tiền dự định tiết kiệm hàng tháng");
 
-        lblJob.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
-        lblJob.setForeground(new java.awt.Color(255, 51, 51));
-        lblJob.setText("Nghề nghiệp");
+        btnAdd.setBackground(new java.awt.Color(255, 51, 51));
+        btnAdd.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        btnAdd.setForeground(new java.awt.Color(255, 255, 255));
+        btnAdd.setText("Thêm");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddActionPerformed(evt);
+            }
+        });
+
+        btnUpdate.setBackground(new java.awt.Color(255, 51, 51));
+        btnUpdate.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        btnUpdate.setForeground(new java.awt.Color(255, 255, 255));
+        btnUpdate.setText("Sửa");
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateActionPerformed(evt);
+            }
+        });
+
+        btnDelete.setBackground(new java.awt.Color(255, 51, 51));
+        btnDelete.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        btnDelete.setForeground(new java.awt.Color(255, 255, 255));
+        btnDelete.setText("Xóa");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout kGradientPanel1Layout = new javax.swing.GroupLayout(kGradientPanel1);
         kGradientPanel1.setLayout(kGradientPanel1Layout);
@@ -165,16 +173,12 @@ public class AddAccountGUI extends javax.swing.JFrame {
                 .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblBalance, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblSavePerMonth)
-                    .addComponent(lblJob, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblAge, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblName, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30)
                 .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(txtName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtJob, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtExpectedSavePerMonth, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtBalance)
-                    .addComponent(cmbAge, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(txtBalance))
                 .addGap(137, 137, 137))
             .addGroup(kGradientPanel1Layout.createSequentialGroup()
                 .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -182,8 +186,12 @@ public class AddAccountGUI extends javax.swing.JFrame {
                         .addGap(362, 362, 362)
                         .addComponent(lblForm))
                     .addGroup(kGradientPanel1Layout.createSequentialGroup()
-                        .addGap(313, 313, 313)
-                        .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(187, 187, 187)
+                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(94, 94, 94)
+                        .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(86, 86, 86)
+                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         kGradientPanel1Layout.setVerticalGroup(
@@ -197,23 +205,18 @@ public class AddAccountGUI extends javax.swing.JFrame {
                     .addComponent(lblName))
                 .addGap(18, 18, 18)
                 .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cmbAge, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblAge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtJob, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblJob))
-                .addGap(18, 18, 18)
-                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtBalance, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblBalance))
+                    .addComponent(lblBalance)
+                    .addComponent(txtBalance, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtExpectedSavePerMonth, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblSavePerMonth))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
-                .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(102, 102, 102))
+                .addGap(112, 112, 112)
+                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(143, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -236,10 +239,6 @@ public class AddAccountGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNameActionPerformed
 
-    private void txtJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtJobActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtJobActionPerformed
-
     private void txtExpectedSavePerMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtExpectedSavePerMonthActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtExpectedSavePerMonthActionPerformed
@@ -248,10 +247,20 @@ public class AddAccountGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtBalanceActionPerformed
 
-    private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
-        this.setVisible(false);
-    }//GEN-LAST:event_btnSubmitActionPerformed
+        refreshComponents();
+    }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        // TODO add your handling code here:
+        refreshComponents();
+    }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        // TODO add your handling code here:
+        refreshComponents();
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -270,38 +279,38 @@ public class AddAccountGUI extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AddAccountGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AccountGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AddAccountGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AccountGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AddAccountGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AccountGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AddAccountGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AccountGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new AddAccountGUI().setVisible(true);
+                new AccountGUI().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnSubmit;
-    private javax.swing.JComboBox<String> cmbAge;
+    private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnUpdate;
     private keeptoo.KGradientPanel kGradientPanel1;
-    private javax.swing.JLabel lblAge;
     private javax.swing.JLabel lblBalance;
     private javax.swing.JLabel lblForm;
-    private javax.swing.JLabel lblJob;
     private javax.swing.JLabel lblName;
     private javax.swing.JLabel lblSavePerMonth;
     private javax.swing.JFormattedTextField txtBalance;
     private javax.swing.JFormattedTextField txtExpectedSavePerMonth;
-    private javax.swing.JTextField txtJob;
     private javax.swing.JTextField txtName;
     // End of variables declaration//GEN-END:variables
 }
@@ -333,5 +342,39 @@ class RoundedJTextField extends JFormattedTextField {
             shape = new RoundRectangle2D.Float(0, 0, getWidth()-1, getHeight()-1, 15, 15);
         }
         return shape.contains(x, y);
+    }
+}
+
+class AccountListRenderer extends JPanel implements ListCellRenderer<AccountDTO>{
+    private JLabel lblIcon = new JLabel();
+//    private JLabel lblCategoryName = new JLabel();
+    private JLabel lblAmount = new JLabel();
+    private JLabel lblNote = new JLabel();
+ 
+    public AccountListRenderer() {
+        setLayout(new BorderLayout(5, 5));
+        JPanel panelText = new JPanel(new GridLayout(0, 1));
+//        panelText.add(lblCategoryName);
+        panelText.add(lblAmount);
+        panelText.add(lblNote);
+        add(lblIcon, BorderLayout.WEST);
+        add(panelText, BorderLayout.CENTER);
+    }
+ 
+    @Override
+    public Component getListCellRendererComponent(JList<? extends AccountDTO>list, AccountDTO acc, int index,
+            boolean isSelected, boolean cellHasFocus) {
+        lblIcon.setSize(new Dimension(50,50));
+        
+        String imgUrl = "D:\\Pj\\LuonVuiTuoi\\src\\main\\java\\myhustwork\\luonvuituoi\\images\\CategoryIcon\\account.png";
+        
+        ImageIcon img = new ImageIcon(imgUrl);
+        lblIcon.setIcon(img);
+        GUIRelated.scaleImage(imgUrl, lblIcon);
+        
+        lblNote.setText(acc.getName());
+        lblNote.setFont(new java.awt.Font("r0c0i Linotte", 0, 18));
+        lblNote.setForeground(new java.awt.Color(255, 51,51));
+        return this;
     }
 }

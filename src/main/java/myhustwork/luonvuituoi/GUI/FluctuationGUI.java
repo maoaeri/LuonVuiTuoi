@@ -25,9 +25,11 @@ import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import myhustwork.luonvuituoi.Controller.FluctuationController;
+import myhustwork.luonvuituoi.DAO.AccountDAO;
 import myhustwork.luonvuituoi.DAO.CategoryDAO;
 import myhustwork.luonvuituoi.DAO.FluctuationDAO;
 import myhustwork.luonvuituoi.DAO.StuffDAO;
+import myhustwork.luonvuituoi.DTO.AccountDTO;
 import myhustwork.luonvuituoi.DTO.CategoryDTO;
 import myhustwork.luonvuituoi.DTO.FluctuationDTO;
 import myhustwork.luonvuituoi.DTO.StuffDTO;
@@ -38,11 +40,12 @@ import myhustwork.luonvuituoi.Util.GUIRelated;
  *
  * @author vvlalalove193
  */
-public class FluctuationGUI extends javax.swing.JFrame {
+public class FluctuationGUI extends javax.swing.JFrame implements InforInterface<FluctuationDTO>{
     boolean fixedButtonpressed;
     private FluctuationDAO flucDAO;
     private CategoryDAO catDAO;
     private StuffDAO stuffDAO;
+    private AccountDAO accDAO;
     /**
      * Creates new form AddFluctuationForm
      */
@@ -50,6 +53,7 @@ public class FluctuationGUI extends javax.swing.JFrame {
         flucDAO = new FluctuationDAO();
         catDAO = new CategoryDAO();
         stuffDAO = new StuffDAO();
+        accDAO = new AccountDAO();
         initComponents();
     }
     
@@ -62,7 +66,7 @@ public class FluctuationGUI extends javax.swing.JFrame {
         radNotFixed.setSelected(false);
     }
     
-    public FluctuationDTO getFluctuationInfor() throws ParseException, SQLException {
+    public FluctuationDTO getInfor() throws ParseException, SQLException {
         FluctuationDTO fluc = new FluctuationDTO();
         fluc.setAmount(Converter.formatAmount(txtAmount.getText()));
         DefaultMutableTreeNode selectedNode1 = (DefaultMutableTreeNode) treCategory.getModel().getRoot() ;
@@ -88,15 +92,29 @@ public class FluctuationGUI extends javax.swing.JFrame {
         return fluc;
     }
     
-    public void addFluctuationListener(ActionListener log){
+    public ListModel<AccountDTO> getAllAccounts(){
+        DefaultListModel listmodel = new DefaultListModel<AccountDTO>();
+        AccountDTO[] list = null;
+        try {
+            list = accDAO.getAll();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        for (AccountDTO i: list) {
+            listmodel.addElement(i);
+        }
+        return listmodel;
+    }
+    
+    public void addListener(ActionListener log){
         btnAdd.addActionListener(log);
     }
     
-    public void updateFluctuationListener(ActionListener log){
+    public void updateListener(ActionListener log){
         btnUpdate.addActionListener(log);
     }
     
-    public void deleteFluctuationListener(ActionListener log){
+    public void deleteListener(ActionListener log){
         btnDelete.addActionListener(log);
     }
 
@@ -127,6 +145,9 @@ public class FluctuationGUI extends javax.swing.JFrame {
         lblDate = new javax.swing.JLabel();
         lblCategory1 = new javax.swing.JLabel();
         lblNote = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        lstAccount = new javax.swing.JList<>();
+        lblNote1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -305,7 +326,22 @@ public class FluctuationGUI extends javax.swing.JFrame {
         lblNote.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
         lblNote.setForeground(new java.awt.Color(255, 51, 51));
         lblNote.setLabelFor(txtAmount);
-        lblNote.setText("Ghi chú");
+        lblNote.setText("Tài khoản:");
+
+        lstAccount.setModel(getAllAccounts());
+        lstAccount.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        lstAccount.setCellRenderer(new AccountListRenderer());
+        lstAccount.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                lstAccountValueChanged(evt);
+            }
+        });
+        jScrollPane3.setViewportView(lstAccount);
+
+        lblNote1.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        lblNote1.setForeground(new java.awt.Color(255, 51, 51));
+        lblNote1.setLabelFor(txtAmount);
+        lblNote1.setText("Ghi chú");
 
         javax.swing.GroupLayout kGradientPanel1Layout = new javax.swing.GroupLayout(kGradientPanel1);
         kGradientPanel1.setLayout(kGradientPanel1Layout);
@@ -322,8 +358,8 @@ public class FluctuationGUI extends javax.swing.JFrame {
                         .addComponent(lblAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(lblDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(lblCategory1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(lblNote, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
+                    .addComponent(lblNote1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                 .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(kGradientPanel1Layout.createSequentialGroup()
                         .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -340,7 +376,11 @@ public class FluctuationGUI extends javax.swing.JFrame {
                     .addComponent(lblCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jScrollPane1)
+                        .addComponent(jScrollPane3))
+                    .addComponent(lblNote, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(51, 51, 51))
         );
         kGradientPanel1Layout.setVerticalGroup(
@@ -361,22 +401,31 @@ public class FluctuationGUI extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblCategory1))
-                        .addGap(18, 18, 18)
+                            .addComponent(lblCategory1)))
+                    .addGroup(kGradientPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblNote, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(kGradientPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, 0)
                         .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(radFixed, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(radNotFixed, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblNote))
+                            .addComponent(lblNote1))
                         .addGap(26, 26, 26)
                         .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(48, Short.MAX_VALUE))
+                            .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(kGradientPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(33, 33, 33))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -448,6 +497,10 @@ public class FluctuationGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtAmountActionPerformed
 
+    private void lstAccountValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstAccountValueChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lstAccountValueChanged
+
     /**
      * @param args the command line arguments
      */
@@ -503,6 +556,7 @@ public class FluctuationGUI extends javax.swing.JFrame {
     private javax.swing.JButton btnUpdate;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private keeptoo.KGradientPanel kGradientPanel1;
     private javax.swing.JLabel lblAmount;
     private javax.swing.JLabel lblCategory;
@@ -510,6 +564,8 @@ public class FluctuationGUI extends javax.swing.JFrame {
     private javax.swing.JLabel lblDate;
     private javax.swing.JLabel lblForm;
     private javax.swing.JLabel lblNote;
+    private javax.swing.JLabel lblNote1;
+    private javax.swing.JList<AccountDTO> lstAccount;
     private javax.swing.JRadioButton radFixed;
     private javax.swing.JRadioButton radNotFixed;
     private javax.swing.JTree treCategory;
@@ -520,43 +576,4 @@ public class FluctuationGUI extends javax.swing.JFrame {
 
 }
 
-class FluctuationListRenderer extends JPanel implements ListCellRenderer<FluctuationDTO> {
-    private JLabel lblIcon = new JLabel();
-//    private JLabel lblCategoryName = new JLabel();
-    private JLabel lblAmount = new JLabel();
-    private JLabel lblNote = new JLabel();
- 
-    public FluctuationListRenderer() {
-        setLayout(new BorderLayout(5, 5));
-        JPanel panelText = new JPanel(new GridLayout(0, 1));
-//        panelText.add(lblCategoryName);
-        panelText.add(lblAmount);
-        panelText.add(lblNote);
-        add(lblIcon, BorderLayout.WEST);
-        add(panelText, BorderLayout.CENTER);
-    }
- 
-    @Override
-    public Component getListCellRendererComponent(JList<? extends FluctuationDTO> list, FluctuationDTO fluc, int index,
-            boolean isSelected, boolean cellHasFocus) {
-        lblIcon.setSize(new Dimension(50,50));
-        
-        String imgUrl = "D:\\Pj\\LuonVuiTuoi\\src\\main\\java\\myhustwork\\luonvuituoi\\images\\CategoryIcon\\" + String.valueOf(fluc.getCategory().getCategoryId() + ".png");
-        
-        ImageIcon img = new ImageIcon(imgUrl);
-        lblIcon.setIcon(img);
-        GUIRelated.scaleImage(imgUrl, lblIcon);
-        
-        
-//        lblCategoryName.setText(stuff.getCategory().getCategoryName());
-//        lblCategoryName.setFont(new java.awt.Font("r0c0i Linotte", 0, 18));
-//        lblCategoryName.setForeground(new java.awt.Color(255, 51,51));
-        lblAmount.setText(Double.toString(fluc.getAmount()));
-        lblAmount.setFont(new java.awt.Font("r0c0i Linotte", 0, 18));
-        lblAmount.setForeground(new java.awt.Color(255, 51, 51));
-        lblNote.setText(fluc.getNote());
-        lblNote.setFont(new java.awt.Font("r0c0i Linotte", 0, 18));
-        lblNote.setForeground(new java.awt.Color(255, 51,51));
-        return this;
-    }
-} 
+

@@ -178,7 +178,7 @@
                         </Property>
                       </Properties>
                       <AuxValues>
-                        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="lstStuff.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);&#xa;lstFluc.setCellRenderer(new FluctuationListRenderer());"/>
+                        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="lstFluc.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);&#xa;lstFluc.setCellRenderer(new FluctuationListRenderer());"/>
                         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;FluctuationDTO&gt;"/>
                       </AuxValues>
                     </Component>
