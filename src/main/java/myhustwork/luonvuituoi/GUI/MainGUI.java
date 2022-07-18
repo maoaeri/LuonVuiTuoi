@@ -14,8 +14,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -200,6 +198,8 @@ public class MainGUI extends javax.swing.JFrame {
         btnAddAccount = new javax.swing.JButton();
         btnStat = new javax.swing.JButton();
         btnSuggest = new javax.swing.JButton();
+        btnRefresh = new javax.swing.JButton();
+        btnAboutUs = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -336,7 +336,7 @@ public class MainGUI extends javax.swing.JFrame {
         btnAddStuff.setBackground(new java.awt.Color(255, 51, 51));
         btnAddStuff.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
         btnAddStuff.setForeground(new java.awt.Color(255, 255, 255));
-        btnAddStuff.setText("Thêm đồ cần mua");
+        btnAddStuff.setText("Đồ cần mua");
         btnAddStuff.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddStuffActionPerformed(evt);
@@ -346,7 +346,7 @@ public class MainGUI extends javax.swing.JFrame {
         btnAddAccount.setBackground(new java.awt.Color(255, 51, 51));
         btnAddAccount.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
         btnAddAccount.setForeground(new java.awt.Color(255, 255, 255));
-        btnAddAccount.setText("Thêm tài khoản");
+        btnAddAccount.setText("Tài khoản");
         btnAddAccount.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddAccountActionPerformed(evt);
@@ -373,6 +373,16 @@ public class MainGUI extends javax.swing.JFrame {
             }
         });
 
+        btnRefresh.setBackground(new java.awt.Color(255, 51, 51));
+        btnRefresh.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        btnRefresh.setForeground(new java.awt.Color(255, 255, 255));
+        btnRefresh.setText("Làm mới");
+
+        btnAboutUs.setBackground(new java.awt.Color(255, 51, 51));
+        btnAboutUs.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        btnAboutUs.setForeground(new java.awt.Color(255, 255, 255));
+        btnAboutUs.setText("Về chúng tôi");
+
         javax.swing.GroupLayout kGradientPanel1Layout = new javax.swing.GroupLayout(kGradientPanel1);
         kGradientPanel1.setLayout(kGradientPanel1Layout);
         kGradientPanel1Layout.setHorizontalGroup(
@@ -386,12 +396,14 @@ public class MainGUI extends javax.swing.JFrame {
                         .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(tbPnl))
                 .addGap(34, 34, 34)
-                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnFluc, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAddStuff, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAddAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnStat, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSuggest, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnFluc, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+                    .addComponent(btnAddStuff, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+                    .addComponent(btnAddAccount, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+                    .addComponent(btnStat, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+                    .addComponent(btnSuggest, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+                    .addComponent(btnRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnAboutUs, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
         kGradientPanel1Layout.setVerticalGroup(
@@ -413,7 +425,12 @@ public class MainGUI extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tbPnl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSuggest, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(kGradientPanel1Layout.createSequentialGroup()
+                        .addComponent(btnSuggest, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(28, 28, 28)
+                        .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(26, 26, 26)
+                        .addComponent(btnAboutUs, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -458,7 +475,6 @@ public class MainGUI extends javax.swing.JFrame {
     private void lstStuffValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstStuffValueChanged
         // TODO add your handling code here:
         this.setStuffId(lstStuff.getSelectedValue().getID());
-        
     }//GEN-LAST:event_lstStuffValueChanged
 
     private void btnStatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStatActionPerformed
@@ -583,9 +599,11 @@ public class MainGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAboutUs;
     private javax.swing.JButton btnAddAccount;
     private javax.swing.JButton btnAddStuff;
     private javax.swing.JButton btnFluc;
+    private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnStat;
     private javax.swing.JButton btnSuggest;
     private javax.swing.JScrollPane jScrollPane2;

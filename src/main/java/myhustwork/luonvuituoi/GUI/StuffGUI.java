@@ -9,7 +9,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.text.ParseException;
 import javax.swing.BorderFactory;
@@ -25,8 +24,6 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
 import myhustwork.luonvuituoi.BLL.StuffBLL;
-import myhustwork.luonvuituoi.DAO.CategoryDAO;
-import myhustwork.luonvuituoi.DAO.StuffDAO;
 import myhustwork.luonvuituoi.DTO.CategoryDTO;
 import myhustwork.luonvuituoi.DTO.StuffDTO;
 import myhustwork.luonvuituoi.Util.Converter;
@@ -37,8 +34,6 @@ import myhustwork.luonvuituoi.Util.GUIRelated;
  * @author vvlalalove193
  */
 public class StuffGUI extends javax.swing.JFrame implements InforInterface<StuffDTO>{
-    private CategoryDAO catDAO;
-    private StuffDAO stuffDAO;
     private StuffBLL stuffBLL;
     private int stuffID;
 //    private StuffDTO stuff;
@@ -46,8 +41,6 @@ public class StuffGUI extends javax.swing.JFrame implements InforInterface<Stuff
      * Creates new form AddStuffInfoFrm
      */
     public StuffGUI() {
-        catDAO = new CategoryDAO();
-        stuffDAO = new StuffDAO();
         stuffBLL = new StuffBLL();
         stuffID = -1;
         this.setTitle("LuonVuiTuoi");
@@ -95,7 +88,7 @@ public class StuffGUI extends javax.swing.JFrame implements InforInterface<Stuff
         DefaultListModel listmodel = new DefaultListModel<StuffDTO>();
         StuffDTO[] list = null;
         try {
-            list = stuffDAO.getAll();
+            list = stuffBLL.getAllStuffs();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -384,7 +377,7 @@ public class StuffGUI extends javax.swing.JFrame implements InforInterface<Stuff
         // TODO add your handling code here:
         try {
                 StuffDTO stuff = this.getInfor();
-                stuffBLL.addStuff(stuff);
+                stuffBLL.updateFromGUI(stuff);
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
             } catch (SQLException ex) {
@@ -397,7 +390,7 @@ public class StuffGUI extends javax.swing.JFrame implements InforInterface<Stuff
         // TODO add your handling code here:
         try {
                 StuffDTO stuff = this.getInfor();
-                stuffBLL.updateStuff(stuff);
+                stuffBLL.addFromGUI(stuff);
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
             } catch (SQLException ex) {
@@ -410,7 +403,7 @@ public class StuffGUI extends javax.swing.JFrame implements InforInterface<Stuff
         // TODO add your handling code here:
         try {
                 StuffDTO stuff = this.getInfor();
-                stuffBLL.deleteStuff(stuff);
+                stuffBLL.deleteFromGUI(stuff);
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
             } catch (SQLException ex) {
