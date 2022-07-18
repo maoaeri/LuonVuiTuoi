@@ -36,7 +36,7 @@ public class StuffBLL implements BLLInterface<StuffDTO>{
         catDAO = new CategoryDAO();
     }
 
-    public StuffDTO[] getAllStuffs() throws SQLException {
+    public StuffDTO[] getAll() throws SQLException {
         return stuffDAO.getAll();
     }
     

@@ -4,8 +4,6 @@
  */
 package myhustwork.luonvuituoi.DTO;
 
-import com.google.protobuf.Value;
-
 /**
  *
  * @author vvlalalove193

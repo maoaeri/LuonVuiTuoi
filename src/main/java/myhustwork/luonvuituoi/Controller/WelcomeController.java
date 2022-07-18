@@ -6,7 +6,6 @@ package myhustwork.luonvuituoi.Controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import myhustwork.luonvuituoi.GUI.MainGUI;
 import myhustwork.luonvuituoi.GUI.WelcomeGUI;
 
 /**
