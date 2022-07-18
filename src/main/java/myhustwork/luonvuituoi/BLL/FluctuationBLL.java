@@ -41,6 +41,10 @@ public class FluctuationBLL implements BLLInterface<FluctuationDTO>{//bien dong 
         return flucDAO.get(id);
     }
     
+    public FluctuationDTO[] getAll() throws SQLException{
+        return flucDAO.getAll();
+    }
+    
     //get fluc from GUI, add category id and insert to database
     @Override
     public void addFromGUI(FluctuationDTO fluc) throws SQLException{

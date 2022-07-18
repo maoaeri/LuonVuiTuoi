@@ -26,12 +26,10 @@ import javax.swing.ListModel;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionListener;
+import myhustwork.luonvuituoi.BLL.AccountBLL;
+import myhustwork.luonvuituoi.BLL.CategoryBLL;
 import myhustwork.luonvuituoi.BLL.FluctuationBLL;
 import myhustwork.luonvuituoi.BLL.StuffBLL;
-import myhustwork.luonvuituoi.DAO.AccountDAO;
-import myhustwork.luonvuituoi.DAO.CategoryDAO;
-import myhustwork.luonvuituoi.DAO.FluctuationDAO;
-import myhustwork.luonvuituoi.DAO.StuffDAO;
 import myhustwork.luonvuituoi.DTO.AccountDTO;
 import myhustwork.luonvuituoi.DTO.CategoryDTO;
 import myhustwork.luonvuituoi.DTO.DatasetDTO;
@@ -49,12 +47,10 @@ import org.jfree.data.general.DefaultPieDataset;
  * @author vvlalalove193
  */
 public class MainGUI extends javax.swing.JFrame {
-    private CategoryDAO catDAO;
     private FluctuationBLL flucBLL;
-    private FluctuationDAO flucDAO;
-    private StuffDAO stuffDAO;
-    private AccountDAO accDAO;
     private StuffBLL stuffBLL;
+    private AccountBLL accBLL;
+    private CategoryBLL catBLL;
     private int accId;
     private int flucId;
     private int stuffId;
@@ -62,12 +58,10 @@ public class MainGUI extends javax.swing.JFrame {
      * Creates new form MainGUI
      */
     public MainGUI() {
-        catDAO = new CategoryDAO();
         flucBLL = new FluctuationBLL();
-        flucDAO = new FluctuationDAO();
-        stuffDAO = new StuffDAO();
-        accDAO = new AccountDAO();
         stuffBLL = new StuffBLL();
+        accBLL = new AccountBLL();
+        catBLL = new CategoryBLL();
         accId = 1;
         this.setTitle("LuonVuiTuoi");
         initComponents();
@@ -101,7 +95,7 @@ public class MainGUI extends javax.swing.JFrame {
         DefaultListModel listmodel = new DefaultListModel<StuffDTO>();
         StuffDTO[] list = null;
         try {
-            list = stuffBLL.StuffSuggestion(stuffDAO.getAll());
+            list = stuffBLL.StuffSuggestion(stuffBLL.getAll());
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -115,7 +109,7 @@ public class MainGUI extends javax.swing.JFrame {
         DefaultListModel listmodel = new DefaultListModel<FluctuationDTO>();
         FluctuationDTO[] list = null;
         try {
-            list = flucDAO.getAll();
+            list = flucBLL.getAll();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -129,7 +123,7 @@ public class MainGUI extends javax.swing.JFrame {
         DefaultListModel listmodel = new DefaultListModel<AccountDTO>();
         AccountDTO[] list = null;
         try {
-            list = accDAO.getAll();
+            list = accBLL.getAll();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -377,6 +371,11 @@ public class MainGUI extends javax.swing.JFrame {
         btnRefresh.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
         btnRefresh.setForeground(new java.awt.Color(255, 255, 255));
         btnRefresh.setText("Làm mới");
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefreshActionPerformed(evt);
+            }
+        });
 
         btnAboutUs.setBackground(new java.awt.Color(255, 51, 51));
         btnAboutUs.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
@@ -518,6 +517,13 @@ public class MainGUI extends javax.swing.JFrame {
 //        lstAccount.setModel(getAllAccounts());
     }//GEN-LAST:event_tbPnlStateChanged
 
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        // TODO add your handling code here:
+        lstStuff.setModel(getAllStuffs());
+        lstFluc.setModel(getAllFlucs());
+        lstAccount.setModel(getAllAccounts());
+    }//GEN-LAST:event_btnRefreshActionPerformed
+
     public DefaultPieDataset[] getDataset(){
         DefaultPieDataset[] dataset = new DefaultPieDataset[2];
         dataset[0] = new DefaultPieDataset();
@@ -525,7 +531,7 @@ public class MainGUI extends javax.swing.JFrame {
         
         CategoryDTO[] listCategory = null;
         try {
-            listCategory = catDAO.getAll();
+            listCategory = catBLL.getAll();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -545,7 +551,7 @@ public class MainGUI extends javax.swing.JFrame {
         
         for (int i = 0; i < arrList.size(); i++){
             try {
-                switch (catDAO.get(arrList.get(i).getId()).getCategoryType()) {
+                switch (catBLL.get(arrList.get(i).getId()).getCategoryType()) {
                     case CategoryDTO.CHI:
                         dataset[0].setValue(arrList.get(i).getName(), arrList.get(i).getValue());
                         break;

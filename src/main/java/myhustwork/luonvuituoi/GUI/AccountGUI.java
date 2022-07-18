@@ -5,13 +5,13 @@
 package myhustwork.luonvuituoi.GUI;
 
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.geom.RoundRectangle2D;
 import java.sql.SQLException;
 import java.text.ParseException;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
+import myhustwork.luonvuituoi.BLL.AccountBLL;
 import myhustwork.luonvuituoi.DTO.AccountDTO;
 import myhustwork.luonvuituoi.Util.Converter;
 import myhustwork.luonvuituoi.Util.GUIRelated;
@@ -21,11 +21,15 @@ import myhustwork.luonvuituoi.Util.GUIRelated;
  * @author vvlalalove193
  */
 public class AccountGUI extends javax.swing.JFrame implements InforInterface<AccountDTO>{
-
+    private AccountBLL accBLL;
+    private int accId;
+    
     /**
      * Creates new form AccountGUI
      */
     public AccountGUI() {
+        this.accId = -1;
+        accBLL = new AccountBLL();
         this.setTitle("LuonVuiTuoi");
         initComponents();
     }
@@ -33,6 +37,9 @@ public class AccountGUI extends javax.swing.JFrame implements InforInterface<Acc
     @Override
     public AccountDTO getInfor() throws ParseException, SQLException {
         AccountDTO acc = new AccountDTO();
+        if (accId != -1){
+            acc.setId(accId);
+        }
         acc.setName(txtName.getText());
         acc.setBalance(Converter.formatAmount(txtBalance.getText()));
         acc.setSave_per_month(Converter.formatAmount(txtExpectedSavePerMonth.getText()));
@@ -51,18 +58,21 @@ public class AccountGUI extends javax.swing.JFrame implements InforInterface<Acc
         txtName.setText("");
         txtBalance.setText("");
         txtExpectedSavePerMonth.setText("");
+        accId = -1;
     }
     
-    public void addListener(ActionListener log){
-        btnAdd.addActionListener(log);
-    }
-    
-    public void updateListener(ActionListener log){
-        btnUpdate.addActionListener(log);
-    }
-    
-    public void deleteListener(ActionListener log){
-        btnDelete.addActionListener(log);
+    public ListModel<AccountDTO> getAllAccounts(){
+        DefaultListModel listmodel = new DefaultListModel<AccountDTO>();
+        AccountDTO[] list = null;
+        try {
+            list = accBLL.getAll();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        for (AccountDTO i: list) {
+            listmodel.addElement(i);
+        }
+        return listmodel;
     }
 
     /**
@@ -85,6 +95,8 @@ public class AccountGUI extends javax.swing.JFrame implements InforInterface<Acc
         btnAdd = new javax.swing.JButton();
         btnUpdate = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        lstAccount = new javax.swing.JList<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setFont(new java.awt.Font("Maiandra GD", 0, 10)); // NOI18N
@@ -169,22 +181,20 @@ public class AccountGUI extends javax.swing.JFrame implements InforInterface<Acc
             }
         });
 
+        lstAccount.setModel(getAllAccounts());
+        lstAccount.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        lstAccount.setCellRenderer(new AccountListRenderer());
+        lstAccount.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                lstAccountValueChanged(evt);
+            }
+        });
+        jScrollPane1.setViewportView(lstAccount);
+
         javax.swing.GroupLayout kGradientPanel1Layout = new javax.swing.GroupLayout(kGradientPanel1);
         kGradientPanel1.setLayout(kGradientPanel1Layout);
         kGradientPanel1Layout.setHorizontalGroup(
             kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kGradientPanel1Layout.createSequentialGroup()
-                .addContainerGap(59, Short.MAX_VALUE)
-                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblBalance, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblSavePerMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblName, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(30, 30, 30)
-                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(txtName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtExpectedSavePerMonth, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtBalance))
-                .addGap(137, 137, 137))
             .addGroup(kGradientPanel1Layout.createSequentialGroup()
                 .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(kGradientPanel1Layout.createSequentialGroup()
@@ -198,6 +208,21 @@ public class AccountGUI extends javax.swing.JFrame implements InforInterface<Acc
                         .addGap(92, 92, 92)
                         .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kGradientPanel1Layout.createSequentialGroup()
+                .addContainerGap(59, Short.MAX_VALUE)
+                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 859, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(kGradientPanel1Layout.createSequentialGroup()
+                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblBalance, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblSavePerMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblName, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(30, 30, 30)
+                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txtName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtExpectedSavePerMonth, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtBalance))))
+                .addGap(42, 42, 42))
         );
         kGradientPanel1Layout.setVerticalGroup(
             kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -221,7 +246,9 @@ public class AccountGUI extends javax.swing.JFrame implements InforInterface<Acc
                     .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(224, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -254,18 +281,48 @@ public class AccountGUI extends javax.swing.JFrame implements InforInterface<Acc
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
+        try {
+                AccountDTO acc = this.getInfor();
+                accBLL.addFromGUI(acc);
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         refreshComponents();
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         // TODO add your handling code here:
+        try {
+                AccountDTO acc = this.getInfor();
+                accBLL.updateFromGUI(acc);
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         refreshComponents();
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         // TODO add your handling code here:
+        try {
+                AccountDTO acc = this.getInfor();
+                accBLL.deleteFromGUI(acc);
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         refreshComponents();
     }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void lstAccountValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstAccountValueChanged
+        // TODO add your handling code here:
+        display(lstAccount.getSelectedValue());
+        this.accId = lstAccount.getSelectedValue().getId();
+    }//GEN-LAST:event_lstAccountValueChanged
 
     /**
      * @param args the command line arguments
@@ -309,11 +366,13 @@ public class AccountGUI extends javax.swing.JFrame implements InforInterface<Acc
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnUpdate;
+    private javax.swing.JScrollPane jScrollPane1;
     private keeptoo.KGradientPanel kGradientPanel1;
     private javax.swing.JLabel lblBalance;
     private javax.swing.JLabel lblForm;
     private javax.swing.JLabel lblName;
     private javax.swing.JLabel lblSavePerMonth;
+    private javax.swing.JList<AccountDTO> lstAccount;
     private javax.swing.JFormattedTextField txtBalance;
     private javax.swing.JFormattedTextField txtExpectedSavePerMonth;
     private javax.swing.JTextField txtName;

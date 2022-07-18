@@ -12,7 +12,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import myhustwork.luonvuituoi.DTO.AccountDTO;
-import myhustwork.luonvuituoi.DTO.CategoryDTO;
 import static myhustwork.luonvuituoi.Util.DBConnection.createConnection;
 
 /**

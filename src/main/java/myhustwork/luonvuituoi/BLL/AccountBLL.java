@@ -15,15 +15,36 @@ import myhustwork.luonvuituoi.DTO.CategoryDTO;
  *
  * @author vvlalalove193
  */
-public class AccountBLL {
+public class AccountBLL implements BLLInterface<AccountDTO>{
     private AccountDAO accDAO;
 
     public AccountBLL() {
         accDAO = new AccountDAO();
     }
     
+    @Override
+    public AccountDTO get(int id) throws SQLException{
+        return accDAO.get(id);
+    }
+    
+    @Override
     public AccountDTO[] getAll() throws SQLException{
         return accDAO.getAll();
+    }
+    
+    @Override
+    public void addFromGUI(AccountDTO acc) throws SQLException{
+        accDAO.add(acc);
+    }
+    
+    @Override
+    public void updateFromGUI(AccountDTO acc) throws SQLException{
+        accDAO.update(acc);
+    }
+    
+    @Override
+    public void deleteFromGUI(AccountDTO acc) throws SQLException{
+        accDAO.delete(acc);
     }
     
     public String[] getAllNames() throws SQLException{

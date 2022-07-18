@@ -25,6 +25,10 @@ public class CategoryBLL {
         return catDAO.getAll();
     }
     
+    public CategoryDTO get(int id) throws SQLException{
+        return catDAO.get(id);
+    }
+    
     public String[] getAllNames() throws SQLException{
         String[] names = new String[25];
         CategoryDTO[] catList = catDAO.getAll();

@@ -12,6 +12,7 @@ import java.sql.SQLException;
  */
 public interface BLLInterface<T> {
     public T get(int id) throws SQLException;
+    public T[] getAll() throws SQLException;
     public void addFromGUI(T t) throws SQLException;
     public void updateFromGUI(T t) throws SQLException;
     public void deleteFromGUI(T t) throws SQLException;
