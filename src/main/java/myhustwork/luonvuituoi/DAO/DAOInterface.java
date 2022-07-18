@@ -12,9 +12,9 @@ import java.sql.SQLException;
  * @param <T>
  */
 public interface DAOInterface<T> {
-    public int add(T t) throws SQLException ;
-    public int update(T t) throws SQLException ;
-    public int delete(T t)throws SQLException ;
+    public void add(T t) throws SQLException ;
+    public void update(T t) throws SQLException ;
+    public void delete(T t)throws SQLException ;
     public T get(int id)throws SQLException ;
     public T[] getAll()throws SQLException ;
 }

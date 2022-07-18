@@ -67,7 +67,7 @@
                   </Group>
                   <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="btnAddFluc" min="-2" pref="223" max="-2" attributes="0"/>
+                      <Component id="btnFluc" min="-2" pref="223" max="-2" attributes="0"/>
                       <Component id="btnAddStuff" min="-2" pref="223" max="-2" attributes="0"/>
                       <Component id="btnAddAccount" min="-2" pref="223" max="-2" attributes="0"/>
                       <Component id="btnStat" min="-2" pref="223" max="-2" attributes="0"/>
@@ -87,7 +87,7 @@
                           <Component id="panel0" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
-                          <Component id="btnAddFluc" min="-2" pref="45" max="-2" attributes="0"/>
+                          <Component id="btnFluc" min="-2" pref="45" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
                           <Component id="btnAddStuff" min="-2" pref="45" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
@@ -298,7 +298,7 @@
             </Container>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JButton" name="btnAddFluc">
+        <Component class="javax.swing.JButton" name="btnFluc">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="33" green="33" red="ff" type="rgb"/>
@@ -309,10 +309,10 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Th&#xea;m giao d&#x1ecb;ch"/>
+            <Property name="text" type="java.lang.String" value="Giao d&#x1ecb;ch"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddFlucActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnFlucActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnAddStuff">

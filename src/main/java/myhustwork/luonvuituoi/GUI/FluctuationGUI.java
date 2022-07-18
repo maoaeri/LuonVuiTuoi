@@ -4,37 +4,33 @@
  */
 package myhustwork.luonvuituoi.GUI;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 //import java.text.SimpleDateFormat;
 //import java.util.Calendar;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonModel;
 import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.ListCellRenderer;
+import javax.swing.JTable;
 import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.plaf.basic.BasicComboBoxRenderer;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
-import myhustwork.luonvuituoi.Controller.FluctuationController;
-import myhustwork.luonvuituoi.DAO.AccountDAO;
-import myhustwork.luonvuituoi.DAO.CategoryDAO;
-import myhustwork.luonvuituoi.DAO.FluctuationDAO;
-import myhustwork.luonvuituoi.DAO.StuffDAO;
-import myhustwork.luonvuituoi.DTO.AccountDTO;
-import myhustwork.luonvuituoi.DTO.CategoryDTO;
-import myhustwork.luonvuituoi.DTO.FluctuationDTO;
-import myhustwork.luonvuituoi.DTO.StuffDTO;
+import myhustwork.luonvuituoi.BLL.*;
+import myhustwork.luonvuituoi.DAO.*;
+import myhustwork.luonvuituoi.DTO.*;
 import myhustwork.luonvuituoi.Util.Converter;
-import myhustwork.luonvuituoi.Util.GUIRelated;
 
 /**
  *
@@ -46,18 +42,46 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
     private CategoryDAO catDAO;
     private StuffDAO stuffDAO;
     private AccountDAO accDAO;
+    private CategoryBLL catBLL;
+    private AccountBLL accBLL;
+    private FluctuationBLL flucBLL;
     private int accId;
+    private int flucId;
     /**
      * Creates new form AddFluctuationForm
      */
     public FluctuationGUI() {
         accId = -1;
+        flucId = -1;
         flucDAO = new FluctuationDAO();
         catDAO = new CategoryDAO();
         stuffDAO = new StuffDAO();
         accDAO = new AccountDAO();
+        catBLL = new CategoryBLL();
+        accBLL = new AccountBLL();
+        flucBLL = new FluctuationBLL();
         this.setTitle("LuonVuiTuoi");
         initComponents();
+        List<FluctuationDTO> dataset = null;
+        
+        try {
+            dataset = flucBLL.getAllFlucDataset();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+        FluctuationTableModel model = new FluctuationTableModel(dataset);
+        //create the table
+        tblFluc.setModel(model);
+        tblFluc.repaint();
+    }
+
+    public int getFlucId() {
+        return flucId;
+    }
+
+    public void setFlucId(int flucId) {
+        this.flucId = flucId;
     }
     
     @Override
@@ -68,6 +92,7 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
         lblCategory.setText(fluc.getCategory().getCategoryName());
         radFixed.setSelected(fluc.isFixed());
         radNotFixed.setSelected(!fluc.isFixed());
+        lblAccountName.setText(fluc.getAccount().getName());
     }
     
     @Override
@@ -78,38 +103,40 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
         lblCategory.setText("");
         radFixed.setSelected(false);
         radNotFixed.setSelected(false);
+        lblAccountName.setText("");
     }
     
     @Override
     public FluctuationDTO getInfor() throws ParseException, SQLException {
         FluctuationDTO fluc = new FluctuationDTO();
         if (accId != -1){
-            fluc.setAccountId(accId);
+            fluc.getAccount().setId(accId);
+            this.accId = -1;
         }
+        fluc.setID(this.flucId);
         fluc.setAmount(Converter.formatAmount(txtAmount.getText()));
-        DefaultMutableTreeNode selectedNode1 = (DefaultMutableTreeNode) treCategory.getModel().getRoot() ;
-        String rootType = selectedNode1.getUserObject().toString();
-        int categoryType = 0;
-        switch (rootType) {
-            case "Thu" ->  {
-                categoryType = 1;
+        if (!treCategory.isSelectionEmpty()){
+           DefaultMutableTreeNode selectedNode2 = (DefaultMutableTreeNode) treCategory.getLastSelectedPathComponent();
+            String rootType = selectedNode2.getPath()[1].toString();
+            int categoryType = 0;
+            System.out.println(rootType);
+            switch (rootType) {
+                case "Thu" ->  {
+                    categoryType = 1;
+                    break;
+                }
+                case "Chi" ->  {
+                    categoryType = 0;
+                    break;
+                }
             }
-            case "Chi" ->  {
-                categoryType = 0;
-            }
+            String categoryName = selectedNode2.getUserObject().toString();
+            CategoryDTO cat = new CategoryDTO(categoryType, categoryName);
+            fluc.setCategory(cat); 
         }
-        DefaultMutableTreeNode selectedNode2 = (DefaultMutableTreeNode) treCategory.getLastSelectedPathComponent() ;
-        String categoryName = selectedNode2.getUserObject().toString();
-        CategoryDTO cat = new CategoryDTO(categoryType, categoryName);
-        cat.setCategoryId(catDAO.getCategoryId(cat));
-        fluc.setCategory(cat);
         fluc.setDate(Converter.toDate(txtDate.getText()));
         fluc.setNote(txtNote.getText());
         fluc.setFixed(this.fixedButtonpressed);
-//        System.out.println(parseInt(txtAmount.getText()));
-        fluc.setAccountId(this.accId);
-        System.out.println(this.accId);
-        System.err.println(fluc.getAccountId());
         return fluc;
     }
     
@@ -127,20 +154,6 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
         return listmodel;
     }
     
-    @Override
-    public void addListener(ActionListener log){
-        btnAdd.addActionListener(log);
-    }
-    
-    @Override
-    public void updateListener(ActionListener log){
-        btnUpdate.addActionListener(log);
-    }
-    
-    @Override
-    public void deleteListener(ActionListener log){
-        btnDelete.addActionListener(log);
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -172,9 +185,30 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
         jScrollPane3 = new javax.swing.JScrollPane();
         lstAccount = new javax.swing.JList<>();
         lblNote1 = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        tblFluc = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
+        String[] catNameList = null;
+        try {
+            catNameList = catBLL.getAllNames();
+        } catch(SQLException ex){
+            JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+        jcbCat = new javax.swing.JComboBox<>();
+        String[] accNameList = null;
+        try {
+            accNameList = accBLL.getAllNames();
+        } catch(SQLException ex){
+            JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+        jcbAccount = new javax.swing.JComboBox<>();
+        btnSearch = new javax.swing.JButton();
+        btnAll = new javax.swing.JButton();
+        lblAccountName = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setResizable(false);
 
         kGradientPanel1.setkEndColor(new java.awt.Color(255, 175, 175));
         kGradientPanel1.setkGradientFocus(100);
@@ -368,12 +402,90 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
         lblNote1.setLabelFor(txtAmount);
         lblNote1.setText("Ghi chú");
 
+        tblFluc.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        ListSelectionModel tblFlucSelectionModel = tblFluc.getSelectionModel();
+        tblFlucSelectionModel.addListSelectionListener(new ListSelectionListener(){
+            public void valueChanged(ListSelectionEvent event) {
+                tblFlucValueChanged(event);
+            }
+        });
+        jScrollPane4.setViewportView(tblFluc);
+
+        jButton1.setBackground(new java.awt.Color(255, 51, 51));
+        jButton1.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("Cập nhật");
+
+        jcbCat.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        jcbCat.setForeground(new java.awt.Color(255, 51, 51));
+        jcbCat.setModel(new javax.swing.DefaultComboBoxModel<>(catNameList));
+        //jcbCat.setRenderer(new CategoryItemRenderer());
+
+        jcbAccount.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        jcbAccount.setForeground(new java.awt.Color(255, 51, 51));
+        jcbAccount.setModel(new javax.swing.DefaultComboBoxModel<>(accNameList));
+
+        btnSearch.setBackground(new java.awt.Color(255, 51, 51));
+        btnSearch.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        btnSearch.setForeground(new java.awt.Color(255, 255, 255));
+        btnSearch.setText("Tìm kiếm");
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
+
+        btnAll.setBackground(new java.awt.Color(255, 51, 51));
+        btnAll.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        btnAll.setForeground(new java.awt.Color(255, 255, 255));
+        btnAll.setText("Tất cả");
+        btnAll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAllActionPerformed(evt);
+            }
+        });
+
+        lblAccountName.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        lblAccountName.setForeground(new java.awt.Color(255, 51, 51));
+
         javax.swing.GroupLayout kGradientPanel1Layout = new javax.swing.GroupLayout(kGradientPanel1);
         kGradientPanel1.setLayout(kGradientPanel1Layout);
         kGradientPanel1Layout.setHorizontalGroup(
             kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(kGradientPanel1Layout.createSequentialGroup()
-                .addGap(37, 37, 37)
+                .addGap(377, 377, 377)
+                .addComponent(lblForm)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kGradientPanel1Layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButton1)
+                .addGap(18, 18, 18)
+                .addComponent(jcbCat, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jcbAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnSearch)
+                .addGap(18, 18, 18)
+                .addComponent(btnAll, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(450, 450, 450))
+            .addGroup(kGradientPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(lblAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -381,32 +493,24 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
                         .addComponent(lblCategory1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(lblNote1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(kGradientPanel1Layout.createSequentialGroup()
-                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(52, 52, 52)
-                        .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(50, 50, 50)
-                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(kGradientPanel1Layout.createSequentialGroup()
-                            .addComponent(radFixed, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(radNotFixed, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(lblCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(txtAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(51, 51, 51)
+                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(radNotFixed, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
+                    .addComponent(radFixed, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblCategory, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtDate, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtAmount, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblNote, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
-                .addGap(155, 155, 155))
-            .addGroup(kGradientPanel1Layout.createSequentialGroup()
-                .addGap(377, 377, 377)
-                .addComponent(lblForm)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(kGradientPanel1Layout.createSequentialGroup()
+                        .addComponent(lblNote, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(5, 5, 5)
+                        .addComponent(lblAccountName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(436, 436, 436))
         );
         kGradientPanel1Layout.setVerticalGroup(
             kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -414,38 +518,50 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
                 .addGap(33, 33, 33)
                 .addComponent(lblForm)
                 .addGap(31, 31, 31)
-                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(kGradientPanel1Layout.createSequentialGroup()
-                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblAmount))
-                        .addGap(18, 18, 18)
-                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblDate))
-                        .addGap(18, 18, 18)
-                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblCategory1))
-                        .addGap(18, 18, 18)
-                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(radNotFixed, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(radFixed, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblNote1))
-                        .addGap(32, 32, 32)
-                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(kGradientPanel1Layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblNote, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblNote, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblAccountName))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(kGradientPanel1Layout.createSequentialGroup()
+                            .addGap(242, 242, 242)
+                            .addComponent(lblNote1))
+                        .addGroup(kGradientPanel1Layout.createSequentialGroup()
+                            .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(txtAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblAmount))
+                            .addGap(18, 18, 18)
+                            .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblDate))
+                            .addGap(18, 18, 18)
+                            .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(lblCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblCategory1))
+                            .addGap(4, 4, 4)
+                            .addComponent(radFixed, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(6, 6, 6)
+                            .addComponent(radNotFixed, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 81, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kGradientPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jcbCat, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jcbAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAll))
                 .addContainerGap())
         );
 
@@ -453,11 +569,11 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(kGradientPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(kGradientPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(kGradientPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(kGradientPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 536, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -465,16 +581,50 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         // TODO add your handling code here:
+        try {
+                FluctuationDTO fluc = this.getInfor();
+                flucBLL.deleteFluctuationDromGUI(fluc);
+                
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+            }
+        
         refreshComponents();
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         // TODO add your handling code here:
+        try {
+            FluctuationDTO fluc = this.getInfor();
+            flucBLL.updateFluctuationFromGUI(fluc);
+        } catch (ParseException ex) {
+            JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+        ex.printStackTrace();
+            } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
         refreshComponents();
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
+        try {
+                FluctuationDTO fluc = this.getInfor();
+                flucBLL.addFluctuationFromGUI(fluc);
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+                return;
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+                return;
+            }
         refreshComponents();
     }//GEN-LAST:event_btnAddActionPerformed
 
@@ -521,9 +671,55 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
     private void lstAccountValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstAccountValueChanged
         // TODO add your handling code here:
         accId = lstAccount.getSelectedValue().getId();
-        System.out.println(accId);
     }//GEN-LAST:event_lstAccountValueChanged
 
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        // TODO add your handling code here:
+        String catName = jcbCat.getSelectedItem().toString();
+        String accName = jcbAccount.getSelectedItem().toString();
+        
+        List<FluctuationDTO> dataset = null;
+        
+        try {
+            dataset = flucBLL.getFlucDatasetByCategoryAndAccount(catName, accName);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+        FluctuationTableModel model = new FluctuationTableModel(dataset);
+        //create the table
+        tblFluc.setModel(model);
+        tblFluc.repaint();
+    }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void btnAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAllActionPerformed
+        // TODO add your handling code here:
+        List<FluctuationDTO> dataset = null;
+        
+        try {
+            dataset = flucBLL.getAllFlucDataset();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+        FluctuationTableModel model = new FluctuationTableModel(dataset);
+        //create the table
+        tblFluc.setModel(model);
+        tblFluc.repaint();
+    }//GEN-LAST:event_btnAllActionPerformed
+
+    private void tblFlucValueChanged(javax.swing.event.ListSelectionEvent evt){
+        flucId = Integer.parseInt(tblFluc.getValueAt(tblFluc.getSelectedRow(), 0).toString());
+        FluctuationDTO fluc = null;
+        try {
+           fluc = flucBLL.get(flucId);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+        display(fluc);
+        tblFluc.clearSelection();
+    }
     /**
      * @param args the command line arguments
      */
@@ -575,12 +771,19 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnAll;
     private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnUpdate;
+    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JComboBox<String> jcbAccount;
+    private javax.swing.JComboBox<String> jcbCat;
     private keeptoo.KGradientPanel kGradientPanel1;
+    private javax.swing.JLabel lblAccountName;
     private javax.swing.JLabel lblAmount;
     private javax.swing.JLabel lblCategory;
     private javax.swing.JLabel lblCategory1;
@@ -591,6 +794,7 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
     private javax.swing.JList<AccountDTO> lstAccount;
     private javax.swing.JRadioButton radFixed;
     private javax.swing.JRadioButton radNotFixed;
+    private javax.swing.JTable tblFluc;
     private javax.swing.JTree treCategory;
     private javax.swing.JFormattedTextField txtAmount;
     private javax.swing.JFormattedTextField txtDate;
@@ -599,4 +803,79 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
 
 }
 
+class FluctuationTableModel extends AbstractTableModel{
+    
+    private final List<FluctuationDTO> datasetList;
+     
+    private final String[] columnNames = new String[] {
+            "Id", "Số tiền", "Ngày tháng", "Tên hạng mục", "Ghi chú"
+    };
+    private final Class[] columnClass = new Class[] {
+        Integer.class ,Long.class, LocalDate.class, String.class, String.class
+    };
+ 
+    public FluctuationTableModel(List<FluctuationDTO> datasetList)
+    {
+        this.datasetList = datasetList;
+    }
+     
+    @Override
+    public String getColumnName(int column)
+    {
+        return columnNames[column];
+    }
+ 
+    @Override
+    public Class<?> getColumnClass(int columnIndex)
+    {
+        return columnClass[columnIndex];
+    }
+ 
+    @Override
+    public int getColumnCount()
+    {
+        return columnNames.length;
+    }
+ 
+    @Override
+    public int getRowCount()
+    {
+        return datasetList.size();
+    }
+ 
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex)
+    {
+        FluctuationDTO row = datasetList.get(rowIndex);
+        if (0 == columnIndex){
+            return row.getID();
+        }
+        else if(1 == columnIndex) {
+            return row.getAmount();
+        }
+        else if(2 == columnIndex) {
+            return row.getDate();
+        }
+        else if(3 == columnIndex) {
+            return row.getCategory().getCategoryName();
+        }
+        else if (4 == columnIndex) {
+            return row.getNote();
+        }
+        return null;
+    }
+}
 
+class CategoryItemRenderer extends BasicComboBoxRenderer {
+  public Component getListCellRendererComponent(JList<? extends CategoryDTO> list, CategoryDTO cat, int index,
+            boolean isSelected, boolean cellHasFocus) {
+    super.getListCellRendererComponent(list, cat, index, isSelected,
+        cellHasFocus);
+
+    if (index == -1) {
+      setText(cat.getCategoryName());
+    } else {
+      setText(cat.getCategoryName());    }
+    return this;
+  }
+}

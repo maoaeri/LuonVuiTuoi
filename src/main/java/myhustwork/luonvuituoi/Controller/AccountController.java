@@ -55,10 +55,9 @@ public class AccountController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            int res = 0;
             try {
                 AccountDTO acc = accGUI.getInfor();
-                res = accDAO.add(acc);
+                accDAO.add(acc);
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(accGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
                 ex.printStackTrace();
@@ -66,10 +65,6 @@ public class AccountController {
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(accGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
                 ex.printStackTrace();
-                return;
-            }
-            if (res == 0){
-                System.out.print(res);
                 return;
             }
         }
@@ -79,10 +74,9 @@ public class AccountController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            int res = 0;
             try {
                 AccountDTO acc = accGUI.getInfor();
-                res = accDAO.update(acc);
+                accDAO.update(acc);
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(accGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
                 ex.printStackTrace();
@@ -91,9 +85,6 @@ public class AccountController {
                 JOptionPane.showMessageDialog(accGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
                 ex.printStackTrace();
                 return;
-            }
-            if (res == 0){
-                System.out.print(res);
             }
         }
     }
@@ -102,10 +93,9 @@ public class AccountController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            int res = 0;
             try {
                 AccountDTO acc = accGUI.getInfor();
-                res = accDAO.delete(acc);
+                accDAO.delete(acc);
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(accGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
                 ex.printStackTrace();
@@ -114,9 +104,6 @@ public class AccountController {
                 JOptionPane.showMessageDialog(accGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
                 ex.printStackTrace();
                 return;
-            }
-            if (res == 0){
-                System.out.print(res);
             }
         }
     }

@@ -11,9 +11,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import myhustwork.luonvuituoi.DTO.AccountDTO;
+import myhustwork.luonvuituoi.DTO.CategoryDTO;
 import static myhustwork.luonvuituoi.Util.DBConnection.createConnection;
 
 /**
@@ -24,24 +23,21 @@ public class AccountDAO implements DAOInterface<AccountDTO> {
     
     public AccountDAO(){
     }
-
+    
     @Override
-    public int add(AccountDTO acc) throws SQLException {
-        int res = 0;
+    public void add(AccountDTO acc) throws SQLException {
         String query = "INSERT INTO main.account(account_name, account_balance, account_save_per_month) VALUES(?,?,?)";
         Connection conn = createConnection();
         PreparedStatement ps = conn.prepareStatement(query);
         ps.setString(1, acc.getName());
         ps.setLong(2, acc.getBalance());
         ps.setLong(3, acc.getSave_per_month());
-        res = ps.executeUpdate();
+        ps.executeUpdate();
         conn.close();
-        return res;
     }
 
     @Override
-    public int update(AccountDTO acc) throws SQLException {
-        int res = 0;
+    public void update(AccountDTO acc) throws SQLException {
         String query = "UPDATE main.account SET account_name = ?, account_balance = ?, account_save_per_month = ? WHERE account_id = ?";
             Connection conn = createConnection();
             PreparedStatement ps = conn.prepareStatement(query);
@@ -49,21 +45,18 @@ public class AccountDAO implements DAOInterface<AccountDTO> {
             ps.setLong(2, acc.getBalance());
             ps.setLong(3, acc.getSave_per_month());
             ps.setInt(4, acc.getId());
-            res = ps.executeUpdate();
+            ps.executeUpdate();
             conn.close();
-        return res;
     }
 
     @Override
-    public int delete(AccountDTO acc) throws SQLException {
-        int res = 0;
+    public void delete(AccountDTO acc) throws SQLException {
         String query = "DELETE FROM main.account WHERE account_id = ?";
             Connection conn = createConnection();
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1, acc.getId());
-            res = ps.executeUpdate();
+            ps.executeUpdate();
             conn.close();
-        return res;
     }
 
     @Override

@@ -15,12 +15,14 @@ public class DatasetDTO {
     private String name;
     private double value;
     private long amount;
+    private String type;
 
-    public DatasetDTO(int Id, String name, double value, long amount) {
+    public DatasetDTO(int Id, String name, double value, long amount, String type) {
         this.Id = Id;
         this.name = name;
         this.value = value;
         this.amount = amount;
+        this.type = type;
     }
 
     public String getName() {
@@ -37,6 +39,14 @@ public class DatasetDTO {
 
     public long getAmount() {
         return amount;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public void setAmount(long amount) {

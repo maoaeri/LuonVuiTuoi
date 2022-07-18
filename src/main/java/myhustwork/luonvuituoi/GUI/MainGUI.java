@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -140,7 +142,7 @@ public class MainGUI extends javax.swing.JFrame {
     }
     
     public void addFlucListener(ActionListener log){
-        btnAddFluc.addActionListener(log);
+        btnFluc.addActionListener(log);
     }
     
     public void addStuffListener(ActionListener log){
@@ -193,7 +195,7 @@ public class MainGUI extends javax.swing.JFrame {
         pnlAccount = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         lstAccount = new javax.swing.JList<>();
-        btnAddFluc = new javax.swing.JButton();
+        btnFluc = new javax.swing.JButton();
         btnAddStuff = new javax.swing.JButton();
         btnAddAccount = new javax.swing.JButton();
         btnStat = new javax.swing.JButton();
@@ -321,13 +323,13 @@ public class MainGUI extends javax.swing.JFrame {
 
         tbPnl.addTab("Tài khoản", pnlAccount);
 
-        btnAddFluc.setBackground(new java.awt.Color(255, 51, 51));
-        btnAddFluc.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
-        btnAddFluc.setForeground(new java.awt.Color(255, 255, 255));
-        btnAddFluc.setText("Thêm giao dịch");
-        btnAddFluc.addActionListener(new java.awt.event.ActionListener() {
+        btnFluc.setBackground(new java.awt.Color(255, 51, 51));
+        btnFluc.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        btnFluc.setForeground(new java.awt.Color(255, 255, 255));
+        btnFluc.setText("Giao dịch");
+        btnFluc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddFlucActionPerformed(evt);
+                btnFlucActionPerformed(evt);
             }
         });
 
@@ -385,7 +387,7 @@ public class MainGUI extends javax.swing.JFrame {
                     .addComponent(tbPnl))
                 .addGap(34, 34, 34)
                 .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnAddFluc, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnFluc, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAddStuff, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAddAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnStat, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -401,7 +403,7 @@ public class MainGUI extends javax.swing.JFrame {
                         .addComponent(panel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(panel0, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(kGradientPanel1Layout.createSequentialGroup()
-                        .addComponent(btnAddFluc, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnFluc, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(27, 27, 27)
                         .addComponent(btnAddStuff, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(27, 27, 27)
@@ -435,10 +437,10 @@ public class MainGUI extends javax.swing.JFrame {
         
     }//GEN-LAST:event_lstAccountValueChanged
 
-    private void btnAddFlucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddFlucActionPerformed
+    private void btnFlucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFlucActionPerformed
         // TODO add your handling code here:
 //        refreshComponents();
-    }//GEN-LAST:event_btnAddFlucActionPerformed
+    }//GEN-LAST:event_btnFlucActionPerformed
 
     private void btnAddStuffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddStuffActionPerformed
         // TODO add your handling code here:
@@ -496,9 +498,9 @@ public class MainGUI extends javax.swing.JFrame {
 
     private void tbPnlStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tbPnlStateChanged
         // TODO add your handling code here:
-        lstStuff.setModel(getAllStuffs());
-        lstFluc.setModel(getAllFlucs());
-        lstAccount.setModel(getAllAccounts());
+//        lstStuff.setModel(getAllStuffs());
+//        lstFluc.setModel(getAllFlucs());
+//        lstAccount.setModel(getAllAccounts());
     }//GEN-LAST:event_tbPnlStateChanged
 
     public DefaultPieDataset[] getDataset(){
@@ -519,7 +521,12 @@ public class MainGUI extends javax.swing.JFrame {
         LocalDate lastDayOfMonth = DateRelated.getLastDayOfMonth(localdate);
         
         List<DatasetDTO> arrList = new ArrayList<DatasetDTO>();
-        arrList = flucBLL.getDataset(firstDayOfMonth, lastDayOfMonth);
+        try {
+            arrList = flucBLL.getStatDatasetByDate(firstDayOfMonth, lastDayOfMonth);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
         
         for (int i = 0; i < arrList.size(); i++){
             try {
@@ -577,8 +584,8 @@ public class MainGUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddAccount;
-    private javax.swing.JButton btnAddFluc;
     private javax.swing.JButton btnAddStuff;
+    private javax.swing.JButton btnFluc;
     private javax.swing.JButton btnStat;
     private javax.swing.JButton btnSuggest;
     private javax.swing.JScrollPane jScrollPane2;

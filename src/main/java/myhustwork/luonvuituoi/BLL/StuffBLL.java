@@ -37,6 +37,18 @@ public class StuffBLL {
         return stuffDAO.getAll();
     }
 
+    public void addStuff(StuffDTO stuff) throws SQLException{
+        stuffDAO.add(stuff);
+    }
+    
+    public void updateStuff(StuffDTO stuff) throws SQLException{
+        stuffDAO.update(stuff);
+    }
+    
+    public void deleteStuff(StuffDTO stuff) throws SQLException {
+        stuffDAO.delete(stuff);
+    }
+    
     public void Suggestion(LocalDate date1, LocalDate date2) throws SQLException {
         double ThuThanghientai = 0, Chithanghientai = 0, Sodutrongthang = 0;
 

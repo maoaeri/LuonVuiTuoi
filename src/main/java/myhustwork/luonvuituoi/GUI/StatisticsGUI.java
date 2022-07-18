@@ -11,6 +11,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
@@ -19,6 +21,7 @@ import myhustwork.luonvuituoi.DAO.CategoryDAO;
 import myhustwork.luonvuituoi.DTO.DatasetDTO;
 import myhustwork.luonvuituoi.Util.DateRelated;
 import myhustwork.luonvuituoi.BLL.FluctuationBLL;
+import myhustwork.luonvuituoi.DTO.FluctuationDTO;
 import myhustwork.luonvuituoi.Util.Converter;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -55,26 +58,30 @@ public class StatisticsGUI extends javax.swing.JFrame {
         kGradientPanel1 = new keeptoo.KGradientPanel();
         lblForm = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
+        kGradientPanel5 = new keeptoo.KGradientPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        tblDate1 = new javax.swing.JTable();
         kGradientPanel2 = new keeptoo.KGradientPanel();
-        txtDateStart = new javax.swing.JFormattedTextField();
-        txtDateEnd = new javax.swing.JFormattedTextField();
         lblDate = new javax.swing.JLabel();
         lblDate1 = new javax.swing.JLabel();
         btnStatDate = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblDate = new javax.swing.JTable();
+        dateEndDate = new com.toedter.calendar.JDateChooser();
+        dateStartDate = new com.toedter.calendar.JDateChooser();
         kGradientPanel3 = new keeptoo.KGradientPanel();
         lblDate2 = new javax.swing.JLabel();
-        txtDateStartOfMonth = new javax.swing.JFormattedTextField();
         btnStatMonth = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblMonth = new javax.swing.JTable();
+        jmcMonthMonth = new com.toedter.calendar.JMonthChooser();
+        jmcMonthYear = new com.toedter.calendar.JYearChooser();
         kGradientPanel4 = new keeptoo.KGradientPanel();
         lblDate3 = new javax.swing.JLabel();
-        txtYear = new javax.swing.JFormattedTextField();
         btnStatYear = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblYear = new javax.swing.JTable();
+        jYear = new com.toedter.calendar.JYearChooser();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -91,22 +98,47 @@ public class StatisticsGUI extends javax.swing.JFrame {
         jTabbedPane1.setForeground(new java.awt.Color(255, 51, 51));
         jTabbedPane1.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
 
+        kGradientPanel5.setkEndColor(new java.awt.Color(255, 175, 175));
+        kGradientPanel5.setkGradientFocus(100);
+        kGradientPanel5.setkStartColor(new java.awt.Color(255, 255, 255));
+
+        tblDate1.setFont(new java.awt.Font("r0c0i Linotte", 0, 14)); // NOI18N
+        tblDate1.setForeground(new java.awt.Color(255, 51, 51));
+        tblDate1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        tblDate1.setRowHeight(20);
+        tblDate1.setRowSelectionAllowed(false);
+        tblDate1.setSelectionBackground(new java.awt.Color(255, 255, 255));
+        jScrollPane4.setViewportView(tblDate1);
+
+        javax.swing.GroupLayout kGradientPanel5Layout = new javax.swing.GroupLayout(kGradientPanel5);
+        kGradientPanel5.setLayout(kGradientPanel5Layout);
+        kGradientPanel5Layout.setHorizontalGroup(
+            kGradientPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kGradientPanel5Layout.createSequentialGroup()
+                .addContainerGap(51, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 799, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(61, 61, 61))
+        );
+        kGradientPanel5Layout.setVerticalGroup(
+            kGradientPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kGradientPanel5Layout.createSequentialGroup()
+                .addContainerGap(80, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab("Tổng quát", kGradientPanel5);
+
         kGradientPanel2.setkEndColor(new java.awt.Color(255, 175, 175));
         kGradientPanel2.setkGradientFocus(100);
         kGradientPanel2.setkStartColor(new java.awt.Color(255, 255, 255));
-
-        txtDateStart.setForeground(new java.awt.Color(255, 51, 51));
-        txtDateStart.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
-        txtDateStart.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
-        txtDateStart.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtDateStartActionPerformed(evt);
-            }
-        });
-
-        txtDateEnd.setForeground(new java.awt.Color(255, 51, 51));
-        txtDateEnd.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
-        txtDateEnd.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
 
         lblDate.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
         lblDate.setForeground(new java.awt.Color(255, 51, 51));
@@ -141,6 +173,14 @@ public class StatisticsGUI extends javax.swing.JFrame {
         tblDate.setSelectionBackground(new java.awt.Color(255, 255, 255));
         jScrollPane3.setViewportView(tblDate);
 
+        dateEndDate.setForeground(new java.awt.Color(255, 51, 51));
+        dateEndDate.setDateFormatString("dd/MM/yyyy");
+        dateEndDate.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+
+        dateStartDate.setForeground(new java.awt.Color(255, 51, 51));
+        dateStartDate.setDateFormatString("dd/MM/yyyy");
+        dateStartDate.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+
         javax.swing.GroupLayout kGradientPanel2Layout = new javax.swing.GroupLayout(kGradientPanel2);
         kGradientPanel2.setLayout(kGradientPanel2Layout);
         kGradientPanel2Layout.setHorizontalGroup(
@@ -148,15 +188,15 @@ public class StatisticsGUI extends javax.swing.JFrame {
             .addGroup(kGradientPanel2Layout.createSequentialGroup()
                 .addGroup(kGradientPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(kGradientPanel2Layout.createSequentialGroup()
+                        .addGap(89, 89, 89)
+                        .addComponent(btnStatDate, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(kGradientPanel2Layout.createSequentialGroup()
                         .addGap(34, 34, 34)
                         .addGroup(kGradientPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lblDate1, javax.swing.GroupLayout.DEFAULT_SIZE, 311, Short.MAX_VALUE)
                             .addComponent(lblDate, javax.swing.GroupLayout.DEFAULT_SIZE, 311, Short.MAX_VALUE)
-                            .addComponent(txtDateStart)
-                            .addComponent(txtDateEnd)))
-                    .addGroup(kGradientPanel2Layout.createSequentialGroup()
-                        .addGap(89, 89, 89)
-                        .addComponent(btnStatDate, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(dateEndDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(dateStartDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(61, 61, 61))
@@ -166,17 +206,17 @@ public class StatisticsGUI extends javax.swing.JFrame {
             .addGroup(kGradientPanel2Layout.createSequentialGroup()
                 .addGap(61, 61, 61)
                 .addComponent(lblDate)
-                .addGap(18, 18, 18)
-                .addComponent(txtDateStart, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(dateStartDate, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(54, 54, 54)
                 .addComponent(lblDate1)
-                .addGap(18, 18, 18)
-                .addComponent(txtDateEnd, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(38, 38, 38)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(dateEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(50, 50, 50)
                 .addComponent(btnStatDate, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kGradientPanel2Layout.createSequentialGroup()
-                .addContainerGap(68, Short.MAX_VALUE)
+                .addContainerGap(80, Short.MAX_VALUE)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -189,16 +229,7 @@ public class StatisticsGUI extends javax.swing.JFrame {
 
         lblDate2.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
         lblDate2.setForeground(new java.awt.Color(255, 51, 51));
-        lblDate2.setText("Ngày đầu tiên của tháng");
-
-        txtDateStartOfMonth.setForeground(new java.awt.Color(255, 51, 51));
-        txtDateStartOfMonth.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
-        txtDateStartOfMonth.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
-        txtDateStartOfMonth.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtDateStartOfMonthActionPerformed(evt);
-            }
-        });
+        lblDate2.setText("Tháng");
 
         btnStatMonth.setBackground(new java.awt.Color(255, 51, 51));
         btnStatMonth.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
@@ -225,18 +256,29 @@ public class StatisticsGUI extends javax.swing.JFrame {
         tblMonth.setSelectionBackground(new java.awt.Color(255, 255, 255));
         jScrollPane2.setViewportView(tblMonth);
 
+        jmcMonthMonth.setForeground(new java.awt.Color(255, 51, 51));
+        jmcMonthMonth.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+
+        jmcMonthYear.setForeground(new java.awt.Color(255, 51, 51));
+        jmcMonthYear.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+
         javax.swing.GroupLayout kGradientPanel3Layout = new javax.swing.GroupLayout(kGradientPanel3);
         kGradientPanel3.setLayout(kGradientPanel3Layout);
         kGradientPanel3Layout.setHorizontalGroup(
             kGradientPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(kGradientPanel3Layout.createSequentialGroup()
                 .addGroup(kGradientPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(kGradientPanel3Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kGradientPanel3Layout.createSequentialGroup()
                         .addContainerGap(26, Short.MAX_VALUE)
                         .addGroup(kGradientPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lblDate2, javax.swing.GroupLayout.DEFAULT_SIZE, 311, Short.MAX_VALUE)
-                            .addComponent(txtDateStartOfMonth))
-                        .addGap(60, 60, 60))
+                            .addGroup(kGradientPanel3Layout.createSequentialGroup()
+                                .addComponent(lblDate2, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(60, 60, 60))
+                            .addGroup(kGradientPanel3Layout.createSequentialGroup()
+                                .addComponent(jmcMonthMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jmcMonthYear, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(69, 69, 69))))
                     .addGroup(kGradientPanel3Layout.createSequentialGroup()
                         .addGap(64, 64, 64)
                         .addComponent(btnStatMonth, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -249,14 +291,16 @@ public class StatisticsGUI extends javax.swing.JFrame {
             .addGroup(kGradientPanel3Layout.createSequentialGroup()
                 .addGap(68, 68, 68)
                 .addGroup(kGradientPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(kGradientPanel3Layout.createSequentialGroup()
                         .addComponent(lblDate2)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtDateStartOfMonth, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
-                        .addComponent(btnStatMonth, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(kGradientPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jmcMonthMonth, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jmcMonthYear, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(57, 57, 57)
+                        .addComponent(btnStatMonth, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Theo tháng", kGradientPanel3);
@@ -268,15 +312,6 @@ public class StatisticsGUI extends javax.swing.JFrame {
         lblDate3.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
         lblDate3.setForeground(new java.awt.Color(255, 51, 51));
         lblDate3.setText("Năm");
-
-        txtYear.setForeground(new java.awt.Color(255, 51, 51));
-        txtYear.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("y"))));
-        txtYear.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
-        txtYear.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtYearActionPerformed(evt);
-            }
-        });
 
         btnStatYear.setBackground(new java.awt.Color(255, 51, 51));
         btnStatYear.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
@@ -303,6 +338,9 @@ public class StatisticsGUI extends javax.swing.JFrame {
         tblYear.setSelectionBackground(new java.awt.Color(255, 255, 255));
         jScrollPane1.setViewportView(tblYear);
 
+        jYear.setForeground(new java.awt.Color(255, 51, 51));
+        jYear.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+
         javax.swing.GroupLayout kGradientPanel4Layout = new javax.swing.GroupLayout(kGradientPanel4);
         kGradientPanel4.setLayout(kGradientPanel4Layout);
         kGradientPanel4Layout.setHorizontalGroup(
@@ -310,13 +348,13 @@ public class StatisticsGUI extends javax.swing.JFrame {
             .addGroup(kGradientPanel4Layout.createSequentialGroup()
                 .addGroup(kGradientPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(kGradientPanel4Layout.createSequentialGroup()
+                        .addGap(73, 73, 73)
+                        .addComponent(btnStatYear, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(kGradientPanel4Layout.createSequentialGroup()
                         .addGap(29, 29, 29)
                         .addGroup(kGradientPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblDate3, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtYear, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(kGradientPanel4Layout.createSequentialGroup()
-                        .addGap(73, 73, 73)
-                        .addComponent(btnStatYear, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jYear, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblDate3, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(64, 64, 64))
@@ -329,11 +367,11 @@ public class StatisticsGUI extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(kGradientPanel4Layout.createSequentialGroup()
                         .addComponent(lblDate3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtYear, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(44, 44, 44)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jYear, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(50, 50, 50)
                         .addComponent(btnStatYear, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Theo năm", kGradientPanel4);
@@ -346,7 +384,7 @@ public class StatisticsGUI extends javax.swing.JFrame {
                 .addGap(383, 383, 383)
                 .addComponent(lblForm)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 916, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1)
         );
         kGradientPanel1Layout.setVerticalGroup(
             kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -371,55 +409,61 @@ public class StatisticsGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtDateStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDateStartActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtDateStartActionPerformed
-
     private void btnStatDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStatDateActionPerformed
         // TODO add your handling code here:
-        LocalDate dateStart = Converter.toDate(txtDateStart.getText());
-        LocalDate dateEnd = Converter.toDate(txtDateEnd.getText());
+        LocalDate dateStart = Converter.fromDatetoLocalDate(dateStartDate.getDate()).minusDays(1);
+        LocalDate dateEnd = Converter.fromDatetoLocalDate(dateEndDate.getDate()).plusDays(1);
         DefaultPieDataset[] dataset = getDataset(dateStart, dateEnd);
-        createStatFrame(dataset, "Thống kê từ ngày " + txtDateStart.getText() + " đến ngày " + txtDateEnd.getText());
+        createStatFrame(dataset, "Thống kê từ ngày " + dateStartDate.getDateFormatString() + " đến ngày " + dateEndDate.getDateFormatString());
         
-        List<DatasetDTO> tableDataset = flucBLL.getDataset(dateStart, dateEnd);        
+        List<DatasetDTO> tableDataset = null;        
+        try {
+            tableDataset = flucBLL.getStatDatasetByDate(dateStart, dateEnd);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
         DatasetTableModel model = new DatasetTableModel(tableDataset);
         //create the table
         tblDate.setModel(model);
         tblDate.repaint();
     }//GEN-LAST:event_btnStatDateActionPerformed
 
-    private void txtDateStartOfMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDateStartOfMonthActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtDateStartOfMonthActionPerformed
-
     private void btnStatMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStatMonthActionPerformed
         // TODO add your handling code here:
-        LocalDate date = Converter.toDate(txtDateStartOfMonth.getText());
-        LocalDate firstDayOfMonth = DateRelated.getFirstDayOfMonth(date);
-        LocalDate lastDayOfMonth = DateRelated.getLastDayOfMonth(date);
-        DefaultPieDataset[] dataset = getDataset(firstDayOfMonth, lastDayOfMonth);
+//        LocalDate date = Converter.toDate(txtDateStartOfMonth.getText());
+        LocalDate lastDayOfLastMonth = DateRelated.getFirstDayOfMonth(jmcMonthMonth.getMonth()+1, jmcMonthYear.getYear()).minusDays(1);
+        LocalDate firstDayOfNextMonth = DateRelated.getLastDayOfMonth(jmcMonthMonth.getMonth()+1, jmcMonthYear.getYear()).plusDays(1);
+        DefaultPieDataset[] dataset = getDataset(lastDayOfLastMonth, firstDayOfNextMonth);
         
-        createStatFrame(dataset, "Thống kê từ tháng " + String.valueOf(date.getMonthValue()) + " năm " + String.valueOf(date.getYear()));
+        createStatFrame(dataset, "Thống kê tháng " + String.valueOf(jmcMonthMonth.getMonth() + 1) + " năm " + String.valueOf(jmcMonthYear.getYear()));
        
-        List<DatasetDTO> tableDataset = flucBLL.getDataset(lastDayOfMonth, lastDayOfMonth);        
+        List<DatasetDTO> tableDataset = null;        
+        try {
+            tableDataset = flucBLL.getStatDatasetByDate(lastDayOfLastMonth, firstDayOfNextMonth);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
         DatasetTableModel model = new DatasetTableModel(tableDataset);
         //create the table
         tblMonth.setModel(model);
         tblMonth.repaint();
     }//GEN-LAST:event_btnStatMonthActionPerformed
 
-    private void txtYearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtYearActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtYearActionPerformed
-
     private void btnStatYearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStatYearActionPerformed
         // TODO add your handling code here:
-        int year = Integer.parseInt(txtYear.getText());
-        LocalDate firstDayOfYear = DateRelated.getFirstDayOfYear(year);
-        LocalDate lastDayOfYear = DateRelated.getLastDayOfYear(year);
+        int year = jYear.getYear();
+        LocalDate firstDayOfYear = DateRelated.getFirstDayOfYear(year).minusDays(1);
+        LocalDate lastDayOfYear = DateRelated.getLastDayOfYear(year).plusDays(1);
         DefaultPieDataset[] chartDataset = getDataset(firstDayOfYear, lastDayOfYear);
-        List<DatasetDTO> tableDataset = flucBLL.getDataset(firstDayOfYear, lastDayOfYear);
+        List<DatasetDTO> tableDataset = null;
+        try {
+            tableDataset = flucBLL.getStatDatasetByDate(firstDayOfYear, lastDayOfYear);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
         createStatFrame(chartDataset, "Thống kê trong năm " + String.valueOf(year));
         
         DatasetTableModel model = new DatasetTableModel(tableDataset);
@@ -467,7 +511,12 @@ public class StatisticsGUI extends javax.swing.JFrame {
         
         
         List<DatasetDTO> arrList = new ArrayList<DatasetDTO>();
-        arrList = flucBLL.getDataset(date1, date2);
+        try {
+            arrList = flucBLL.getStatDatasetByDate(date1, date2);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
         
         for (int i = 0; i < arrList.size(); i++){
             System.err.println(arrList.get(i).getName());
@@ -527,38 +576,41 @@ public class StatisticsGUI extends javax.swing.JFrame {
     private javax.swing.JButton btnStatDate;
     private javax.swing.JButton btnStatMonth;
     private javax.swing.JButton btnStatYear;
+    private com.toedter.calendar.JDateChooser dateEndDate;
+    private com.toedter.calendar.JDateChooser dateStartDate;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private com.toedter.calendar.JYearChooser jYear;
+    private com.toedter.calendar.JMonthChooser jmcMonthMonth;
+    private com.toedter.calendar.JYearChooser jmcMonthYear;
     private keeptoo.KGradientPanel kGradientPanel1;
     private keeptoo.KGradientPanel kGradientPanel2;
     private keeptoo.KGradientPanel kGradientPanel3;
     private keeptoo.KGradientPanel kGradientPanel4;
+    private keeptoo.KGradientPanel kGradientPanel5;
     private javax.swing.JLabel lblDate;
     private javax.swing.JLabel lblDate1;
     private javax.swing.JLabel lblDate2;
     private javax.swing.JLabel lblDate3;
     private javax.swing.JLabel lblForm;
     private javax.swing.JTable tblDate;
+    private javax.swing.JTable tblDate1;
     private javax.swing.JTable tblMonth;
     private javax.swing.JTable tblYear;
-    private javax.swing.JFormattedTextField txtDateEnd;
-    private javax.swing.JFormattedTextField txtDateStart;
-    private javax.swing.JFormattedTextField txtDateStartOfMonth;
-    private javax.swing.JFormattedTextField txtYear;
     // End of variables declaration//GEN-END:variables
 }
 
-class DatasetTableModel extends AbstractTableModel
-{
+class DatasetTableModel extends AbstractTableModel{
     private final List<DatasetDTO> datasetList;
      
     private final String[] columnNames = new String[] {
-            "Tên hạng mục", "Số tiền", "Số phần trăm"
+            "Tên hạng mục", "Số tiền", "Số phần trăm", "Loại chi tiêu"
     };
     private final Class[] columnClass = new Class[] {
-        String.class, Long.class, Double.class
+        String.class, Long.class, Double.class, String.class
     };
  
     public DatasetTableModel(List<DatasetDTO> datasetList)
@@ -603,6 +655,10 @@ class DatasetTableModel extends AbstractTableModel
         else if(2 == columnIndex) {
             return row.getValue();
         }
+        else if(3 == columnIndex){
+            return row.getType();
+        }
         return null;
     }
 }
+    
