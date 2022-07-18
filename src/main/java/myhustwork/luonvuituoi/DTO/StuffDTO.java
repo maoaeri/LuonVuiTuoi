@@ -12,7 +12,6 @@ package myhustwork.luonvuituoi.DTO;
  */
 public class StuffDTO extends MoneyDTO implements Comparable<StuffDTO>{
     private int ID;
-    private CategoryDTO category;
     private String note;
 
     public StuffDTO() {
@@ -20,9 +19,8 @@ public class StuffDTO extends MoneyDTO implements Comparable<StuffDTO>{
     }
 
     public StuffDTO(int ID, CategoryDTO category, String note, long amount) {
-        super(amount);
+        super(amount, category);
         this.ID = ID;
-        this.category = category;
         this.note = note;
     }
 
@@ -32,14 +30,6 @@ public class StuffDTO extends MoneyDTO implements Comparable<StuffDTO>{
 
     public void setID(int ID) {
         this.ID = ID;
-    }
-    
-    public CategoryDTO getCategory() {
-        return category;
-    }
-
-    public void setCategory(CategoryDTO category) {
-        this.category = category;
     }
 
     public String getNote() {

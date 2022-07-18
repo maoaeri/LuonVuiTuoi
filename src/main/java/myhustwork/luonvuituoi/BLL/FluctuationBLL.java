@@ -55,15 +55,17 @@ public class FluctuationBLL implements BLLInterface<FluctuationDTO>{//bien dong 
         }
     }
 
-    public void updateFluctuationFromGUI(FluctuationDTO fluc) throws SQLException{
+    @Override
+    public void updateFromGUI(FluctuationDTO fluc) throws SQLException{
         FluctuationDTO fluc1 = flucDAO.get(fluc.getID());//get from database to compare
         if (fluc.getCategory() == null){
             fluc.setCategory(fluc1.getCategory());
-        } else if (fluc.getAccount().getId() == 0){
+        } 
+        if (fluc.getAccount().getId() == 0){
             fluc.getAccount().setId(fluc.getAccount().getId());
         }
-        int catId = catDAO.getCategoryId(fluc1.getCategory());
-        fluc.getCategory().setCategoryId(catId);
+//        int catId = catDAO.getCategoryId(fluc1.getCategory());
+//        fluc.getCategory().setCategoryId(catId);
         flucDAO.update(fluc);
         AccountDTO acc = accDAO.get(fluc.getAccount().getId());
         if (fluc.getCategory().isIncome()) {
@@ -73,7 +75,8 @@ public class FluctuationBLL implements BLLInterface<FluctuationDTO>{//bien dong 
         }
     }
     
-    public void deleteFluctuationDromGUI(FluctuationDTO fluc) throws SQLException {
+    @Override
+    public void deleteFromGUI(FluctuationDTO fluc) throws SQLException {
         FluctuationDTO fluc1 = flucDAO.get(fluc.getID());    
         int catId = catDAO.getCategoryId(fluc1.getCategory());
         fluc1.getCategory().setCategoryId(catId);

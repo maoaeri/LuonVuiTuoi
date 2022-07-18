@@ -5,13 +5,10 @@
 package myhustwork.luonvuituoi.GUI;
 
 import java.awt.Component;
-import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 //import java.text.SimpleDateFormat;
 //import java.util.Calendar;
 import javax.swing.AbstractButton;
@@ -19,7 +16,6 @@ import javax.swing.ButtonModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
@@ -583,7 +579,7 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
         // TODO add your handling code here:
         try {
                 FluctuationDTO fluc = this.getInfor();
-                flucBLL.deleteFluctuationDromGUI(fluc);
+                flucBLL.deleteFromGUI(fluc);
                 
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
@@ -600,7 +596,7 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
         // TODO add your handling code here:
         try {
             FluctuationDTO fluc = this.getInfor();
-            flucBLL.updateFluctuationFromGUI(fluc);
+            flucBLL.updateFromGUI(fluc);
         } catch (ParseException ex) {
             JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
         ex.printStackTrace();
@@ -615,7 +611,7 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
         // TODO add your handling code here:
         try {
                 FluctuationDTO fluc = this.getInfor();
-                flucBLL.addFluctuationFromGUI(fluc);
+                flucBLL.addFromGUI(fluc);
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
                 ex.printStackTrace();
