@@ -88,7 +88,7 @@ public class StuffGUI extends javax.swing.JFrame implements InforInterface<Stuff
         DefaultListModel listmodel = new DefaultListModel<StuffDTO>();
         StuffDTO[] list = null;
         try {
-            list = stuffBLL.getAllStuffs();
+            list = stuffBLL.getAll();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -104,6 +104,7 @@ public class StuffGUI extends javax.swing.JFrame implements InforInterface<Stuff
         txtNote.setText("");
         lblCategory2.setText("");
         lstStuff.setModel(getAllStuffs());
+        stuffID = -1;
     }
 
     /**

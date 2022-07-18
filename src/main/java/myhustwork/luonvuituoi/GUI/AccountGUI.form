@@ -62,21 +62,6 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace pref="59" max="32767" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="lblBalance" min="-2" pref="296" max="-2" attributes="0"/>
-                      <Component id="lblSavePerMonth" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblName" min="-2" pref="296" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                      <Component id="txtName" alignment="1" max="32767" attributes="0"/>
-                      <Component id="txtExpectedSavePerMonth" alignment="0" max="32767" attributes="0"/>
-                      <Component id="txtBalance" alignment="1" max="32767" attributes="0"/>
-                  </Group>
-                  <EmptySpace min="-2" pref="137" max="-2" attributes="0"/>
-              </Group>
               <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
@@ -84,15 +69,35 @@
                           <Component id="lblForm" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="187" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="181" max="-2" attributes="0"/>
                           <Component id="btnAdd" min="-2" pref="112" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="94" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="102" max="-2" attributes="0"/>
                           <Component id="btnUpdate" min="-2" pref="112" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="86" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="92" max="-2" attributes="0"/>
                           <Component id="btnDelete" min="-2" pref="112" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
+              </Group>
+              <Group type="102" alignment="1" attributes="0">
+                  <EmptySpace pref="59" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="jScrollPane1" min="-2" pref="859" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="lblBalance" min="-2" pref="296" max="-2" attributes="0"/>
+                              <Component id="lblSavePerMonth" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblName" min="-2" pref="296" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Component id="txtName" alignment="1" max="32767" attributes="0"/>
+                              <Component id="txtExpectedSavePerMonth" alignment="0" max="32767" attributes="0"/>
+                              <Component id="txtBalance" alignment="1" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                  </Group>
+                  <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -116,13 +121,15 @@
                       <Component id="txtExpectedSavePerMonth" alignment="3" min="-2" pref="34" max="-2" attributes="0"/>
                       <Component id="lblSavePerMonth" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="112" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btnAdd" alignment="3" min="-2" pref="34" max="-2" attributes="0"/>
                       <Component id="btnUpdate" alignment="3" min="-2" pref="34" max="-2" attributes="0"/>
                       <Component id="btnDelete" alignment="3" min="-2" pref="34" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="143" max="32767" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="jScrollPane1" pref="194" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -226,7 +233,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="33" green="33" red="ff" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="S&#x1ed1; ti&#x1ec1;n d&#x1ef1; &#x111;&#x1ecb;nh ti&#x1ebf;t ki&#x1ec7;m h&#xe0;ng th&#xe1;ng"/>
+            <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;body&gt;S&#x1ed1; ti&#x1ec1;n d&#x1ef1; &#x111;&#x1ecb;nh&lt;br&gt;ti&#x1ebf;t ki&#x1ec7;m h&#xe0;ng th&#xe1;ng&lt;/body&gt;&lt;/html&gt;"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btnAdd">
@@ -280,6 +287,29 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDeleteActionPerformed"/>
           </Events>
         </Component>
+        <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+          <AuxValues>
+            <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+          </AuxValues>
+
+          <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+          <SubComponents>
+            <Component class="javax.swing.JList" name="lstAccount">
+              <Properties>
+                <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="getAllAccounts()" type="code"/>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="valueChanged" listener="javax.swing.event.ListSelectionListener" parameters="javax.swing.event.ListSelectionEvent" handler="lstAccountValueChanged"/>
+              </Events>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="lstAccount.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);&#xa;lstAccount.setCellRenderer(new AccountListRenderer());"/>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;AccountDTO&gt;"/>
+              </AuxValues>
+            </Component>
+          </SubComponents>
+        </Container>
       </SubComponents>
     </Container>
   </SubComponents>

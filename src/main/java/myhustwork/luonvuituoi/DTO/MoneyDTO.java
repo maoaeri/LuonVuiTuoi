@@ -4,9 +4,6 @@
  */
 package myhustwork.luonvuituoi.DTO;
 
-import java.text.DecimalFormat;
-import java.text.ParseException;
-
 /**
  *
  * @author vvlalalove193

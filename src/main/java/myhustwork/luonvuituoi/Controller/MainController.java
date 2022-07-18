@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import myhustwork.luonvuituoi.GUI.MainGUI;
-import myhustwork.luonvuituoi.GUI.StatisticsGUI;
 
 /**
  *
