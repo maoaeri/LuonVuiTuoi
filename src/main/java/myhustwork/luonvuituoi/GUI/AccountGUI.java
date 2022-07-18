@@ -53,17 +53,14 @@ public class AccountGUI extends javax.swing.JFrame implements InforInterface<Acc
         txtExpectedSavePerMonth.setText("");
     }
     
-    @Override
     public void addListener(ActionListener log){
         btnAdd.addActionListener(log);
     }
     
-    @Override
     public void updateListener(ActionListener log){
         btnUpdate.addActionListener(log);
     }
     
-    @Override
     public void deleteListener(ActionListener log){
         btnDelete.addActionListener(log);
     }
@@ -140,7 +137,7 @@ public class AccountGUI extends javax.swing.JFrame implements InforInterface<Acc
 
         lblSavePerMonth.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
         lblSavePerMonth.setForeground(new java.awt.Color(255, 51, 51));
-        lblSavePerMonth.setText("Số tiền dự định tiết kiệm hàng tháng");
+        lblSavePerMonth.setText("<html><body>Số tiền dự định<br>tiết kiệm hàng tháng</body></html>");
 
         btnAdd.setBackground(new java.awt.Color(255, 51, 51));
         btnAdd.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
@@ -180,7 +177,7 @@ public class AccountGUI extends javax.swing.JFrame implements InforInterface<Acc
                 .addContainerGap(59, Short.MAX_VALUE)
                 .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblBalance, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblSavePerMonth)
+                    .addComponent(lblSavePerMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblName, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30)
                 .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -194,11 +191,11 @@ public class AccountGUI extends javax.swing.JFrame implements InforInterface<Acc
                         .addGap(362, 362, 362)
                         .addComponent(lblForm))
                     .addGroup(kGradientPanel1Layout.createSequentialGroup()
-                        .addGap(187, 187, 187)
+                        .addGap(181, 181, 181)
                         .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(94, 94, 94)
+                        .addGap(102, 102, 102)
                         .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(86, 86, 86)
+                        .addGap(92, 92, 92)
                         .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -218,13 +215,13 @@ public class AccountGUI extends javax.swing.JFrame implements InforInterface<Acc
                 .addGap(18, 18, 18)
                 .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtExpectedSavePerMonth, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblSavePerMonth))
-                .addGap(112, 112, 112)
+                    .addComponent(lblSavePerMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(143, Short.MAX_VALUE))
+                .addContainerGap(224, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

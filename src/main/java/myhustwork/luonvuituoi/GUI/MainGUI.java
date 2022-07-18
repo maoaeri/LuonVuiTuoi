@@ -451,7 +451,6 @@ public class MainGUI extends javax.swing.JFrame {
     private void lstAccountValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstAccountValueChanged
         // TODO add your handling code here:
         setAccId(lstAccount.getSelectedValue().getId());
-        
     }//GEN-LAST:event_lstAccountValueChanged
 
     private void btnFlucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFlucActionPerformed
