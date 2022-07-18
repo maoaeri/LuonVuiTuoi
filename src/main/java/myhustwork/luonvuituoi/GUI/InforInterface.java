@@ -14,8 +14,6 @@ import java.text.ParseException;
  */
 public interface InforInterface<T> {
     public T getInfor() throws ParseException, SQLException;
+    public void display(T t);
     public void refreshComponents();
-    public void addListener(ActionListener log);
-    public void updateListener(ActionListener log);
-    public void deleteListener(ActionListener log);
 }

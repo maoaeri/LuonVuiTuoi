@@ -25,22 +25,19 @@ public class StuffDAO implements DAOInterface<StuffDTO>{
     }
     
     @Override
-    public int add(StuffDTO stuff) throws SQLException{
-        int res = 0;
+    public void add(StuffDTO stuff) throws SQLException{
         String query = "INSERT INTO main.stuff(stuff_amount, category_id, stuff_note) VALUES(?,?,?)";
             Connection conn = createConnection();
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setDouble(1, stuff.getAmount());
             ps.setInt(2, stuff.getCategory().getCategoryId());
             ps.setString(3, stuff.getNote());
-            res = ps.executeUpdate();
+            ps.executeUpdate();
             conn.close();
-        return res;
     }
     
     @Override
-    public int update(StuffDTO stuff) throws SQLException{
-        int res = 0;
+    public void update(StuffDTO stuff) throws SQLException{
         String query = "UPDATE main.stuff SET stuff_amount = ?, stuff_note = ?, category_id = ? WHERE stuff_id = ?";
             Connection conn = createConnection();
             PreparedStatement ps = conn.prepareStatement(query);
@@ -48,21 +45,18 @@ public class StuffDAO implements DAOInterface<StuffDTO>{
             ps.setString(2, stuff.getNote());
             ps.setInt(3, stuff.getCategory().getCategoryId());
             ps.setInt(4, stuff.getID());
-            res = ps.executeUpdate();
+            ps.executeUpdate();
             conn.close();
-        return res;
     }
     
     @Override
-    public int delete(StuffDTO stuff) throws SQLException{
-        int res = 0;
+    public void delete(StuffDTO stuff) throws SQLException{
         String query = "DELETE FROM main.stuff WHERE stuff_id = ?";
             Connection conn = createConnection();
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1, stuff.getID());
-            res = ps.executeUpdate();
+            ps.executeUpdate();
             conn.close();
-        return res;
     }
     
     public StuffDTO get(int id) throws SQLException{
@@ -77,7 +71,7 @@ public class StuffDAO implements DAOInterface<StuffDTO>{
                 stuff.setID(rs.getInt("stuff_id"));
                 stuff.setAmount(rs.getLong("stuff_amount"));
                 stuff.setCategory(new CategoryDTO(rs.getInt("category_type"), rs.getInt("category_id"), rs.getString("category_name")));
-                stuff.setNote("stuff_note");
+                stuff.setNote(rs.getString("stuff_note"));
             }
             conn.close();
         return stuff;

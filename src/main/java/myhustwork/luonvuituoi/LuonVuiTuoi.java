@@ -5,10 +5,7 @@
 
 package myhustwork.luonvuituoi;
 
-import myhustwork.luonvuituoi.Controller.FluctuationController;
-import myhustwork.luonvuituoi.Controller.MainController;
-//import myhustwork.luonvuituoi.Controller.StuffController;
-import myhustwork.luonvuituoi.GUI.FluctuationGUI;
+import myhustwork.luonvuituoi.Controller.WelcomeController;
 
 /**
  *
@@ -18,8 +15,8 @@ public class LuonVuiTuoi {
 
     public static void main(String[] args) {
         System.out.println("Hello World!");
-        FluctuationController fc = new FluctuationController();
-//        MainController mc = new MainController();
+//        FluctuationController fc = new FluctuationController();
+        WelcomeController mc = new WelcomeController();
 //        FluctuationGUI.RunApp();
         System.out.println("Dcm MTr");
 

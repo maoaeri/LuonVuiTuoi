@@ -5,14 +5,14 @@
 package myhustwork.luonvuituoi.GUI;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -21,13 +21,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
+import myhustwork.luonvuituoi.BLL.StuffBLL;
 import myhustwork.luonvuituoi.DAO.CategoryDAO;
 import myhustwork.luonvuituoi.DAO.StuffDAO;
 import myhustwork.luonvuituoi.DTO.CategoryDTO;
-import myhustwork.luonvuituoi.DTO.FluctuationDTO;
 import myhustwork.luonvuituoi.DTO.StuffDTO;
 import myhustwork.luonvuituoi.Util.Converter;
 import myhustwork.luonvuituoi.Util.GUIRelated;
@@ -39,6 +39,7 @@ import myhustwork.luonvuituoi.Util.GUIRelated;
 public class StuffGUI extends javax.swing.JFrame implements InforInterface<StuffDTO>{
     private CategoryDAO catDAO;
     private StuffDAO stuffDAO;
+    private StuffBLL stuffBLL;
     private int stuffID;
 //    private StuffDTO stuff;
     /**
@@ -47,11 +48,14 @@ public class StuffGUI extends javax.swing.JFrame implements InforInterface<Stuff
     public StuffGUI() {
         catDAO = new CategoryDAO();
         stuffDAO = new StuffDAO();
+        stuffBLL = new StuffBLL();
         stuffID = -1;
+        this.setTitle("LuonVuiTuoi");
         initComponents();
     }
-
-    public void displayStuff(StuffDTO stuff){
+    
+    @Override
+    public void display(StuffDTO stuff){
         txtAmount.setText(Long.toString(stuff.getAmount()));
         txtNote.setText(stuff.getNote());
         lblCategory2.setText(stuff.getCategory().getCategoryName());
@@ -64,25 +68,25 @@ public class StuffGUI extends javax.swing.JFrame implements InforInterface<Stuff
             stuff.setID(stuffID);
         }
         stuff.setAmount(Converter.formatAmount(txtAmount.getText()));
-        DefaultMutableTreeNode selectedNode1 = (DefaultMutableTreeNode) treCategory.getModel().getRoot() ;
-        String rootType = selectedNode1.getUserObject().toString();
-        int categoryType = 0;
-        switch (rootType) {
-            case "Thu" ->  {
-                categoryType = 1;
+        if (!treCategory.isSelectionEmpty()){
+           DefaultMutableTreeNode selectedNode2 = (DefaultMutableTreeNode) treCategory.getLastSelectedPathComponent();
+            String rootType = selectedNode2.getPath()[1].toString();
+            int categoryType = 0;
+            System.out.println(rootType);
+            switch (rootType) {
+                case "Thu" ->  {
+                    categoryType = 1;
+                    break;
+                }
+                case "Chi" ->  {
+                    categoryType = 0;
+                    break;
+                }
             }
-            case "Chi" ->  {
-                categoryType = 0;
-            }
-            default -> {
-                categoryType = 0;
-            }
+            String categoryName = selectedNode2.getUserObject().toString();
+            CategoryDTO cat = new CategoryDTO(categoryType, categoryName);
+            stuff.setCategory(cat); 
         }
-        DefaultMutableTreeNode selectedNode2 = (DefaultMutableTreeNode) treCategory.getLastSelectedPathComponent() ;
-        String categoryName = selectedNode2.getUserObject().toString();
-        CategoryDTO cat = new CategoryDTO(categoryType, categoryName);
-        cat.setCategoryId(catDAO.getCategoryId(cat));
-        stuff.setCategory(cat);
         stuff.setNote(txtNote.getText());
         return stuff;
     }
@@ -107,21 +111,6 @@ public class StuffGUI extends javax.swing.JFrame implements InforInterface<Stuff
         txtNote.setText("");
         lblCategory2.setText("");
         lstStuff.setModel(getAllStuffs());
-    }
-    
-    @Override
-    public void addListener(ActionListener log){
-        btnAdd.addActionListener(log);
-    }
-    
-    @Override
-    public void updateListener(ActionListener log){
-        btnUpdate.addActionListener(log);
-    }
-    
-    @Override
-    public void deleteListener(ActionListener log){
-        btnDelete.addActionListener(log);
     }
 
     /**
@@ -149,7 +138,7 @@ public class StuffGUI extends javax.swing.JFrame implements InforInterface<Stuff
         btnDelete = new javax.swing.JButton();
         lblFrm = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setFont(new java.awt.Font("Consolas", 0, 12)); // NOI18N
         setResizable(false);
         setSize(new java.awt.Dimension(960, 540));
@@ -162,6 +151,7 @@ public class StuffGUI extends javax.swing.JFrame implements InforInterface<Stuff
         lstStuff.setModel(getAllStuffs());
         lstStuff.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         lstStuff.setCellRenderer(new StuffListRenderer());
+        lstStuff.setSelectionBackground(new java.awt.Color(255, 255, 255));
         lstStuff.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 lstStuffValueChanged(evt);
@@ -169,6 +159,8 @@ public class StuffGUI extends javax.swing.JFrame implements InforInterface<Stuff
         });
         jScrollPane1.setViewportView(lstStuff);
 
+        treCategory.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        treCategory.setForeground(new java.awt.Color(255, 51, 51));
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Hạng mục");
         javax.swing.tree.DefaultMutableTreeNode treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Thu");
         javax.swing.tree.DefaultMutableTreeNode treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("Lương");
@@ -228,7 +220,9 @@ public class StuffGUI extends javax.swing.JFrame implements InforInterface<Stuff
         });
         jScrollPane2.setViewportView(treCategory);
 
+        txtAmount.setForeground(new java.awt.Color(255, 51, 51));
         txtAmount.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0"))));
+        txtAmount.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
         txtAmount.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtAmountActionPerformed(evt);
@@ -240,12 +234,16 @@ public class StuffGUI extends javax.swing.JFrame implements InforInterface<Stuff
         lblAmount.setLabelFor(txtAmount);
         lblAmount.setText("Giá tiền:");
 
+        lblCategory2.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        lblCategory2.setForeground(new java.awt.Color(255, 51, 51));
         lblCategory2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         lblCategory.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
         lblCategory.setForeground(new java.awt.Color(255, 51, 51));
         lblCategory.setText("Hạng mục:");
 
+        txtNote.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        txtNote.setForeground(new java.awt.Color(255, 51, 51));
         txtNote.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtNoteActionPerformed(evt);
@@ -329,7 +327,7 @@ public class StuffGUI extends javax.swing.JFrame implements InforInterface<Stuff
             .addGroup(kGradientPanel1Layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addComponent(lblFrm)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                 .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(kGradientPanel1Layout.createSequentialGroup()
                         .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -384,22 +382,46 @@ public class StuffGUI extends javax.swing.JFrame implements InforInterface<Stuff
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         // TODO add your handling code here:
+        try {
+                StuffDTO stuff = this.getInfor();
+                stuffBLL.addStuff(stuff);
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         refreshComponents();
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
+        try {
+                StuffDTO stuff = this.getInfor();
+                stuffBLL.updateStuff(stuff);
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         refreshComponents();
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         // TODO add your handling code here:
+        try {
+                StuffDTO stuff = this.getInfor();
+                stuffBLL.deleteStuff(stuff);
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         refreshComponents();
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void lstStuffValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstStuffValueChanged
         // TODO add your handling code here:
-        displayStuff(lstStuff.getSelectedValue());
+        display(lstStuff.getSelectedValue());
         this.stuffID = lstStuff.getSelectedValue().getID();
     }//GEN-LAST:event_lstStuffValueChanged
 
@@ -472,6 +494,8 @@ class StuffListRenderer extends JPanel implements ListCellRenderer<StuffDTO> {
     private JLabel lblCategoryName = new JLabel();
     private JLabel lblAmount = new JLabel();
     private JLabel lblNote = new JLabel();
+    Border lineBorder = BorderFactory.createLineBorder(Color.RED, 1);
+    Border emptyBorder = BorderFactory.createEmptyBorder(2, 2, 2, 2);
  
     public StuffListRenderer() {
         setLayout(new BorderLayout(5, 5));
@@ -500,19 +524,21 @@ class StuffListRenderer extends JPanel implements ListCellRenderer<StuffDTO> {
         lblAmount.setText(Long.toString(stuff.getAmount()));
         lblAmount.setFont(new java.awt.Font("r0c0i Linotte", 0, 16));
         lblAmount.setForeground(new java.awt.Color(255, 51, 51));
+        
         lblNote.setText(stuff.getNote());
         lblNote.setFont(new java.awt.Font("r0c0i Linotte", 0, 16));
         lblNote.setForeground(new java.awt.Color(255, 51,51));
         
         if (isSelected) {
-            FluctuationGUI a = new FluctuationGUI();
-            System.err.println(stuff.getID());
-//            a.setVisible(isSelected);
-//            a.setDefaultCloseOperation(a.DISPOSE_ON_CLOSE);
-//            isSelected = false;
-            StuffGUI stuffGUI = new StuffGUI();
-//            stuffGUI.setVisible(true);
+            this.setForeground(list.getSelectionForeground());
+            this.setBackground(list.getSelectionBackground());
+            this.setBorder(new LineBorder(Color.BLUE));
+        } else {
+            this.setForeground(list.getForeground());
+            this.setBackground(list.getBackground());
         }
+
+        this.setBorder(cellHasFocus ? lineBorder : emptyBorder);
         return this;
     }
 }

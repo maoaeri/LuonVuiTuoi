@@ -6,31 +6,105 @@ package myhustwork.luonvuituoi.Controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import myhustwork.luonvuituoi.GUI.MainGUI;
-import myhustwork.luonvuituoi.GUI.WelcomeGUI;
+import myhustwork.luonvuituoi.GUI.StatisticsGUI;
 
 /**
  *
  * @author vvlalalove193
  */
 public class MainController {
-    private WelcomeGUI welcomeGUI;
     private MainGUI mainGUI;
-    
+    private FluctuationController fc;
+    private StuffController sc;
+    private AccountController ac;
+    private StatisticsController stc;
+
     public MainController() {
-        welcomeGUI = new WelcomeGUI();
         mainGUI = new MainGUI();
+        mainGUI.setVisible(true);
         
-        welcomeGUI.setVisible(true);
-        welcomeGUI.StartListener(new btnStartListener());
+        mainGUI.addFlucListener(new addFlucListener());
+        mainGUI.addStuffListener(new addStuffListener());
+        mainGUI.addAccountListener(new addAccountListener());
+        mainGUI.StatListener(new StatListener());
+        mainGUI.selectStuffListener(new selectStuffListener());
+        mainGUI.selectFlucListener(new selectFlucListener());
+        mainGUI.selectAccountListener(new selectAccountListener());
     }
     
-    class btnStartListener implements ActionListener{
+    class addFlucListener implements ActionListener{
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            welcomeGUI.setVisible(false);
-            mainGUI.setVisible(true);
+            fc = new FluctuationController();
+        }
+    }
+    
+    class addStuffListener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            sc = new StuffController();
+        }
+    }
+    
+    class addAccountListener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            ac = new AccountController();
+        }
+    }
+    
+    class StatListener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            stc = new StatisticsController();
+        }
+    }
+    
+    class selectStuffListener implements ListSelectionListener{
+        
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+            
+            System.out.println(1);
+            if (mainGUI.getStuffId() != 0 && !e.getValueIsAdjusting()){
+               sc = new StuffController(mainGUI.getStuffId());
+               mainGUI.setStuffId(0);
+            }
+            mainGUI.setStuffId(0);
+//            sc = new StuffController(mainGUI.getStuffId());     
+        }
+    }
+    
+    class selectFlucListener implements ListSelectionListener{
+        
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+            System.out.println(1);
+            if (mainGUI.getFlucId() != 0 && !e.getValueIsAdjusting()){
+               fc = new FluctuationController(mainGUI.getFlucId());
+            }
+//            sc = new FlucController(mainGUI.getFlucId());     
+        }
+    }
+    
+    class selectAccountListener implements ListSelectionListener{
+        
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+            System.out.println(1);
+            if (mainGUI.getAccId() != 0 && !e.getValueIsAdjusting()){
+               ac = new AccountController(mainGUI.getAccId());
+               mainGUI.setAccId(0);
+            }
+            mainGUI.setAccId(0);
+//            sc = new FlucController(mainGUI.getFlucId());     
         }
     }
     

@@ -10,10 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import myhustwork.luonvuituoi.DTO.CategoryDTO;
-import myhustwork.luonvuituoi.DTO.FluctuationDTO;
 import static myhustwork.luonvuituoi.Util.DBConnection.createConnection;
 
 /**
@@ -64,17 +62,17 @@ public class CategoryDAO implements DAOInterface<CategoryDTO>{
     }    
 
     @Override
-    public int add(CategoryDTO t) throws SQLException {
+    public void add(CategoryDTO t) throws SQLException {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public int update(CategoryDTO t) throws SQLException {
+    public void update(CategoryDTO t) throws SQLException {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public int delete(CategoryDTO t) throws SQLException {
+    public void delete(CategoryDTO t) throws SQLException {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
@@ -83,6 +81,7 @@ public class CategoryDAO implements DAOInterface<CategoryDTO>{
         CategoryDTO[] dataset = null;
         CategoryDTO data;
         List<CategoryDTO> arrlist = new ArrayList<>();
+        arrlist.add(new CategoryDTO());
         String query = "SELECT * FROM main.category";
             Connection conn = createConnection();
             Statement st = conn.createStatement();

@@ -8,6 +8,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.logging.Level;
@@ -32,6 +33,17 @@ public class Converter {
 
         LocalDate localDate = LocalDate.parse(date, formatter);
         return localDate;
+    }
+    
+    public static String fromLocalDatetoString(LocalDate date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        String str = date.format(formatter);
+        return str;
+    }
+    
+    public static LocalDate fromDatetoLocalDate(Date date){
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
     /**
      * Convert from text format "#,###" to long int

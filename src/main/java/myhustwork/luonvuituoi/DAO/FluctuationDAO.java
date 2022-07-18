@@ -11,11 +11,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import myhustwork.luonvuituoi.DTO.AccountDTO;
 import myhustwork.luonvuituoi.DTO.CategoryDTO;
 import myhustwork.luonvuituoi.DTO.FluctuationDTO;
 import static myhustwork.luonvuituoi.Util.DBConnection.createConnection;
@@ -25,8 +22,10 @@ import static myhustwork.luonvuituoi.Util.DBConnection.createConnection;
  * @author vvlalalove193
  */
 public class FluctuationDAO implements DAOInterface<FluctuationDTO>{
-
+    private AccountDAO accDAO;
+    
     public FluctuationDAO() {
+        accDAO = new AccountDAO();
     }
     
     public static void main(String[] args) throws SQLException{
@@ -39,9 +38,8 @@ public class FluctuationDAO implements DAOInterface<FluctuationDTO>{
     }
         
     @Override
-    public int add(FluctuationDTO fluc) throws SQLException {
-        int res = 0;
-        String query = "INSERT INTO main.fluctuation(fluctuation_amount, fluctuation_note, fluctuation_date, category_id, fluctuation_is_fixed, account_id) VALUES(?,?,?,?,?, ?)";
+    public void add(FluctuationDTO fluc) throws SQLException {
+        String query = "INSERT INTO main.fluctuation(fluctuation_amount, fluctuation_note, fluctuation_date, category_id, fluctuation_is_fixed, account_id, pre_amount) VALUES(?,?,?,?,?, ?, ?)";
         Connection conn = createConnection();
         PreparedStatement ps = conn.prepareStatement(query);
         ps.setDouble(1, fluc.getAmount());
@@ -49,16 +47,15 @@ public class FluctuationDAO implements DAOInterface<FluctuationDTO>{
         ps.setDate(3, java.sql.Date.valueOf(fluc.getDate()));
         ps.setInt(4, fluc.getCategory().getCategoryId());
         ps.setBoolean(5, fluc.isFixed());
-        ps.setInt(6, fluc.getAccountId());
-        res = ps.executeUpdate();
+        ps.setInt(6, fluc.getAccount().getId());
+        ps.setLong(7, 0);
+        ps.executeUpdate();
         conn.close();
-        return res;
     }
     
     @Override
-    public int update(FluctuationDTO fluc) throws SQLException{
-        int res = 0;
-        String query = "UPDATE main.fluctuation SET fluctuation_amount = ?, fluctuation_note = ?, fluctuation_date = ?, category_id = ?, fluctuation_is_fixed = ?, account_id = ? WHERE fluctuation_id = ?";
+    public void update(FluctuationDTO fluc) throws SQLException{
+        String query = "UPDATE main.fluctuation SET fluctuation_amount = ?, fluctuation_note = ?, fluctuation_date = ?, category_id = ?, fluctuation_is_fixed = ?, account_id = ?, pre_amount = ? WHERE fluctuation_id = ?";
             Connection conn = createConnection();
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setDouble(1, fluc.getAmount());
@@ -66,23 +63,21 @@ public class FluctuationDAO implements DAOInterface<FluctuationDTO>{
             ps.setDate(3, java.sql.Date.valueOf(fluc.getDate()));
             ps.setInt(4, fluc.getCategory().getCategoryId());
             ps.setBoolean(5, fluc.isFixed());
-            ps.setInt(7, fluc.getID());
-            ps.setInt(6, fluc.getAccountId());
-            res = ps.executeUpdate();
+            ps.setInt(8, fluc.getID());
+            ps.setInt(6, fluc.getAccount().getId());
+            ps.setLong(7, get(fluc.getID()).getAmount());
+            ps.executeUpdate();
             conn.close();
-        return res;
     }
     
     @Override
-    public int delete(FluctuationDTO fluc) throws SQLException{
-        int res = 0;
+    public void delete(FluctuationDTO fluc) throws SQLException{
         String query = "DELETE FROM main.fluctuation WHERE fluctuation_id = ?";
             Connection conn = createConnection();
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1, fluc.getID());
-            res = ps.executeUpdate();
+            ps.executeUpdate();
             conn.close();
-        return res;
     }
     
     @Override
@@ -94,15 +89,16 @@ public class FluctuationDAO implements DAOInterface<FluctuationDTO>{
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
-                fluc = new FluctuationDTO();
                 int flucId = rs.getInt("fluctuation_id");
                 long flucAmount = rs.getLong("fluctuation_amount");
                 String flucNote = rs.getString("fluctuation_note");
                 LocalDate flucDate = rs.getDate("fluctuation_date").toLocalDate();
                 CategoryDTO flucCat = new CategoryDTO(rs.getInt("category_type"), rs.getInt("category_id"), rs.getString("category_name"));
-                boolean flucFixed = rs.getBoolean("fluc_is_fixed");
+                boolean flucFixed = rs.getBoolean("fluctuation_is_fixed");
                 int flucAccountId = rs.getInt("account_id");
-                fluc = new FluctuationDTO(flucId, flucNote, flucDate, flucCat, flucFixed, flucAmount, flucAccountId);
+                AccountDTO flucAccount = accDAO.get(flucAccountId);
+                fluc = new FluctuationDTO(flucId, flucNote, flucDate, flucCat, flucFixed, flucAmount, flucAccount);
+                fluc.setPreAmount(rs.getLong("pre_amount"));
             }
             conn.close();
         return fluc;
@@ -125,10 +121,89 @@ public class FluctuationDAO implements DAOInterface<FluctuationDTO>{
                 CategoryDTO flucCat = new CategoryDTO(rs.getInt("category_type"), rs.getInt("category_id"), rs.getString("category_name"));
                 boolean flucFixed = rs.getBoolean("fluctuation_is_fixed");
                 int flucAccountId = rs.getInt("account_id");
-                data = new FluctuationDTO(flucId, flucNote, flucDate, flucCat, flucFixed, flucAmount, flucAccountId);
+                AccountDTO flucAccount = accDAO.get(flucAccountId);
+                data = new FluctuationDTO(flucId, flucNote, flucDate, flucCat, flucFixed, flucAmount, flucAccount);
+                data.setPreAmount(rs.getLong("pre_amount"));
                 arrlist.add(data);
             }
         dataset = arrlist.toArray(new FluctuationDTO[arrlist.size()]);
         return dataset;
     }
+    
+    public FluctuationDTO[] getAllByCategoryAndAccount(String catName, String accName) throws SQLException{
+        FluctuationDTO[] dataset = null;
+        FluctuationDTO data;
+        List<FluctuationDTO> arrlist = new ArrayList<>();
+        String query = "SELECT * FROM main.fluctuation LEFT JOIN main.category ON main.fluctuation.category_id = main.category.category_id LEFT JOIN main.account ON main.fluctuation.account_id = main.account.account_id WHERE category_name = ? AND account_name = ? ORDER BY fluctuation_id DESC";
+            Connection conn = createConnection();
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, catName);
+            ps.setString(2, accName);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                int flucId = rs.getInt("fluctuation_id");
+                long flucAmount = rs.getLong("fluctuation_amount");
+                String flucNote = rs.getString("fluctuation_note");
+                LocalDate flucDate = rs.getDate("fluctuation_date").toLocalDate();
+                CategoryDTO flucCat = new CategoryDTO(rs.getInt("category_type"), rs.getInt("category_id"), rs.getString("category_name"));
+                boolean flucFixed = rs.getBoolean("fluctuation_is_fixed");
+                int flucAccountId = rs.getInt("account_id");
+                AccountDTO flucAccount = accDAO.get(flucAccountId);
+                data = new FluctuationDTO(flucId, flucNote, flucDate, flucCat, flucFixed, flucAmount, flucAccount);
+                data.setPreAmount(rs.getLong("pre_amount"));
+                arrlist.add(data);
+            }
+        dataset = arrlist.toArray(new FluctuationDTO[arrlist.size()]);
+        return dataset;
+    }
+    
+    public FluctuationDTO[] getAllByCategory(String catName) throws SQLException{
+        FluctuationDTO[] dataset = null;
+        FluctuationDTO data;
+        List<FluctuationDTO> arrlist = new ArrayList<>();
+        String query = "SELECT * FROM main.fluctuation LEFT JOIN main.category ON main.fluctuation.category_id = main.category.category_id WHERE main.category.category_name = ? ORDER BY fluctuation_id DESC";
+            Connection conn = createConnection();
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, catName);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                int flucId = rs.getInt("fluctuation_id");
+                long flucAmount = rs.getLong("fluctuation_amount");
+                String flucNote = rs.getString("fluctuation_note");
+                LocalDate flucDate = rs.getDate("fluctuation_date").toLocalDate();
+                CategoryDTO flucCat = new CategoryDTO(rs.getInt("category_type"), rs.getInt("category_id"), rs.getString("category_name"));
+                boolean flucFixed = rs.getBoolean("fluctuation_is_fixed");
+                int flucAccountId = rs.getInt("account_id");
+                AccountDTO flucAccount = accDAO.get(flucAccountId);
+                data = new FluctuationDTO(flucId, flucNote, flucDate, flucCat, flucFixed, flucAmount, flucAccount);
+                data.setPreAmount(rs.getLong("pre_amount"));
+                arrlist.add(data);
+            }
+        dataset = arrlist.toArray(new FluctuationDTO[arrlist.size()]);
+        return dataset;
+    }
+    
+//    public FluctuationDTO[] getAllInSpecificMonth(int month) throws SQLException{
+//        FluctuationDTO[] dataset = null;
+//        FluctuationDTO data;
+//        List<FluctuationDTO> arrlist = new ArrayList<>();
+//        String query = "SELECT * FROM main.fluctuation LEFT JOIN main.category ON main.fluctuation.category_id = main.category.category_id WHERE month(main.fluctuation_date) = ? ORDER BY fluctuation_id DESC";
+//            Connection conn = createConnection();
+//            PreparedStatement ps = conn.prepareStatement(query);
+//            ResultSet rs = ps.executeQuery(query);
+//            while (rs.next()){
+//                int flucId = rs.getInt("fluctuation_id");
+//                long flucAmount = rs.getLong("fluctuation_amount");
+//                String flucNote = rs.getString("fluctuation_note");
+//                LocalDate flucDate = rs.getDate("fluctuation_date").toLocalDate();
+//                CategoryDTO flucCat = new CategoryDTO(rs.getInt("category_type"), rs.getInt("category_id"), rs.getString("category_name"));
+//                boolean flucFixed = rs.getBoolean("fluctuation_is_fixed");
+//                int flucAccountId = rs.getInt("account_id");
+//                data = new FluctuationDTO(flucId, flucNote, flucDate, flucCat, flucFixed, flucAmount, flucAccountId);
+//                data.setPreAmount(rs.getLong("pre_amount"));
+//                arrlist.add(data);
+//            }
+//        dataset = arrlist.toArray(new FluctuationDTO[arrlist.size()]);
+//        return dataset;
+//    }
 }

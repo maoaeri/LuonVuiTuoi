@@ -7,11 +7,11 @@ package myhustwork.luonvuituoi.GUI;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.geom.RoundRectangle2D;
-import static java.lang.Byte.parseByte;
-import static java.lang.Integer.parseInt;
 import java.sql.SQLException;
 import java.text.ParseException;
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 import myhustwork.luonvuituoi.DTO.AccountDTO;
 import myhustwork.luonvuituoi.Util.Converter;
 import myhustwork.luonvuituoi.Util.GUIRelated;
@@ -26,6 +26,7 @@ public class AccountGUI extends javax.swing.JFrame implements InforInterface<Acc
      * Creates new form AccountGUI
      */
     public AccountGUI() {
+        this.setTitle("LuonVuiTuoi");
         initComponents();
     }
     
@@ -36,6 +37,13 @@ public class AccountGUI extends javax.swing.JFrame implements InforInterface<Acc
         acc.setBalance(Converter.formatAmount(txtBalance.getText()));
         acc.setSave_per_month(Converter.formatAmount(txtExpectedSavePerMonth.getText()));
         return acc;
+    }
+    
+    @Override
+    public void display(AccountDTO acc){
+        txtName.setText(acc.getName());
+        txtBalance.setText(acc.getBalance() + "");
+        txtExpectedSavePerMonth.setText(acc.getSave_per_month() + "");
     }
     
     @Override
@@ -81,7 +89,7 @@ public class AccountGUI extends javax.swing.JFrame implements InforInterface<Acc
         btnUpdate = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setFont(new java.awt.Font("Maiandra GD", 0, 10)); // NOI18N
         setSize(new java.awt.Dimension(960, 540));
 
@@ -348,15 +356,17 @@ class RoundedJTextField extends JFormattedTextField {
 class AccountListRenderer extends JPanel implements ListCellRenderer<AccountDTO>{
     private JLabel lblIcon = new JLabel();
 //    private JLabel lblCategoryName = new JLabel();
-    private JLabel lblAmount = new JLabel();
-    private JLabel lblNote = new JLabel();
+    private JLabel lblBalance = new JLabel();
+    private JLabel lblName = new JLabel();
+    Border lineBorder = BorderFactory.createLineBorder(Color.RED, 1);
+    Border emptyBorder = BorderFactory.createEmptyBorder(2, 2, 2, 2);
  
     public AccountListRenderer() {
         setLayout(new BorderLayout(5, 5));
         JPanel panelText = new JPanel(new GridLayout(0, 1));
 //        panelText.add(lblCategoryName);
-        panelText.add(lblAmount);
-        panelText.add(lblNote);
+        panelText.add(lblName);
+        panelText.add(lblBalance);
         add(lblIcon, BorderLayout.WEST);
         add(panelText, BorderLayout.CENTER);
     }
@@ -366,15 +376,30 @@ class AccountListRenderer extends JPanel implements ListCellRenderer<AccountDTO>
             boolean isSelected, boolean cellHasFocus) {
         lblIcon.setSize(new Dimension(50,50));
         
-        String imgUrl = "D:\\Pj\\LuonVuiTuoi\\src\\main\\java\\myhustwork\\luonvuituoi\\images\\CategoryIcon\\account.png";
+        String imgUrl = "D:\\Pj\\LuonVuiTuoi\\src\\main\\java\\myhustwork\\luonvuituoi\\images\\account.png";
         
         ImageIcon img = new ImageIcon(imgUrl);
         lblIcon.setIcon(img);
         GUIRelated.scaleImage(imgUrl, lblIcon);
         
-        lblNote.setText(acc.getName());
-        lblNote.setFont(new java.awt.Font("r0c0i Linotte", 0, 18));
-        lblNote.setForeground(new java.awt.Color(255, 51,51));
+        lblName.setText(acc.getName());
+        lblName.setFont(new java.awt.Font("r0c0i Linotte", 0, 18));
+        lblName.setForeground(new java.awt.Color(255, 51,51));
+        
+        lblBalance.setText(Long.toString(acc.getBalance()));
+        lblBalance.setFont(new java.awt.Font("r0c0i Linotte", 0, 18));
+        lblBalance.setForeground(new java.awt.Color(255, 51,51));
+        
+        if (isSelected) {
+            this.setForeground(list.getSelectionForeground());
+            this.setBackground(list.getSelectionBackground());
+            this.setBorder(new LineBorder(Color.BLUE));
+        } else {
+            this.setForeground(list.getForeground());
+            this.setBackground(list.getBackground());
+        }
+
+        this.setBorder(cellHasFocus ? lineBorder : emptyBorder);
         return this;
     }
 }
