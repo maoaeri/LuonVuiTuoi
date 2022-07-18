@@ -13,12 +13,14 @@ import java.text.ParseException;
  */
 public class MoneyDTO {
     private long amount;
+    private CategoryDTO category;
 
     public MoneyDTO() {
     }
 
-    public MoneyDTO(long amount) {
+    public MoneyDTO(long amount, CategoryDTO category) {
         this.amount = amount;
+        this.category = category;
     }
 
     public long getAmount() {
@@ -27,6 +29,14 @@ public class MoneyDTO {
 
     public void setAmount(long amount) {
         this.amount = amount;
+    }
+
+    public CategoryDTO getCategory() {
+        return category;
+    }
+
+    public void setCategory(CategoryDTO category) {
+        this.category = category;
     }
     
 }

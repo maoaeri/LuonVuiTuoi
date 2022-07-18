@@ -7,8 +7,6 @@ package myhustwork.luonvuituoi.GUI;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.geom.RoundRectangle2D;
-import static java.lang.Byte.parseByte;
-import static java.lang.Integer.parseInt;
 import java.sql.SQLException;
 import java.text.ParseException;
 import javax.swing.*;
@@ -28,6 +26,7 @@ public class AccountGUI extends javax.swing.JFrame implements InforInterface<Acc
      * Creates new form AccountGUI
      */
     public AccountGUI() {
+        this.setTitle("LuonVuiTuoi");
         initComponents();
     }
     

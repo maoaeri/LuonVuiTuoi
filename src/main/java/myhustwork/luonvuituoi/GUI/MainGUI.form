@@ -66,12 +66,14 @@
                       <Component id="tbPnl" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="btnAddFluc" min="-2" pref="223" max="-2" attributes="0"/>
-                      <Component id="btnAddStuff" min="-2" pref="223" max="-2" attributes="0"/>
-                      <Component id="btnAddAccount" min="-2" pref="223" max="-2" attributes="0"/>
-                      <Component id="btnStat" min="-2" pref="223" max="-2" attributes="0"/>
-                      <Component id="btnSuggest" min="-2" pref="223" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="btnFluc" pref="223" max="32767" attributes="0"/>
+                      <Component id="btnAddStuff" pref="223" max="32767" attributes="0"/>
+                      <Component id="btnAddAccount" pref="223" max="32767" attributes="0"/>
+                      <Component id="btnStat" pref="223" max="32767" attributes="0"/>
+                      <Component id="btnSuggest" pref="223" max="32767" attributes="0"/>
+                      <Component id="btnRefresh" alignment="0" max="32767" attributes="0"/>
+                      <Component id="btnAboutUs" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace pref="21" max="32767" attributes="0"/>
               </Group>
@@ -87,7 +89,7 @@
                           <Component id="panel0" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
-                          <Component id="btnAddFluc" min="-2" pref="45" max="-2" attributes="0"/>
+                          <Component id="btnFluc" min="-2" pref="45" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
                           <Component id="btnAddStuff" min="-2" pref="45" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
@@ -99,7 +101,13 @@
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="tbPnl" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnSuggest" min="-2" pref="45" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Component id="btnSuggest" min="-2" pref="45" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
+                          <Component id="btnRefresh" min="-2" pref="40" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+                          <Component id="btnAboutUs" min="-2" pref="40" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -141,6 +149,9 @@
           <Properties>
             <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
+          <Events>
+            <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="tbPnlStateChanged"/>
+          </Events>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
           <SubComponents>
@@ -295,7 +306,7 @@
             </Container>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JButton" name="btnAddFluc">
+        <Component class="javax.swing.JButton" name="btnFluc">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="33" green="33" red="ff" type="rgb"/>
@@ -306,10 +317,10 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Th&#xea;m giao d&#x1ecb;ch"/>
+            <Property name="text" type="java.lang.String" value="Giao d&#x1ecb;ch"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddFlucActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnFlucActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnAddStuff">
@@ -323,7 +334,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Th&#xea;m &#x111;&#x1ed3; c&#x1ea7;n mua"/>
+            <Property name="text" type="java.lang.String" value="&#x110;&#x1ed3; c&#x1ea7;n mua"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddStuffActionPerformed"/>
@@ -340,7 +351,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Th&#xea;m t&#xe0;i kho&#x1ea3;n"/>
+            <Property name="text" type="java.lang.String" value="T&#xe0;i kho&#x1ea3;n"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddAccountActionPerformed"/>
@@ -379,6 +390,34 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSuggestActionPerformed"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnRefresh">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="33" green="33" red="ff" type="rgb"/>
+            </Property>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="r0c0i Linotte" size="18" style="0"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="L&#xe0;m m&#x1edb;i"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnAboutUs">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="33" green="33" red="ff" type="rgb"/>
+            </Property>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="r0c0i Linotte" size="18" style="0"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="V&#x1ec1; ch&#xfa;ng t&#xf4;i"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>

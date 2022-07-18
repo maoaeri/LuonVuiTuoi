@@ -20,22 +20,20 @@ public class FluctuationDTO extends MoneyDTO {
     private int ID; //auto-generated
     private String note;
     private LocalDate date;
-    private CategoryDTO category;
     private boolean fixed; //co dinh hay khong
-    private int accountId;
+    private AccountDTO account;
     private long preAmount; //amount before update, if not update, is = 0
 
     public FluctuationDTO() {
     }
 
-    public FluctuationDTO(int ID, String note, LocalDate date, CategoryDTO category, boolean fixed, long amount, int accountId) {
-        super(amount);
+    public FluctuationDTO(int ID, String note, LocalDate date, CategoryDTO category, boolean fixed, long amount, AccountDTO account) {
+        super(amount, category);
         this.ID = ID;
         this.note = note;
         this.date = date;
-        this.category = category;
         this.fixed = fixed;
-        this.accountId = accountId;
+        this.account = account;
     }
 
     public int getID() {
@@ -50,16 +48,12 @@ public class FluctuationDTO extends MoneyDTO {
         return date;
     }
 
-    public CategoryDTO getCategory() {
-        return category;
-    }
-
     public boolean isFixed() {
         return fixed;
     }
 
-    public int getAccountId() {
-        return accountId;
+    public AccountDTO getAccount() {
+        return account;
     }
 
     public long getPreAmount() {
@@ -70,8 +64,8 @@ public class FluctuationDTO extends MoneyDTO {
         this.preAmount = preAmount;
     }
 
-    public void setAccountId(int accountId) {
-        this.accountId = accountId;
+    public void setAccount(AccountDTO account) {
+        this.account = account;
     }
 
     public void setID(int ID) {
@@ -84,10 +78,6 @@ public class FluctuationDTO extends MoneyDTO {
 
     public void setDate(LocalDate date) {
         this.date = date;
-    }
-
-    public void setCategory(CategoryDTO category) {
-        this.category = category;
     }
 
     public void setFixed(boolean fixed) {

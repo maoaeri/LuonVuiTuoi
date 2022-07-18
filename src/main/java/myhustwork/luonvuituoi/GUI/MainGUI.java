@@ -14,8 +14,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -71,6 +69,7 @@ public class MainGUI extends javax.swing.JFrame {
         accDAO = new AccountDAO();
         stuffBLL = new StuffBLL();
         accId = 1;
+        this.setTitle("LuonVuiTuoi");
         initComponents();
     }
 
@@ -141,7 +140,7 @@ public class MainGUI extends javax.swing.JFrame {
     }
     
     public void addFlucListener(ActionListener log){
-        btnAddFluc.addActionListener(log);
+        btnFluc.addActionListener(log);
     }
     
     public void addStuffListener(ActionListener log){
@@ -194,11 +193,13 @@ public class MainGUI extends javax.swing.JFrame {
         pnlAccount = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         lstAccount = new javax.swing.JList<>();
-        btnAddFluc = new javax.swing.JButton();
+        btnFluc = new javax.swing.JButton();
         btnAddStuff = new javax.swing.JButton();
         btnAddAccount = new javax.swing.JButton();
         btnStat = new javax.swing.JButton();
         btnSuggest = new javax.swing.JButton();
+        btnRefresh = new javax.swing.JButton();
+        btnAboutUs = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -245,6 +246,11 @@ public class MainGUI extends javax.swing.JFrame {
         );
 
         tbPnl.setToolTipText("");
+        tbPnl.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                tbPnlStateChanged(evt);
+            }
+        });
 
         lstFluc.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         lstFluc.setModel(getAllFlucs());
@@ -317,20 +323,20 @@ public class MainGUI extends javax.swing.JFrame {
 
         tbPnl.addTab("Tài khoản", pnlAccount);
 
-        btnAddFluc.setBackground(new java.awt.Color(255, 51, 51));
-        btnAddFluc.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
-        btnAddFluc.setForeground(new java.awt.Color(255, 255, 255));
-        btnAddFluc.setText("Thêm giao dịch");
-        btnAddFluc.addActionListener(new java.awt.event.ActionListener() {
+        btnFluc.setBackground(new java.awt.Color(255, 51, 51));
+        btnFluc.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        btnFluc.setForeground(new java.awt.Color(255, 255, 255));
+        btnFluc.setText("Giao dịch");
+        btnFluc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddFlucActionPerformed(evt);
+                btnFlucActionPerformed(evt);
             }
         });
 
         btnAddStuff.setBackground(new java.awt.Color(255, 51, 51));
         btnAddStuff.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
         btnAddStuff.setForeground(new java.awt.Color(255, 255, 255));
-        btnAddStuff.setText("Thêm đồ cần mua");
+        btnAddStuff.setText("Đồ cần mua");
         btnAddStuff.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddStuffActionPerformed(evt);
@@ -340,7 +346,7 @@ public class MainGUI extends javax.swing.JFrame {
         btnAddAccount.setBackground(new java.awt.Color(255, 51, 51));
         btnAddAccount.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
         btnAddAccount.setForeground(new java.awt.Color(255, 255, 255));
-        btnAddAccount.setText("Thêm tài khoản");
+        btnAddAccount.setText("Tài khoản");
         btnAddAccount.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddAccountActionPerformed(evt);
@@ -367,6 +373,16 @@ public class MainGUI extends javax.swing.JFrame {
             }
         });
 
+        btnRefresh.setBackground(new java.awt.Color(255, 51, 51));
+        btnRefresh.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        btnRefresh.setForeground(new java.awt.Color(255, 255, 255));
+        btnRefresh.setText("Làm mới");
+
+        btnAboutUs.setBackground(new java.awt.Color(255, 51, 51));
+        btnAboutUs.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        btnAboutUs.setForeground(new java.awt.Color(255, 255, 255));
+        btnAboutUs.setText("Về chúng tôi");
+
         javax.swing.GroupLayout kGradientPanel1Layout = new javax.swing.GroupLayout(kGradientPanel1);
         kGradientPanel1.setLayout(kGradientPanel1Layout);
         kGradientPanel1Layout.setHorizontalGroup(
@@ -380,12 +396,14 @@ public class MainGUI extends javax.swing.JFrame {
                         .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(tbPnl))
                 .addGap(34, 34, 34)
-                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnAddFluc, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAddStuff, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAddAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnStat, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSuggest, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnFluc, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+                    .addComponent(btnAddStuff, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+                    .addComponent(btnAddAccount, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+                    .addComponent(btnStat, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+                    .addComponent(btnSuggest, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+                    .addComponent(btnRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnAboutUs, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
         kGradientPanel1Layout.setVerticalGroup(
@@ -397,7 +415,7 @@ public class MainGUI extends javax.swing.JFrame {
                         .addComponent(panel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(panel0, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(kGradientPanel1Layout.createSequentialGroup()
-                        .addComponent(btnAddFluc, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnFluc, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(27, 27, 27)
                         .addComponent(btnAddStuff, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(27, 27, 27)
@@ -407,7 +425,12 @@ public class MainGUI extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tbPnl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSuggest, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(kGradientPanel1Layout.createSequentialGroup()
+                        .addComponent(btnSuggest, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(28, 28, 28)
+                        .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(26, 26, 26)
+                        .addComponent(btnAboutUs, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -431,10 +454,10 @@ public class MainGUI extends javax.swing.JFrame {
         
     }//GEN-LAST:event_lstAccountValueChanged
 
-    private void btnAddFlucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddFlucActionPerformed
+    private void btnFlucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFlucActionPerformed
         // TODO add your handling code here:
 //        refreshComponents();
-    }//GEN-LAST:event_btnAddFlucActionPerformed
+    }//GEN-LAST:event_btnFlucActionPerformed
 
     private void btnAddStuffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddStuffActionPerformed
         // TODO add your handling code here:
@@ -446,8 +469,7 @@ public class MainGUI extends javax.swing.JFrame {
 
     private void lstFlucValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstFlucValueChanged
         // TODO add your handling code here:
-        this.setFlucId(lstFluc.getSelectedValue().getID());
-        System.err.println(this.getFlucId());
+        this.setFlucId(lstFluc.getSelectedValue().getID()); 
     }//GEN-LAST:event_lstFlucValueChanged
 
     private void lstStuffValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstStuffValueChanged
@@ -490,6 +512,13 @@ public class MainGUI extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, message, "Đề xuất", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnSuggestActionPerformed
 
+    private void tbPnlStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tbPnlStateChanged
+        // TODO add your handling code here:
+//        lstStuff.setModel(getAllStuffs());
+//        lstFluc.setModel(getAllFlucs());
+//        lstAccount.setModel(getAllAccounts());
+    }//GEN-LAST:event_tbPnlStateChanged
+
     public DefaultPieDataset[] getDataset(){
         DefaultPieDataset[] dataset = new DefaultPieDataset[2];
         dataset[0] = new DefaultPieDataset();
@@ -508,7 +537,12 @@ public class MainGUI extends javax.swing.JFrame {
         LocalDate lastDayOfMonth = DateRelated.getLastDayOfMonth(localdate);
         
         List<DatasetDTO> arrList = new ArrayList<DatasetDTO>();
-        arrList = flucBLL.getDataset(firstDayOfMonth, lastDayOfMonth);
+        try {
+            arrList = flucBLL.getStatDatasetByDate(firstDayOfMonth, lastDayOfMonth);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
         
         for (int i = 0; i < arrList.size(); i++){
             try {
@@ -565,9 +599,11 @@ public class MainGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAboutUs;
     private javax.swing.JButton btnAddAccount;
-    private javax.swing.JButton btnAddFluc;
     private javax.swing.JButton btnAddStuff;
+    private javax.swing.JButton btnFluc;
+    private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnStat;
     private javax.swing.JButton btnSuggest;
     private javax.swing.JScrollPane jScrollPane2;

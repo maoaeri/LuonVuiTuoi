@@ -9,11 +9,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -25,13 +22,9 @@ import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
-import myhustwork.luonvuituoi.DAO.CategoryDAO;
-import myhustwork.luonvuituoi.DAO.StuffDAO;
+import myhustwork.luonvuituoi.BLL.StuffBLL;
 import myhustwork.luonvuituoi.DTO.CategoryDTO;
-import myhustwork.luonvuituoi.DTO.FluctuationDTO;
 import myhustwork.luonvuituoi.DTO.StuffDTO;
 import myhustwork.luonvuituoi.Util.Converter;
 import myhustwork.luonvuituoi.Util.GUIRelated;
@@ -41,17 +34,16 @@ import myhustwork.luonvuituoi.Util.GUIRelated;
  * @author vvlalalove193
  */
 public class StuffGUI extends javax.swing.JFrame implements InforInterface<StuffDTO>{
-    private CategoryDAO catDAO;
-    private StuffDAO stuffDAO;
+    private StuffBLL stuffBLL;
     private int stuffID;
 //    private StuffDTO stuff;
     /**
      * Creates new form AddStuffInfoFrm
      */
     public StuffGUI() {
-        catDAO = new CategoryDAO();
-        stuffDAO = new StuffDAO();
+        stuffBLL = new StuffBLL();
         stuffID = -1;
+        this.setTitle("LuonVuiTuoi");
         initComponents();
     }
     
@@ -69,25 +61,25 @@ public class StuffGUI extends javax.swing.JFrame implements InforInterface<Stuff
             stuff.setID(stuffID);
         }
         stuff.setAmount(Converter.formatAmount(txtAmount.getText()));
-        DefaultMutableTreeNode selectedNode1 = (DefaultMutableTreeNode) treCategory.getModel().getRoot() ;
-        String rootType = selectedNode1.getUserObject().toString();
-        int categoryType = 0;
-        switch (rootType) {
-            case "Thu" ->  {
-                categoryType = 1;
+        if (!treCategory.isSelectionEmpty()){
+           DefaultMutableTreeNode selectedNode2 = (DefaultMutableTreeNode) treCategory.getLastSelectedPathComponent();
+            String rootType = selectedNode2.getPath()[1].toString();
+            int categoryType = 0;
+            System.out.println(rootType);
+            switch (rootType) {
+                case "Thu" ->  {
+                    categoryType = 1;
+                    break;
+                }
+                case "Chi" ->  {
+                    categoryType = 0;
+                    break;
+                }
             }
-            case "Chi" ->  {
-                categoryType = 0;
-            }
-            default -> {
-                categoryType = 0;
-            }
+            String categoryName = selectedNode2.getUserObject().toString();
+            CategoryDTO cat = new CategoryDTO(categoryType, categoryName);
+            stuff.setCategory(cat); 
         }
-        DefaultMutableTreeNode selectedNode2 = (DefaultMutableTreeNode) treCategory.getLastSelectedPathComponent() ;
-        String categoryName = selectedNode2.getUserObject().toString();
-        CategoryDTO cat = new CategoryDTO(categoryType, categoryName);
-        cat.setCategoryId(catDAO.getCategoryId(cat));
-        stuff.setCategory(cat);
         stuff.setNote(txtNote.getText());
         return stuff;
     }
@@ -96,7 +88,7 @@ public class StuffGUI extends javax.swing.JFrame implements InforInterface<Stuff
         DefaultListModel listmodel = new DefaultListModel<StuffDTO>();
         StuffDTO[] list = null;
         try {
-            list = stuffDAO.getAll();
+            list = stuffBLL.getAllStuffs();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -112,21 +104,6 @@ public class StuffGUI extends javax.swing.JFrame implements InforInterface<Stuff
         txtNote.setText("");
         lblCategory2.setText("");
         lstStuff.setModel(getAllStuffs());
-    }
-    
-    @Override
-    public void addListener(ActionListener log){
-        btnAdd.addActionListener(log);
-    }
-    
-    @Override
-    public void updateListener(ActionListener log){
-        btnUpdate.addActionListener(log);
-    }
-    
-    @Override
-    public void deleteListener(ActionListener log){
-        btnDelete.addActionListener(log);
     }
 
     /**
@@ -398,16 +375,40 @@ public class StuffGUI extends javax.swing.JFrame implements InforInterface<Stuff
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         // TODO add your handling code here:
+        try {
+                StuffDTO stuff = this.getInfor();
+                stuffBLL.updateFromGUI(stuff);
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         refreshComponents();
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
+        try {
+                StuffDTO stuff = this.getInfor();
+                stuffBLL.addFromGUI(stuff);
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         refreshComponents();
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         // TODO add your handling code here:
+        try {
+                StuffDTO stuff = this.getInfor();
+                stuffBLL.deleteFromGUI(stuff);
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         refreshComponents();
     }//GEN-LAST:event_btnDeleteActionPerformed
 

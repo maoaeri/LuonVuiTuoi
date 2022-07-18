@@ -4,10 +4,7 @@
  */
 package myhustwork.luonvuituoi.GUI;
 
-import java.awt.Image;
 import java.awt.event.ActionListener;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import myhustwork.luonvuituoi.Util.GUIRelated;
 
 /**
@@ -20,6 +17,7 @@ public class WelcomeGUI extends javax.swing.JFrame {
      * Creates new form Home
      */
     public WelcomeGUI() {
+        this.setTitle("LuonVuiTuoi");
         initComponents();
         GUIRelated.scaleImage("D:\\Pj\\LuonVuiTuoi\\src\\main\\java\\myhustwork\\luonvuituoi\\images\\retouch_2022062810064090.png", logo1);
         GUIRelated.scaleImage("D:\\Pj\\LuonVuiTuoi\\src\\main\\java\\myhustwork\\luonvuituoi\\images\\retouch_2022062810064090.png", logo2);
@@ -47,6 +45,7 @@ public class WelcomeGUI extends javax.swing.JFrame {
         logo1 = new javax.swing.JLabel();
         logo2 = new javax.swing.JLabel();
         logo3 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -70,6 +69,9 @@ public class WelcomeGUI extends javax.swing.JFrame {
         kGradientPanel1.setPreferredSize(new java.awt.Dimension(960, 540));
         kGradientPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        btnStart.setBackground(new java.awt.Color(255, 51, 51));
+        btnStart.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        btnStart.setForeground(new java.awt.Color(255, 255, 255));
         btnStart.setText("Get Started");
         btnStart.setBorder(null);
         btnStart.addActionListener(new java.awt.event.ActionListener() {
@@ -90,6 +92,11 @@ public class WelcomeGUI extends javax.swing.JFrame {
         logo3.setIcon(new javax.swing.ImageIcon("D:\\Pj\\LuonVuiTuoi\\src\\main\\java\\myhustwork\\luonvuituoi\\images\\retouch_2022062810064090.png")); // NOI18N
         logo3.setPreferredSize(new java.awt.Dimension(297, 35));
         kGradientPanel1.add(logo3, new org.netbeans.lib.awtextra.AbsoluteConstraints(332, 265, -1, -1));
+
+        jLabel1.setFont(new java.awt.Font("r0c0i Linotte", 0, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 51, 51));
+        jLabel1.setText("App quản lý chi tiêu số một Việt Nam");
+        kGradientPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 340, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -153,6 +160,7 @@ public class WelcomeGUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnStart;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private keeptoo.KGradientPanel kGradientPanel1;
     private javax.swing.JLabel logo1;

@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.*;
 import myhustwork.luonvuituoi.BLL.FluctuationBLL;
 import myhustwork.luonvuituoi.DAO.AccountDAO;
+import myhustwork.luonvuituoi.DAO.CategoryDAO;
 import myhustwork.luonvuituoi.DAO.FluctuationDAO;
 import myhustwork.luonvuituoi.DAO.StuffDAO;
 import myhustwork.luonvuituoi.DTO.AccountDTO;
@@ -20,23 +21,54 @@ import myhustwork.luonvuituoi.DTO.StuffDTO;
  *
  * @author vvlalalove193
  */
-public class StuffBLL {
+public class StuffBLL implements BLLInterface<StuffDTO>{
     private StuffDAO stuffDAO;
     private FluctuationDAO flucDAO;
     private FluctuationBLL flucBLL;
     private AccountDAO accDAO;
+    private CategoryDAO catDAO;
     
     public StuffBLL() {
         stuffDAO = new StuffDAO();
         accDAO = new AccountDAO();
         flucDAO = new FluctuationDAO();
         flucBLL = new FluctuationBLL();
+        catDAO = new CategoryDAO();
     }
 
     public StuffDTO[] getAllStuffs() throws SQLException {
         return stuffDAO.getAll();
     }
+    
+    @Override
+    public StuffDTO get(int id) throws SQLException{
+        return stuffDAO.get(id);
+    }
 
+    @Override
+    public void addFromGUI(StuffDTO stuff) throws SQLException{
+        int catId = catDAO.getCategoryId(stuff.getCategory());
+        stuff.getCategory().setCategoryId(catId);
+        stuffDAO.add(stuff);
+    }
+    
+    @Override
+    public void updateFromGUI(StuffDTO stuff) throws SQLException{
+        StuffDTO stuff1 = stuffDAO.get(stuff.getID());//get from database to compare
+        if (stuff.getCategory() == null){
+            stuff.setCategory(stuff1.getCategory());
+        } 
+        stuffDAO.update(stuff);
+    }
+    
+    @Override
+    public void deleteFromGUI(StuffDTO stuff) throws SQLException {
+        StuffDTO stuff1 = stuffDAO.get(stuff.getID());    
+//        int catId = catDAO.getCategoryId(stuff1.getCategory());
+//        stuff1.getCategory().setCategoryId(catId);
+        stuffDAO.delete(stuff);
+    }
+    
     public void Suggestion(LocalDate date1, LocalDate date2) throws SQLException {
         double ThuThanghientai = 0, Chithanghientai = 0, Sodutrongthang = 0;
 

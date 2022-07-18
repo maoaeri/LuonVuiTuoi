@@ -5,13 +5,14 @@ import myhustwork.luonvuituoi.DTO.*;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class FluctuationBLL {//bien dong so du//
+public class FluctuationBLL implements BLLInterface<FluctuationDTO>{//bien dong so du//
     private final FluctuationDAO flucDAO;
     private final AccountDAO accDAO;
     private final CategoryDAO catDAO;
@@ -26,7 +27,7 @@ public class FluctuationBLL {//bien dong so du//
         FluctuationBLL flucBLL = new FluctuationBLL();
         double[] a = null;
         try {
-            a = flucBLL.PercentCategories(LocalDate.MIN, LocalDate.MAX);
+            a = flucBLL.PercentCategories(LocalDate.of(2022,6,30), LocalDate.of(2022,8,1));
         } catch (SQLException ex) {
             Logger.getLogger(FluctuationBLL.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -34,7 +35,69 @@ public class FluctuationBLL {//bien dong so du//
             System.err.println(i);
         }
     }
+    
+    @Override
+    public FluctuationDTO get(int id) throws SQLException {
+        return flucDAO.get(id);
+    }
+    
+    //get fluc from GUI, add category id and insert to database
+    @Override
+    public void addFromGUI(FluctuationDTO fluc) throws SQLException{
+        int catId = catDAO.getCategoryId(fluc.getCategory());
+        fluc.getCategory().setCategoryId(catId);
+        flucDAO.add(fluc);
+        AccountDTO acc = accDAO.get(fluc.getAccount().getId());
+        if (fluc.getCategory().isIncome()) {
+            acc.setBalance(acc.getBalance() + fluc.getAmount());
+        } else {
+            acc.setBalance(acc.getBalance() - fluc.getAmount());
+        }
+    }
 
+    @Override
+    public void updateFromGUI(FluctuationDTO fluc) throws SQLException{
+        FluctuationDTO fluc1 = flucDAO.get(fluc.getID());//get from database to compare
+        if (fluc.getCategory() == null){
+            fluc.setCategory(fluc1.getCategory());
+        } 
+        if (fluc.getAccount().getId() == 0){
+            fluc.getAccount().setId(fluc.getAccount().getId());
+        }
+//        int catId = catDAO.getCategoryId(fluc1.getCategory());
+//        fluc.getCategory().setCategoryId(catId);
+        flucDAO.update(fluc);
+        AccountDTO acc = accDAO.get(fluc.getAccount().getId());
+        if (fluc.getCategory().isIncome()) {
+            acc.setBalance(acc.getBalance() - fluc.getPreAmount() + fluc.getAmount());
+        } else {
+            acc.setBalance(acc.getBalance() + fluc.getPreAmount() - fluc.getAmount());
+        }
+    }
+    
+    @Override
+    public void deleteFromGUI(FluctuationDTO fluc) throws SQLException {
+        FluctuationDTO fluc1 = flucDAO.get(fluc.getID());    
+        int catId = catDAO.getCategoryId(fluc1.getCategory());
+        fluc1.getCategory().setCategoryId(catId);
+        flucDAO.delete(fluc1);
+        AccountDTO acc = accDAO.get(fluc1.getAccount().getId());
+        if (fluc1.getCategory().isIncome()) {
+            acc.setBalance(acc.getBalance() - fluc1.getAmount());
+        } else {
+            acc.setBalance(acc.getBalance() + fluc1.getAmount());
+        }
+    }
+    
+    public FluctuationDTO[] getAllByCategoryAndAccount(String catName, String accName) throws SQLException{
+        FluctuationDTO[] flucList = null;
+        if (accName.equals("Tất cả")){
+            flucList = flucDAO.getAllByCategory(catName);
+        } else {
+            flucList = flucDAO.getAllByCategoryAndAccount(catName, accName);
+        }
+        return flucList;
+    }
     /**
      * Warning if there's a chance balance < 0
      *
@@ -47,10 +110,13 @@ public class FluctuationBLL {//bien dong so du//
         return balance - save_per_month < 0;
     }
 
-    public double[] SumCategories(LocalDate date1, LocalDate date2) throws SQLException{
-        double[] sumCategories = new double[26];
+    public double[][] SumCategories(LocalDate date1, LocalDate date2) throws SQLException{
+        double[] sumInitCategories = new double[26];
+        double[] sumAfterCategories = new double[26];
+        
         for (int j = 1; j <= 25; j++) {
-            sumCategories[j] = 0;// -1 là không tồn tại
+            sumInitCategories[j] = 0;
+            sumAfterCategories[j] = 0;// -1 là không tồn tại
         }
         FluctuationDTO[] flucArr = flucDAO.getAll();
         for (FluctuationDTO i : flucArr) {
@@ -58,29 +124,33 @@ public class FluctuationBLL {//bien dong so du//
                 switch (i.getCategory().getCategoryId()) {
                     case 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25 -> {
                         int j = i.getCategory().getCategoryId();
-                        sumCategories[j] += i.getAmount();
+                        sumInitCategories[j] += i.getAmount();
                         break;
                     }
                 }
             }
         }
-        for (int j = 3; j <= 9; j++) {
-            sumCategories[1] += sumCategories[j];
+        for (int j = 1; j <= 25; j++) {
+            sumAfterCategories[j] = sumInitCategories[j];
         }
-        sumCategories[10] = sumCategories[10] + sumCategories[14] + sumCategories[15] + sumCategories[16] + sumCategories[17] + sumCategories[18];
-        sumCategories[11] = sumCategories[11] + sumCategories[19] + sumCategories[20] + sumCategories[21] + sumCategories[22] + sumCategories[23];
-        sumCategories[13] = sumCategories[13] + sumCategories[24] + sumCategories[25];
-        sumCategories[2] = sumCategories[2] + sumCategories[10] + sumCategories[11] + sumCategories[12] + sumCategories[13];
+        for (int j = 3; j <= 9; j++) {
+            sumAfterCategories[1] += sumInitCategories[j];
+        }
+        sumAfterCategories[10] = sumInitCategories[10] + sumInitCategories[14] + sumInitCategories[15] + sumInitCategories[16] + sumInitCategories[17] + sumInitCategories[18];
+        sumAfterCategories[11] = sumInitCategories[11] + sumInitCategories[19] + sumInitCategories[20] + sumInitCategories[21] + sumInitCategories[22] + sumInitCategories[23];
+        sumAfterCategories[13] = sumInitCategories[13] + sumInitCategories[24] + sumInitCategories[25];
+        sumAfterCategories[2] = sumInitCategories[2] + sumAfterCategories[10] + sumAfterCategories[11] + sumAfterCategories[12] + sumAfterCategories[13];
         for (int j = 1; j<=25;j++){
-                                System.err.println(j + "   " +  sumCategories[j]);
+                                System.err.println(j + "   " +  sumAfterCategories[j]);
 
         }
-        return sumCategories;
+        double[][] sum = {sumInitCategories, sumAfterCategories};
+        return sum;
 
     }
 
     public double[] PercentCategories(LocalDate date1, LocalDate date2) throws SQLException {
-        double[] sumCategories = SumCategories(date1, date2); // có 25 hạng mục 
+        double[] sumCategories = SumCategories(date1, date2)[1]; // có 25 hạng mục 
         double[] percentCategories = new double[26];
         for (int j = 1; j <= 25; j++) {
             percentCategories[j] = -1;// -1 là không tồn tại
@@ -97,7 +167,7 @@ public class FluctuationBLL {//bien dong so du//
         return percentCategories;
     }
 
-    public List<DatasetDTO> getDataset(LocalDate date1, LocalDate date2) {
+    public List<DatasetDTO> getStatDatasetByDate(LocalDate date1, LocalDate date2) throws SQLException {
         List<DatasetDTO> arrList = new ArrayList<DatasetDTO>();
 
         CategoryDTO[] listCategory = null;
@@ -109,12 +179,8 @@ public class FluctuationBLL {//bien dong so du//
 
         double[] percentages = null;
         double[] sum = null;
-        try {
             percentages = PercentCategories(date1, date2);
-            sum = SumCategories(date1, date2);
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
+            sum = SumCategories(date1, date2)[1];
 
         for (int i = listCategory.length - 1; i >= 0; i--) {
             if (percentages[i] > 0) {
@@ -123,13 +189,48 @@ public class FluctuationBLL {//bien dong so du//
                     if (percentages[listCategory[n].getCategoryParentId()] == percentages[n]) {
                         n = listCategory[n].getCategoryParentId();
                     } else {
-                        DatasetDTO data = new DatasetDTO(n, listCategory[n].getCategoryName(), percentages[n], (long)sum[n]);
+                        percentages[listCategory[n].getCategoryParentId()] -= percentages[n];
+                        sum[listCategory[n].getCategoryParentId()] -= sum[n];
+                        String type = "";
+                        switch (listCategory[n].getCategoryType()) {
+                            case 1:
+                                type = "Thu";
+                                break;
+                            case 0:
+                                type = "Chi";
+                                break;
+                        }
+                        DatasetDTO data = new DatasetDTO(n, listCategory[n].getCategoryName(), percentages[n], (long)sum[n], type);
                         arrList.add(data);
                         break;
                     }
                 }
             }
         }
+        return arrList;
+    }
+    
+    public List<FluctuationDTO> getFlucDatasetByCategoryAndAccount(String catName, String accName) throws SQLException {
+        List<FluctuationDTO> arrList = new ArrayList<FluctuationDTO>();
+
+        FluctuationDTO[] listFluc = getAllByCategoryAndAccount(catName, accName);
+        
+        for (int i = 0; i < listFluc.length; i++){
+            arrList.add(listFluc[i]);
+        }
+
+        return arrList;
+    }
+    
+    public List<FluctuationDTO> getAllFlucDataset() throws SQLException {
+        List<FluctuationDTO> arrList = new ArrayList<FluctuationDTO>();
+
+        FluctuationDTO[] listFluc = flucDAO.getAll();
+        
+        for (int i = 0; i < listFluc.length; i++){
+            arrList.add(listFluc[i]);
+        }
+
         return arrList;
     }
 
@@ -151,34 +252,6 @@ public class FluctuationBLL {//bien dong so du//
                 else sumSpending[j] += i.getAmount(); // tổng chi từng tháng
             }
         }
-    }
-
-    public void CalculateBalance(FluctuationDTO fluc, String options) throws SQLException {//return 0 if success
-        AccountDTO acc = accDAO.get(fluc.getAccountId());
-        switch (options) {
-            case "add":
-                if (fluc.getCategory().isIncome()) {
-                    acc.setBalance(acc.getBalance() + fluc.getAmount());
-                } else {
-                    acc.setBalance(acc.getBalance() - fluc.getAmount());
-                }
-                break;
-            case "delete":
-                if (fluc.getCategory().isIncome()) {
-                    acc.setBalance(acc.getBalance() - fluc.getAmount());
-                } else {
-                    acc.setBalance(acc.getBalance() + fluc.getAmount());
-                }
-                break;
-            case "update":
-                if (fluc.getCategory().isIncome()) {
-                    acc.setBalance(acc.getBalance() - fluc.getPreAmount() + fluc.getAmount());
-                } else {
-                    acc.setBalance(acc.getBalance() + fluc.getPreAmount() - fluc.getAmount());
-                }
-                break;
-        }
-        accDAO.update(acc);
     }
 
     public double AutoCal() throws SQLException {

@@ -71,8 +71,9 @@ public class MainController {
         
         @Override
         public void valueChanged(ListSelectionEvent e) {
+            
             System.out.println(1);
-            if (mainGUI.getStuffId() != 0){
+            if (mainGUI.getStuffId() != 0 && !e.getValueIsAdjusting()){
                sc = new StuffController(mainGUI.getStuffId());
                mainGUI.setStuffId(0);
             }
@@ -86,11 +87,9 @@ public class MainController {
         @Override
         public void valueChanged(ListSelectionEvent e) {
             System.out.println(1);
-            if (mainGUI.getFlucId() != 0){
+            if (mainGUI.getFlucId() != 0 && !e.getValueIsAdjusting()){
                fc = new FluctuationController(mainGUI.getFlucId());
-               mainGUI.setFlucId(0);
             }
-            mainGUI.setFlucId(0);
 //            sc = new FlucController(mainGUI.getFlucId());     
         }
     }
@@ -100,7 +99,7 @@ public class MainController {
         @Override
         public void valueChanged(ListSelectionEvent e) {
             System.out.println(1);
-            if (mainGUI.getAccId() != 0){
+            if (mainGUI.getAccId() != 0 && !e.getValueIsAdjusting()){
                ac = new AccountController(mainGUI.getAccId());
                mainGUI.setAccId(0);
             }
