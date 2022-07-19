@@ -24,25 +24,29 @@ public class FluctuationController{
     private FluctuationGUI flucGUI;
     private FluctuationBLL flucBLL;
     private FluctuationDAO flucDAO;
-    int flucId;
+    private int flucId;
     
     public FluctuationController() {
-        flucGUI = new FluctuationGUI();
-        flucDAO = new FluctuationDAO();
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                flucGUI = new FluctuationGUI();
         flucBLL = new FluctuationBLL();
         
         flucGUI.setVisible(true);
+            }
+        });
+        
     }
     
     public FluctuationController(int flucId) {
         flucGUI = new FluctuationGUI();
-        flucDAO = new FluctuationDAO();
         flucBLL = new FluctuationBLL();
         this.flucId = flucId;
         
         FluctuationDTO fluc = new FluctuationDTO();
         try {
-            fluc = flucDAO.get(flucId);
+            fluc = flucBLL.get(flucId);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(flucGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
