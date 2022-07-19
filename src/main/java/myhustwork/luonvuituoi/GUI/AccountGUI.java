@@ -33,14 +33,6 @@ public class AccountGUI extends javax.swing.JFrame implements InforInterface<Acc
         this.setTitle("LuonVuiTuoi");
         initComponents();
     }
-
-    public int getAccId() {
-        return accId;
-    }
-
-    public void setAccId(int accId) {
-        this.accId = accId;
-    }
     
     @Override
     public AccountDTO getInfor() throws ParseException, SQLException {

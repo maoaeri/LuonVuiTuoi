@@ -5,6 +5,7 @@ import myhustwork.luonvuituoi.DTO.*;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -56,7 +57,6 @@ public class FluctuationBLL implements BLLInterface<FluctuationDTO>{//bien dong 
         } else {
             acc.setBalance(acc.getBalance() - fluc.getAmount());
         }
-        accDAO.update(acc);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class FluctuationBLL implements BLLInterface<FluctuationDTO>{//bien dong 
             fluc.setCategory(fluc1.getCategory());
         } 
         if (fluc.getAccount().getId() == 0){
-            fluc.setAccount(fluc1.getAccount());
+            fluc.getAccount().setId(fluc.getAccount().getId());
         }
 //        int catId = catDAO.getCategoryId(fluc1.getCategory());
 //        fluc.getCategory().setCategoryId(catId);
@@ -77,7 +77,6 @@ public class FluctuationBLL implements BLLInterface<FluctuationDTO>{//bien dong 
         } else {
             acc.setBalance(acc.getBalance() + fluc.getPreAmount() - fluc.getAmount());
         }
-        accDAO.update(acc);
     }
     
     @Override
@@ -85,15 +84,13 @@ public class FluctuationBLL implements BLLInterface<FluctuationDTO>{//bien dong 
         FluctuationDTO fluc1 = flucDAO.get(fluc.getID());    
         int catId = catDAO.getCategoryId(fluc1.getCategory());
         fluc1.getCategory().setCategoryId(catId);
-        
+        flucDAO.delete(fluc1);
         AccountDTO acc = accDAO.get(fluc1.getAccount().getId());
         if (fluc1.getCategory().isIncome()) {
             acc.setBalance(acc.getBalance() - fluc1.getAmount());
         } else {
             acc.setBalance(acc.getBalance() + fluc1.getAmount());
         }
-        accDAO.update(acc);
-        flucDAO.delete(fluc1);
     }
     
     public FluctuationDTO[] getAllByCategoryAndAccount(String catName, String accName) throws SQLException{

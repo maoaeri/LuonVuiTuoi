@@ -155,58 +155,11 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
           <SubComponents>
-            <Container class="javax.swing.JPanel" name="pnlStuff">
-              <Constraints>
-                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                  <JTabbedPaneConstraints tabName="&#x110;&#x1ed3; d&#xf9;ng c&#x1ea7;n &#x1b0;u ti&#xea;nmua">
-                    <Property name="tabTitle" type="java.lang.String" value="&#x110;&#x1ed3; d&#xf9;ng c&#x1ea7;n &#x1b0;u ti&#xea;nmua"/>
-                  </JTabbedPaneConstraints>
-                </Constraint>
-              </Constraints>
-
-              <Layout>
-                <DimensionLayout dim="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="scrPnlStuff" alignment="1" pref="669" max="32767" attributes="0"/>
-                  </Group>
-                </DimensionLayout>
-                <DimensionLayout dim="1">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="scrPnlStuff" alignment="0" pref="174" max="32767" attributes="0"/>
-                  </Group>
-                </DimensionLayout>
-              </Layout>
-              <SubComponents>
-                <Container class="javax.swing.JScrollPane" name="scrPnlStuff">
-                  <AuxValues>
-                    <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-                  </AuxValues>
-
-                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-                  <SubComponents>
-                    <Component class="javax.swing.JList" name="lstStuff">
-                      <Properties>
-                        <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                          <Connection code="getAllStuffs()" type="code"/>
-                        </Property>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="valueChanged" listener="javax.swing.event.ListSelectionListener" parameters="javax.swing.event.ListSelectionEvent" handler="lstStuffValueChanged"/>
-                      </Events>
-                      <AuxValues>
-                        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="lstStuff.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);&#xa;lstStuff.setCellRenderer(new StuffListRenderer());"/>
-                        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;StuffDTO&gt;"/>
-                      </AuxValues>
-                    </Component>
-                  </SubComponents>
-                </Container>
-              </SubComponents>
-            </Container>
             <Container class="javax.swing.JPanel" name="pnlFluc">
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                  <JTabbedPaneConstraints tabName="Bi&#x1ebf;n &#x111;&#x1ed9;ng s&#x1ed1; d&#x1b0; g&#x1ea7;n &#x111;&#xe2;y">
-                    <Property name="tabTitle" type="java.lang.String" value="Bi&#x1ebf;n &#x111;&#x1ed9;ng s&#x1ed1; d&#x1b0; g&#x1ea7;n &#x111;&#xe2;y"/>
+                  <JTabbedPaneConstraints tabName="Giao d&#x1ecb;ch">
+                    <Property name="tabTitle" type="java.lang.String" value="Giao d&#x1ecb;ch"/>
                   </JTabbedPaneConstraints>
                 </Constraint>
               </Constraints>
@@ -245,9 +198,59 @@
                           <Color blue="ff" green="99" red="99" type="rgb"/>
                         </Property>
                       </Properties>
+                      <Events>
+                        <EventHandler event="valueChanged" listener="javax.swing.event.ListSelectionListener" parameters="javax.swing.event.ListSelectionEvent" handler="lstFlucValueChanged"/>
+                      </Events>
                       <AuxValues>
                         <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="lstFluc.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);&#xa;lstFluc.setCellRenderer(new FluctuationListRenderer());"/>
                         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;FluctuationDTO&gt;"/>
+                      </AuxValues>
+                    </Component>
+                  </SubComponents>
+                </Container>
+              </SubComponents>
+            </Container>
+            <Container class="javax.swing.JPanel" name="pnlStuff">
+              <Constraints>
+                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+                  <JTabbedPaneConstraints tabName="&#x110;&#x1ed3; d&#xf9;ng c&#x1ea7;n mua">
+                    <Property name="tabTitle" type="java.lang.String" value="&#x110;&#x1ed3; d&#xf9;ng c&#x1ea7;n mua"/>
+                  </JTabbedPaneConstraints>
+                </Constraint>
+              </Constraints>
+
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="scrPnlStuff" alignment="1" pref="669" max="32767" attributes="0"/>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="scrPnlStuff" alignment="0" pref="174" max="32767" attributes="0"/>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
+              <SubComponents>
+                <Container class="javax.swing.JScrollPane" name="scrPnlStuff">
+                  <AuxValues>
+                    <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+                  </AuxValues>
+
+                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                  <SubComponents>
+                    <Component class="javax.swing.JList" name="lstStuff">
+                      <Properties>
+                        <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                          <Connection code="getAllStuffs()" type="code"/>
+                        </Property>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="valueChanged" listener="javax.swing.event.ListSelectionListener" parameters="javax.swing.event.ListSelectionEvent" handler="lstStuffValueChanged"/>
+                      </Events>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="lstStuff.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);&#xa;lstStuff.setCellRenderer(new StuffListRenderer());"/>
+                        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;StuffDTO&gt;"/>
                       </AuxValues>
                     </Component>
                   </SubComponents>
@@ -314,7 +317,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Bi&#x1ebf;n &#x111;&#x1ed9;ng s&#x1ed1; d&#x1b0;"/>
+            <Property name="text" type="java.lang.String" value="Giao d&#x1ecb;ch"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnFlucActionPerformed"/>
@@ -418,9 +421,6 @@
             </Property>
             <Property name="text" type="java.lang.String" value="V&#x1ec1; ch&#xfa;ng t&#xf4;i"/>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAboutUsActionPerformed"/>
-          </Events>
         </Component>
       </SubComponents>
     </Container>

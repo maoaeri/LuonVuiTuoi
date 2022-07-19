@@ -148,7 +148,11 @@ public class MainGUI extends javax.swing.JFrame {
     public void StatListener(ActionListener log){
         btnStat.addActionListener(log);
     }
-
+    
+    public void SuggestListener(ActionListener log){
+        btnSuggest.addActionListener(log);
+    }
+    
     public void selectFlucListener(ListSelectionListener log){
         lstFluc.addListSelectionListener(log);
     }
@@ -174,12 +178,12 @@ public class MainGUI extends javax.swing.JFrame {
         panel0 = new javax.swing.JPanel();
         panel1 = new javax.swing.JPanel();
         tbPnl = new javax.swing.JTabbedPane();
-        pnlStuff = new javax.swing.JPanel();
-        scrPnlStuff = new javax.swing.JScrollPane();
-        lstStuff = new javax.swing.JList<>();
         pnlFluc = new javax.swing.JPanel();
         scrPnlFluc = new javax.swing.JScrollPane();
         lstFluc = new javax.swing.JList<>();
+        pnlStuff = new javax.swing.JPanel();
+        scrPnlStuff = new javax.swing.JScrollPane();
+        lstStuff = new javax.swing.JList<>();
         pnlAccount = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         lstAccount = new javax.swing.JList<>();
@@ -242,6 +246,31 @@ public class MainGUI extends javax.swing.JFrame {
             }
         });
 
+        lstFluc.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        lstFluc.setModel(getAllFlucs());
+        lstFluc.setSelectionBackground(new java.awt.Color(153, 153, 255));
+        lstFluc.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        lstFluc.setCellRenderer(new FluctuationListRenderer());
+        lstFluc.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                lstFlucValueChanged(evt);
+            }
+        });
+        scrPnlFluc.setViewportView(lstFluc);
+
+        javax.swing.GroupLayout pnlFlucLayout = new javax.swing.GroupLayout(pnlFluc);
+        pnlFluc.setLayout(pnlFlucLayout);
+        pnlFlucLayout.setHorizontalGroup(
+            pnlFlucLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(scrPnlFluc, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
+        );
+        pnlFlucLayout.setVerticalGroup(
+            pnlFlucLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(scrPnlFluc, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
+        );
+
+        tbPnl.addTab("Giao dịch", pnlFluc);
+
         lstStuff.setModel(getAllStuffs());
         lstStuff.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         lstStuff.setCellRenderer(new StuffListRenderer());
@@ -263,27 +292,7 @@ public class MainGUI extends javax.swing.JFrame {
             .addComponent(scrPnlStuff, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
         );
 
-        tbPnl.addTab("Đồ dùng cần ưu tiênmua", pnlStuff);
-
-        lstFluc.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        lstFluc.setModel(getAllFlucs());
-        lstFluc.setSelectionBackground(new java.awt.Color(153, 153, 255));
-        lstFluc.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        lstFluc.setCellRenderer(new FluctuationListRenderer());
-        scrPnlFluc.setViewportView(lstFluc);
-
-        javax.swing.GroupLayout pnlFlucLayout = new javax.swing.GroupLayout(pnlFluc);
-        pnlFluc.setLayout(pnlFlucLayout);
-        pnlFlucLayout.setHorizontalGroup(
-            pnlFlucLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrPnlFluc, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
-        );
-        pnlFlucLayout.setVerticalGroup(
-            pnlFlucLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrPnlFluc, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
-        );
-
-        tbPnl.addTab("Biến động số dư gần đây", pnlFluc);
+        tbPnl.addTab("Đồ dùng cần mua", pnlStuff);
 
         lstAccount.setModel(getAllAccounts());
         lstAccount.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -311,7 +320,7 @@ public class MainGUI extends javax.swing.JFrame {
         btnFluc.setBackground(new java.awt.Color(255, 51, 51));
         btnFluc.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
         btnFluc.setForeground(new java.awt.Color(255, 255, 255));
-        btnFluc.setText("Biến động số dư");
+        btnFluc.setText("Giao dịch");
         btnFluc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnFlucActionPerformed(evt);
@@ -372,11 +381,6 @@ public class MainGUI extends javax.swing.JFrame {
         btnAboutUs.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
         btnAboutUs.setForeground(new java.awt.Color(255, 255, 255));
         btnAboutUs.setText("Về chúng tôi");
-        btnAboutUs.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAboutUsActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout kGradientPanel1Layout = new javax.swing.GroupLayout(kGradientPanel1);
         kGradientPanel1.setLayout(kGradientPanel1Layout);
@@ -461,6 +465,11 @@ public class MainGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnAddAccountActionPerformed
 
+    private void lstFlucValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstFlucValueChanged
+        // TODO add your handling code here:
+        this.setFlucId(lstFluc.getSelectedValue().getID()); 
+    }//GEN-LAST:event_lstFlucValueChanged
+
     private void lstStuffValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstStuffValueChanged
         // TODO add your handling code here:
         this.setStuffId(lstStuff.getSelectedValue().getID());
@@ -514,11 +523,6 @@ public class MainGUI extends javax.swing.JFrame {
         lstFluc.setModel(getAllFlucs());
         lstAccount.setModel(getAllAccounts());
     }//GEN-LAST:event_btnRefreshActionPerformed
-
-    private void btnAboutUsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAboutUsActionPerformed
-        // TODO add your handling code here:
-        JOptionPane.showMessageDialog(this, "Chiếc project được làm bởi nhóm 23", "Về chúng tôi", JOptionPane.INFORMATION_MESSAGE);
-    }//GEN-LAST:event_btnAboutUsActionPerformed
 
     public DefaultPieDataset[] getDataset(){
         DefaultPieDataset[] dataset = new DefaultPieDataset[2];

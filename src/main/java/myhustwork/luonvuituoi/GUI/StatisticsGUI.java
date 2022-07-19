@@ -14,8 +14,8 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
-import myhustwork.luonvuituoi.BLL.CategoryBLL;
 import myhustwork.luonvuituoi.DTO.CategoryDTO;
+import myhustwork.luonvuituoi.DAO.CategoryDAO;
 import myhustwork.luonvuituoi.DTO.DatasetDTO;
 import myhustwork.luonvuituoi.Util.DateRelated;
 import myhustwork.luonvuituoi.BLL.FluctuationBLL;
@@ -31,14 +31,14 @@ import org.jfree.data.general.DefaultPieDataset;
  */
 public class StatisticsGUI extends javax.swing.JFrame {
     private FluctuationBLL flucBLL;
-    private CategoryBLL catBLL;
+    private CategoryDAO catDAO;
 
     /**
      * Creates new form StatisticsGUI
      */
     public StatisticsGUI() {
         flucBLL = new FluctuationBLL();
-        catBLL = new CategoryBLL();
+        catDAO = new CategoryDAO();
         this.setTitle("LuonVuiTuoi");
         initComponents();
     }
@@ -55,6 +55,9 @@ public class StatisticsGUI extends javax.swing.JFrame {
         kGradientPanel1 = new keeptoo.KGradientPanel();
         lblForm = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
+        kGradientPanel5 = new keeptoo.KGradientPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        tblDate1 = new javax.swing.JTable();
         kGradientPanel2 = new keeptoo.KGradientPanel();
         lblDate = new javax.swing.JLabel();
         lblDate1 = new javax.swing.JLabel();
@@ -91,6 +94,44 @@ public class StatisticsGUI extends javax.swing.JFrame {
 
         jTabbedPane1.setForeground(new java.awt.Color(255, 51, 51));
         jTabbedPane1.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+
+        kGradientPanel5.setkEndColor(new java.awt.Color(255, 175, 175));
+        kGradientPanel5.setkGradientFocus(100);
+        kGradientPanel5.setkStartColor(new java.awt.Color(255, 255, 255));
+
+        tblDate1.setFont(new java.awt.Font("r0c0i Linotte", 0, 14)); // NOI18N
+        tblDate1.setForeground(new java.awt.Color(255, 51, 51));
+        tblDate1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        tblDate1.setRowHeight(20);
+        tblDate1.setRowSelectionAllowed(false);
+        tblDate1.setSelectionBackground(new java.awt.Color(255, 255, 255));
+        jScrollPane4.setViewportView(tblDate1);
+
+        javax.swing.GroupLayout kGradientPanel5Layout = new javax.swing.GroupLayout(kGradientPanel5);
+        kGradientPanel5.setLayout(kGradientPanel5Layout);
+        kGradientPanel5Layout.setHorizontalGroup(
+            kGradientPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kGradientPanel5Layout.createSequentialGroup()
+                .addContainerGap(51, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 799, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(61, 61, 61))
+        );
+        kGradientPanel5Layout.setVerticalGroup(
+            kGradientPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kGradientPanel5Layout.createSequentialGroup()
+                .addContainerGap(80, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab("Tổng quát", kGradientPanel5);
 
         kGradientPanel2.setkEndColor(new java.awt.Color(255, 175, 175));
         kGradientPanel2.setkGradientFocus(100);
@@ -215,6 +256,9 @@ public class StatisticsGUI extends javax.swing.JFrame {
         jmcMonthMonth.setForeground(new java.awt.Color(255, 51, 51));
         jmcMonthMonth.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
 
+        jmcMonthYear.setForeground(new java.awt.Color(255, 51, 51));
+        jmcMonthYear.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+
         javax.swing.GroupLayout kGradientPanel3Layout = new javax.swing.GroupLayout(kGradientPanel3);
         kGradientPanel3.setLayout(kGradientPanel3Layout);
         kGradientPanel3Layout.setHorizontalGroup(
@@ -291,6 +335,9 @@ public class StatisticsGUI extends javax.swing.JFrame {
         tblYear.setSelectionBackground(new java.awt.Color(255, 255, 255));
         jScrollPane1.setViewportView(tblYear);
 
+        jYear.setForeground(new java.awt.Color(255, 51, 51));
+        jYear.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+
         javax.swing.GroupLayout kGradientPanel4Layout = new javax.swing.GroupLayout(kGradientPanel4);
         kGradientPanel4.setLayout(kGradientPanel4Layout);
         kGradientPanel4Layout.setHorizontalGroup(
@@ -359,6 +406,48 @@ public class StatisticsGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnStatDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStatDateActionPerformed
+        // TODO add your handling code here:
+        LocalDate dateStart = Converter.fromDatetoLocalDate(dateStartDate.getDate()).minusDays(1);
+        LocalDate dateEnd = Converter.fromDatetoLocalDate(dateEndDate.getDate()).plusDays(1);
+        DefaultPieDataset[] dataset = getDataset(dateStart, dateEnd);
+        createStatFrame(dataset, "Thống kê từ ngày " + dateStartDate.getDateFormatString() + " đến ngày " + dateEndDate.getDateFormatString());
+        
+        List<DatasetDTO> tableDataset = null;        
+        try {
+            tableDataset = flucBLL.getStatDatasetByDate(dateStart, dateEnd);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+        DatasetTableModel model = new DatasetTableModel(tableDataset);
+        //create the table
+        tblDate.setModel(model);
+        tblDate.repaint();
+    }//GEN-LAST:event_btnStatDateActionPerformed
+
+    private void btnStatMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStatMonthActionPerformed
+        // TODO add your handling code here:
+//        LocalDate date = Converter.toDate(txtDateStartOfMonth.getText());
+        LocalDate lastDayOfLastMonth = DateRelated.getFirstDayOfMonth(jmcMonthMonth.getMonth()+1, jmcMonthYear.getYear()).minusDays(1);
+        LocalDate firstDayOfNextMonth = DateRelated.getLastDayOfMonth(jmcMonthMonth.getMonth()+1, jmcMonthYear.getYear()).plusDays(1);
+        DefaultPieDataset[] dataset = getDataset(lastDayOfLastMonth, firstDayOfNextMonth);
+        
+        createStatFrame(dataset, "Thống kê tháng " + String.valueOf(jmcMonthMonth.getMonth() + 1) + " năm " + String.valueOf(jmcMonthYear.getYear()));
+       
+        List<DatasetDTO> tableDataset = null;        
+        try {
+            tableDataset = flucBLL.getStatDatasetByDate(lastDayOfLastMonth, firstDayOfNextMonth);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+        DatasetTableModel model = new DatasetTableModel(tableDataset);
+        //create the table
+        tblMonth.setModel(model);
+        tblMonth.repaint();
+    }//GEN-LAST:event_btnStatMonthActionPerformed
+
     private void btnStatYearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStatYearActionPerformed
         // TODO add your handling code here:
         int year = jYear.getYear();
@@ -373,54 +462,12 @@ public class StatisticsGUI extends javax.swing.JFrame {
             ex.printStackTrace();
         }
         createStatFrame(chartDataset, "Thống kê trong năm " + String.valueOf(year));
-
+        
         DatasetTableModel model = new DatasetTableModel(tableDataset);
         //create the table
         tblYear.setModel(model);
         tblYear.repaint();
     }//GEN-LAST:event_btnStatYearActionPerformed
-
-    private void btnStatMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStatMonthActionPerformed
-        // TODO add your handling code here:
-        //        LocalDate date = Converter.toDate(txtDateStartOfMonth.getText());
-        LocalDate lastDayOfLastMonth = DateRelated.getFirstDayOfMonth(jmcMonthMonth.getMonth()+1, jmcMonthYear.getYear()).minusDays(1);
-        LocalDate firstDayOfNextMonth = DateRelated.getLastDayOfMonth(jmcMonthMonth.getMonth()+1, jmcMonthYear.getYear()).plusDays(1);
-        DefaultPieDataset[] dataset = getDataset(lastDayOfLastMonth, firstDayOfNextMonth);
-
-        createStatFrame(dataset, "Thống kê tháng " + String.valueOf(jmcMonthMonth.getMonth() + 1) + " năm " + String.valueOf(jmcMonthYear.getYear()));
-
-        List<DatasetDTO> tableDataset = null;
-        try {
-            tableDataset = flucBLL.getStatDatasetByDate(lastDayOfLastMonth, firstDayOfNextMonth);
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
-            ex.printStackTrace();
-        }
-        DatasetTableModel model = new DatasetTableModel(tableDataset);
-        //create the table
-        tblMonth.setModel(model);
-        tblMonth.repaint();
-    }//GEN-LAST:event_btnStatMonthActionPerformed
-
-    private void btnStatDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStatDateActionPerformed
-        // TODO add your handling code here:
-        LocalDate dateStart = Converter.fromDatetoLocalDate(dateStartDate.getDate()).minusDays(1);
-        LocalDate dateEnd = Converter.fromDatetoLocalDate(dateEndDate.getDate()).plusDays(1);
-        DefaultPieDataset[] dataset = getDataset(dateStart, dateEnd);
-        createStatFrame(dataset, "Thống kê từ ngày " + dateStartDate.getDate().toString() + " đến ngày " + dateEndDate.getDate().toString());
-
-        List<DatasetDTO> tableDataset = null;
-        try {
-            tableDataset = flucBLL.getStatDatasetByDate(dateStart, dateEnd);
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
-            ex.printStackTrace();
-        }
-        DatasetTableModel model = new DatasetTableModel(tableDataset);
-        //create the table
-        tblDate.setModel(model);
-        tblDate.repaint();
-    }//GEN-LAST:event_btnStatDateActionPerformed
 
     public void createStatFrame(DefaultPieDataset[] dataset, String title){
         JFrame frame = new JFrame();
@@ -454,7 +501,7 @@ public class StatisticsGUI extends javax.swing.JFrame {
         
         CategoryDTO[] listCategory = null;
         try {
-            listCategory = catBLL.getAll();
+            listCategory = catDAO.getAll();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -471,7 +518,7 @@ public class StatisticsGUI extends javax.swing.JFrame {
         for (int i = 0; i < arrList.size(); i++){
             System.err.println(arrList.get(i).getName());
             try {
-                switch (catBLL.get(arrList.get(i).getId()).getCategoryType()) {
+                switch (catDAO.get(arrList.get(i).getId()).getCategoryType()) {
                     case CategoryDTO.CHI:
                         dataset[0].setValue(arrList.get(i).getName(), arrList.get(i).getValue());
                         break;
@@ -531,6 +578,7 @@ public class StatisticsGUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane jTabbedPane1;
     private com.toedter.calendar.JYearChooser jYear;
     private com.toedter.calendar.JMonthChooser jmcMonthMonth;
@@ -539,12 +587,14 @@ public class StatisticsGUI extends javax.swing.JFrame {
     private keeptoo.KGradientPanel kGradientPanel2;
     private keeptoo.KGradientPanel kGradientPanel3;
     private keeptoo.KGradientPanel kGradientPanel4;
+    private keeptoo.KGradientPanel kGradientPanel5;
     private javax.swing.JLabel lblDate;
     private javax.swing.JLabel lblDate1;
     private javax.swing.JLabel lblDate2;
     private javax.swing.JLabel lblDate3;
     private javax.swing.JLabel lblForm;
     private javax.swing.JTable tblDate;
+    private javax.swing.JTable tblDate1;
     private javax.swing.JTable tblMonth;
     private javax.swing.JTable tblYear;
     // End of variables declaration//GEN-END:variables

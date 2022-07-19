@@ -4,13 +4,10 @@
  */
 package myhustwork.luonvuituoi.GUI;
 
-import com.toedter.calendar.JDateChooser;
 import java.awt.Component;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 //import java.text.SimpleDateFormat;
 //import java.util.Calendar;
@@ -86,37 +83,30 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
     @Override
     public void display(FluctuationDTO fluc){
         txtAmount.setText(fluc.getAmount() + "");
-        txtDate.setDate(Date.from(fluc.getDate().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        txtDate.setText(Converter.fromLocalDatetoString(fluc.getDate()));
         txtNote.setText(fluc.getNote());
         lblCategory.setText(fluc.getCategory().getCategoryName());
         radFixed.setSelected(fluc.isFixed());
         radNotFixed.setSelected(!fluc.isFixed());
         lblAccountName.setText(fluc.getAccount().getName());
-
     }
     
     @Override
     public void refreshComponents(){
         txtAmount.setText("");
-        txtDate = new JDateChooser();
+        txtDate.setText("");
         txtNote.setText("");
         lblCategory.setText("");
         radFixed.setSelected(false);
         radNotFixed.setSelected(false);
         lblAccountName.setText("");
-                accId = -1;
-        flucId = -1;
-        lstAccount.setModel(getAllAccounts());
     }
     
     @Override
     public FluctuationDTO getInfor() throws ParseException, SQLException {
         FluctuationDTO fluc = new FluctuationDTO();
-        if (accId == -1){
-            fluc.setAccount(new AccountDTO(0));
-            
-        } else {
-            fluc.setAccount(lstAccount.getSelectedValue());
+        if (accId != -1){
+            fluc.getAccount().setId(accId);
             this.accId = -1;
         }
         fluc.setID(this.flucId);
@@ -140,7 +130,7 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
             CategoryDTO cat = new CategoryDTO(categoryType, categoryName);
             fluc.setCategory(cat); 
         }
-        fluc.setDate(Converter.fromDatetoLocalDate(txtDate.getDate()));
+        fluc.setDate(Converter.toDate(txtDate.getText()));
         fluc.setNote(txtNote.getText());
         fluc.setFixed(this.fixedButtonpressed);
         return fluc;
@@ -171,6 +161,7 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
     private void initComponents() {
 
         kGradientPanel1 = new keeptoo.KGradientPanel();
+        txtDate = new javax.swing.JFormattedTextField();
         radFixed = new javax.swing.JRadioButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         treCategory = new javax.swing.JTree();
@@ -192,6 +183,7 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
         lblNote1 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         tblFluc = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
         String[] catNameList = null;
         try {
             catNameList = catBLL.getAllNames();
@@ -211,8 +203,6 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
         btnSearch = new javax.swing.JButton();
         btnAll = new javax.swing.JButton();
         lblAccountName = new javax.swing.JLabel();
-        txtDate = new com.toedter.calendar.JDateChooser();
-        btnRefresh = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -220,6 +210,10 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
         kGradientPanel1.setkGradientFocus(100);
         kGradientPanel1.setkStartColor(new java.awt.Color(255, 255, 255));
         kGradientPanel1.setPreferredSize(new java.awt.Dimension(960, 540));
+
+        txtDate.setForeground(new java.awt.Color(255, 51, 51));
+        txtDate.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
+        txtDate.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
 
         radFixed.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
         radFixed.setForeground(new java.awt.Color(255, 51, 51));
@@ -347,7 +341,7 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
 
         lblForm.setFont(new java.awt.Font("r0c0i Linotte", 0, 36)); // NOI18N
         lblForm.setForeground(new java.awt.Color(255, 51, 51));
-        lblForm.setText("Biến động số dư");
+        lblForm.setText("Giao dịch");
 
         radNotFixed.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
         radNotFixed.setForeground(new java.awt.Color(255, 51, 51));
@@ -423,6 +417,11 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
         });
         jScrollPane4.setViewportView(tblFluc);
 
+        jButton1.setBackground(new java.awt.Color(255, 51, 51));
+        jButton1.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("Cập nhật");
+
         jcbCat.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
         jcbCat.setForeground(new java.awt.Color(255, 51, 51));
         jcbCat.setModel(new javax.swing.DefaultComboBoxModel<>(catNameList));
@@ -455,25 +454,14 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
         lblAccountName.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
         lblAccountName.setForeground(new java.awt.Color(255, 51, 51));
 
-        txtDate.setBackground(new java.awt.Color(255, 255, 255));
-        txtDate.setForeground(new java.awt.Color(255, 51, 51));
-        txtDate.setDateFormatString("dd/MM/yyyy");
-        txtDate.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
-
-        btnRefresh.setBackground(new java.awt.Color(255, 51, 51));
-        btnRefresh.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
-        btnRefresh.setForeground(new java.awt.Color(255, 255, 255));
-        btnRefresh.setText("Làm mới");
-        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRefreshActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout kGradientPanel1Layout = new javax.swing.GroupLayout(kGradientPanel1);
         kGradientPanel1.setLayout(kGradientPanel1Layout);
         kGradientPanel1Layout.setHorizontalGroup(
             kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(kGradientPanel1Layout.createSequentialGroup()
+                .addGap(377, 377, 377)
+                .addComponent(lblForm)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kGradientPanel1Layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -482,7 +470,7 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
                 .addGap(18, 18, 18)
                 .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButton1)
                 .addGap(18, 18, 18)
                 .addComponent(jcbCat, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -492,35 +480,30 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
                 .addGap(18, 18, 18)
                 .addComponent(btnAll, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(450, 450, 450))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kGradientPanel1Layout.createSequentialGroup()
+            .addGroup(kGradientPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(lblAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblCategory1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblNote1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(radNotFixed, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
+                    .addComponent(radFixed, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblCategory, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtDate, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtAmount, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(kGradientPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(lblForm))
-                    .addGroup(kGradientPanel1Layout.createSequentialGroup()
-                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(lblAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lblDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(lblCategory1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(lblNote1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(radNotFixed, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
-                            .addComponent(radFixed, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblCategory, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtAmount, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
-                            .addComponent(txtDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(kGradientPanel1Layout.createSequentialGroup()
-                                .addComponent(lblNote, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(5, 5, 5)
-                                .addComponent(lblAccountName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                        .addComponent(lblNote, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(5, 5, 5)
+                        .addComponent(lblAccountName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(436, 436, 436))
@@ -530,55 +513,52 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
             .addGroup(kGradientPanel1Layout.createSequentialGroup()
                 .addGap(33, 33, 33)
                 .addComponent(lblForm)
-                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(31, 31, 31)
+                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(kGradientPanel1Layout.createSequentialGroup()
-                        .addGap(31, 31, 31)
-                        .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(kGradientPanel1Layout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(lblNote, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblAccountName))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(kGradientPanel1Layout.createSequentialGroup()
-                                    .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(txtAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(lblAmount))
-                                    .addGap(18, 18, 18)
-                                    .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(lblDate, javax.swing.GroupLayout.Alignment.TRAILING))
-                                    .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(kGradientPanel1Layout.createSequentialGroup()
-                                            .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                .addComponent(lblCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(lblCategory1))
-                                            .addGap(4, 4, 4)
-                                            .addComponent(radFixed, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(6, 6, 6)
-                                            .addComponent(radNotFixed, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(18, 18, 18)
-                                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(kGradientPanel1Layout.createSequentialGroup()
-                                            .addGap(168, 168, 168)
-                                            .addComponent(lblNote1))))))
-                        .addGap(0, 81, Short.MAX_VALUE))
-                    .addGroup(kGradientPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jcbCat, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jcbAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnAll)
-                            .addComponent(btnRefresh))
-                        .addContainerGap())))
+                            .addComponent(lblNote, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblAccountName))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(kGradientPanel1Layout.createSequentialGroup()
+                            .addGap(242, 242, 242)
+                            .addComponent(lblNote1))
+                        .addGroup(kGradientPanel1Layout.createSequentialGroup()
+                            .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(txtAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblAmount))
+                            .addGap(18, 18, 18)
+                            .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblDate))
+                            .addGap(18, 18, 18)
+                            .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(lblCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblCategory1))
+                            .addGap(4, 4, 4)
+                            .addComponent(radFixed, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(6, 6, 6)
+                            .addComponent(radNotFixed, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 81, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kGradientPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jcbCat, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jcbAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAll))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -691,15 +671,8 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         // TODO add your handling code here:
-        String catName = null;
-        String accName = null;
-        try {
-            catName = jcbCat.getSelectedItem().toString();
-            accName = jcbAccount.getSelectedItem().toString();
-        } catch (NullPointerException ex) {
-            JOptionPane.showMessageDialog(this, "Bạn chưa chọn điều kiện tìm kiếm.", "Error", JOptionPane.ERROR_MESSAGE);
-            ex.printStackTrace();
-        }
+        String catName = jcbCat.getSelectedItem().toString();
+        String accName = jcbAccount.getSelectedItem().toString();
         
         List<FluctuationDTO> dataset = null;
         
@@ -731,22 +704,16 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
         tblFluc.repaint();
     }//GEN-LAST:event_btnAllActionPerformed
 
-    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
-        // TODO add your handling code here:
-        refreshComponents();
-    }//GEN-LAST:event_btnRefreshActionPerformed
-
     private void tblFlucValueChanged(javax.swing.event.ListSelectionEvent evt){
         flucId = Integer.parseInt(tblFluc.getValueAt(tblFluc.getSelectedRow(), 0).toString());
         FluctuationDTO fluc = null;
         try {
            fluc = flucBLL.get(flucId);
-            display(fluc);
-            tblFluc.clearSelection();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         }
+        display(fluc);
         tblFluc.clearSelection();
     }
     /**
@@ -788,14 +755,23 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
             }
         });
     }
+    
+    public void Run() {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new FluctuationGUI().setVisible(true);
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnAll;
     private javax.swing.JButton btnDelete;
-    private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnUpdate;
+    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -817,7 +793,7 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
     private javax.swing.JTable tblFluc;
     private javax.swing.JTree treCategory;
     private javax.swing.JFormattedTextField txtAmount;
-    private com.toedter.calendar.JDateChooser txtDate;
+    private javax.swing.JFormattedTextField txtDate;
     private javax.swing.JTextArea txtNote;
     // End of variables declaration//GEN-END:variables
 

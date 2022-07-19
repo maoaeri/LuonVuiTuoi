@@ -46,14 +46,6 @@ public class StuffGUI extends javax.swing.JFrame implements InforInterface<Stuff
         this.setTitle("LuonVuiTuoi");
         initComponents();
     }
-
-    public void setStuffID(int stuffID) {
-        this.stuffID = stuffID;
-    }
-
-    public int getStuffID() {
-        return stuffID;
-    }
     
     @Override
     public void display(StuffDTO stuff){
@@ -73,6 +65,7 @@ public class StuffGUI extends javax.swing.JFrame implements InforInterface<Stuff
            DefaultMutableTreeNode selectedNode2 = (DefaultMutableTreeNode) treCategory.getLastSelectedPathComponent();
             String rootType = selectedNode2.getPath()[1].toString();
             int categoryType = 0;
+            System.out.println(rootType);
             switch (rootType) {
                 case "Thu" ->  {
                     categoryType = 1;
