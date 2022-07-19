@@ -12,6 +12,8 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 //import java.text.SimpleDateFormat;
 //import java.util.Calendar;
 import javax.swing.AbstractButton;
@@ -110,7 +112,7 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
     }
     
     @Override
-    public FluctuationDTO getInfor() throws ParseException, SQLException {
+    public FluctuationDTO getInfor() throws ParseException, NullPointerException {
         FluctuationDTO fluc = new FluctuationDTO();
         if (accId == -1){
             fluc.setAccount(new AccountDTO(0));
@@ -629,18 +631,25 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
+        FluctuationDTO fluc = null;
         try {
-                FluctuationDTO fluc = this.getInfor();
-                flucBLL.addFromGUI(fluc);
+                fluc = this.getInfor();
+                
             } catch (ParseException ex) {
-                JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Bạn chưa điền đủ dữ liệu", "Error", JOptionPane.ERROR_MESSAGE);
                 ex.printStackTrace();
                 return;
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (NullPointerException ex){
+                JOptionPane.showMessageDialog(this, "Bạn chưa điền đủ dữ liệu", "Error", JOptionPane.ERROR_MESSAGE);
                 ex.printStackTrace();
-                return;
             }
+        try {
+            flucBLL.addFromGUI(fluc);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+        }
+        JOptionPane.showMessageDialog(this, "Tạo thông tin mới thành công", "Success", JOptionPane.INFORMATION_MESSAGE);
         refreshComponents();
     }//GEN-LAST:event_btnAddActionPerformed
 
@@ -686,7 +695,9 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
 
     private void lstAccountValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstAccountValueChanged
         // TODO add your handling code here:
-        accId = lstAccount.getSelectedValue().getId();
+        if (!evt.getValueIsAdjusting()){
+            accId = lstAccount.getSelectedValue().getId();
+        }
     }//GEN-LAST:event_lstAccountValueChanged
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
@@ -737,17 +748,20 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
     }//GEN-LAST:event_btnRefreshActionPerformed
 
     private void tblFlucValueChanged(javax.swing.event.ListSelectionEvent evt){
-        flucId = Integer.parseInt(tblFluc.getValueAt(tblFluc.getSelectedRow(), 0).toString());
-        FluctuationDTO fluc = null;
-        try {
-           fluc = flucBLL.get(flucId);
-            display(fluc);
+        if (!evt.getValueIsAdjusting() && tblFluc.getSelectedRow() != -1) {
+            flucId = Integer.parseInt(tblFluc.getValueAt(tblFluc.getSelectedRow(), 0).toString());
+            FluctuationDTO fluc = null;
+            try {
+               fluc = flucBLL.get(flucId);
+                display(fluc);
+                tblFluc.clearSelection();
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+            }
             tblFluc.clearSelection();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
-            ex.printStackTrace();
         }
-        tblFluc.clearSelection();
+        
     }
     /**
      * @param args the command line arguments

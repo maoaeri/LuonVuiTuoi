@@ -54,7 +54,7 @@ public class StuffBLL implements BLLInterface<StuffDTO>{
     @Override
     public void updateFromGUI(StuffDTO stuff) throws SQLException{
         StuffDTO stuff1 = stuffDAO.get(stuff.getID());
-        int catId = catDAO.getCategoryId(stuff.getCategory());
+        int catId = catDAO.getCategoryId(stuff1.getCategory());
         stuff.getCategory().setCategoryId(catId);
         //get from database to compare
         if (stuff.getCategory() == null){

@@ -43,7 +43,7 @@ public class AccountGUI extends javax.swing.JFrame implements InforInterface<Acc
     }
     
     @Override
-    public AccountDTO getInfor() throws ParseException, SQLException {
+    public AccountDTO getInfor() throws ParseException, NullPointerException{
         AccountDTO acc = new AccountDTO();
         if (accId != -1){
             acc.setId(accId);
@@ -289,14 +289,24 @@ public class AccountGUI extends javax.swing.JFrame implements InforInterface<Acc
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
+        AccountDTO acc = null;
         try {
-                AccountDTO acc = this.getInfor();
-                accBLL.addFromGUI(acc);
-            } catch (ParseException ex) {
-                JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+                acc = this.getInfor();
+             } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(this, "Bạn chưa điền đủ dữ liệu", "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+                return;
+            } catch (NullPointerException ex){
+                JOptionPane.showMessageDialog(this, "Bạn chưa điền đủ dữ liệu", "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
             }
+        try {
+            accBLL.addFromGUI(acc);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+        }
+        JOptionPane.showMessageDialog(this, "Tạo thông tin mới thành công", "Success", JOptionPane.INFORMATION_MESSAGE);
         refreshComponents();
     }//GEN-LAST:event_btnAddActionPerformed
 
