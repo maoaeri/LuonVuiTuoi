@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import myhustwork.luonvuituoi.DAO.AccountDAO;
 import myhustwork.luonvuituoi.DTO.AccountDTO;
-import myhustwork.luonvuituoi.DTO.CategoryDTO;
 
 /**
  *
@@ -52,7 +51,7 @@ public class AccountBLL implements BLLInterface<AccountDTO>{
         AccountDTO[] accList = accDAO.getAll();
         List<String> arrList = new ArrayList<>();
         arrList.add("Tất cả");
-        for (int i = 1; i< accList.length; i++){
+        for (int i = 1; i<= accList.length; i++){
             arrList.add(accList[i-1].getName());
         }
         names = arrList.toArray(new String[arrList.size()]);

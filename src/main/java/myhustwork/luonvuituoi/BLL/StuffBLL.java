@@ -7,7 +7,6 @@ import java.util.Calendar;
 
 import java.util.Date;
 import java.util.*;
-import myhustwork.luonvuituoi.BLL.FluctuationBLL;
 import myhustwork.luonvuituoi.DAO.AccountDAO;
 import myhustwork.luonvuituoi.DAO.CategoryDAO;
 import myhustwork.luonvuituoi.DAO.FluctuationDAO;
@@ -54,7 +53,10 @@ public class StuffBLL implements BLLInterface<StuffDTO>{
     
     @Override
     public void updateFromGUI(StuffDTO stuff) throws SQLException{
-        StuffDTO stuff1 = stuffDAO.get(stuff.getID());//get from database to compare
+        StuffDTO stuff1 = stuffDAO.get(stuff.getID());
+        int catId = catDAO.getCategoryId(stuff.getCategory());
+        stuff.getCategory().setCategoryId(catId);
+        //get from database to compare
         if (stuff.getCategory() == null){
             stuff.setCategory(stuff1.getCategory());
         } 

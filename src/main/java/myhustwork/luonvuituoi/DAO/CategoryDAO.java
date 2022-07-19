@@ -18,7 +18,7 @@ import static myhustwork.luonvuituoi.Util.DBConnection.createConnection;
  *
  * @author vvlalalove193
  */
-public class CategoryDAO implements DAOInterface<CategoryDTO>{
+public class CategoryDAO{
     
     public int getCategoryId(CategoryDTO cat) throws SQLException{
         String query = "SELECT category_id from main.category where category_name = ? and category_type = ?";
@@ -42,7 +42,6 @@ public class CategoryDAO implements DAOInterface<CategoryDTO>{
         return  categoryId;
     }
     
-    @Override
     public CategoryDTO get(int categoryId) throws SQLException{
         String query = "SELECT * from main.category where category_id = ?";
         CategoryDTO cat_details = null;
@@ -61,22 +60,6 @@ public class CategoryDAO implements DAOInterface<CategoryDTO>{
         return  cat_details;
     }    
 
-    @Override
-    public void add(CategoryDTO t) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void update(CategoryDTO t) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void delete(CategoryDTO t) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
     public CategoryDTO[] getAll() throws SQLException {
         CategoryDTO[] dataset = null;
         CategoryDTO data;

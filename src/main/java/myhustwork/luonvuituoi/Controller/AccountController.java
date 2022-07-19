@@ -6,7 +6,7 @@ package myhustwork.luonvuituoi.Controller;
 
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
-import myhustwork.luonvuituoi.DAO.AccountDAO;
+import myhustwork.luonvuituoi.BLL.AccountBLL;
 import myhustwork.luonvuituoi.DTO.AccountDTO;
 import myhustwork.luonvuituoi.GUI.AccountGUI;
 
@@ -16,28 +16,30 @@ import myhustwork.luonvuituoi.GUI.AccountGUI;
  */
 public class AccountController {
     private AccountGUI accGUI;
-    private AccountDAO accDAO;
+    private AccountBLL accBLL;
     
     public AccountController() {
         accGUI = new AccountGUI();
-        accDAO = new AccountDAO();
+        accBLL = new AccountBLL();
         
         accGUI.setVisible(true);
     }
     
     public AccountController(int accId) {
         accGUI = new AccountGUI();
-        accDAO = new AccountDAO();
+        accBLL = new AccountBLL();
         
         AccountDTO acc = new AccountDTO();
         try {
-            acc = accDAO.get(accId);
+            acc = accBLL.get(accId);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(accGUI, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         }
-       accGUI.display(acc);
-        
-        accGUI.setVisible(true);
+       
+        accGUI.setAccId(accId);
+        accGUI.display(acc);
+       
+       accGUI.setVisible(true);
     }
 }
