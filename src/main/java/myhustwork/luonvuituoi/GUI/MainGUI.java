@@ -138,11 +138,11 @@ public class MainGUI extends javax.swing.JFrame {
     }
     
     public void addStuffListener(ActionListener log){
-        btnAddStuff.addActionListener(log);
+        btnStuff.addActionListener(log);
     }
     
     public void addAccountListener(ActionListener log){
-        btnAddAccount.addActionListener(log);
+        btnAccount.addActionListener(log);
     }
     
     public void StatListener(ActionListener log){
@@ -182,8 +182,8 @@ public class MainGUI extends javax.swing.JFrame {
         scrPnlAccount = new javax.swing.JScrollPane();
         lstAccount = new javax.swing.JList<>();
         btnFluc = new javax.swing.JButton();
-        btnAddStuff = new javax.swing.JButton();
-        btnAddAccount = new javax.swing.JButton();
+        btnStuff = new javax.swing.JButton();
+        btnAccount = new javax.swing.JButton();
         btnStat = new javax.swing.JButton();
         btnSuggest = new javax.swing.JButton();
         btnRefresh = new javax.swing.JButton();
@@ -294,23 +294,23 @@ public class MainGUI extends javax.swing.JFrame {
             }
         });
 
-        btnAddStuff.setBackground(new java.awt.Color(255, 51, 51));
-        btnAddStuff.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
-        btnAddStuff.setForeground(new java.awt.Color(255, 255, 255));
-        btnAddStuff.setText("Đồ cần mua");
-        btnAddStuff.addActionListener(new java.awt.event.ActionListener() {
+        btnStuff.setBackground(new java.awt.Color(255, 51, 51));
+        btnStuff.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        btnStuff.setForeground(new java.awt.Color(255, 255, 255));
+        btnStuff.setText("Đồ cần mua");
+        btnStuff.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddStuffActionPerformed(evt);
+                btnStuffActionPerformed(evt);
             }
         });
 
-        btnAddAccount.setBackground(new java.awt.Color(255, 51, 51));
-        btnAddAccount.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
-        btnAddAccount.setForeground(new java.awt.Color(255, 255, 255));
-        btnAddAccount.setText("Tài khoản");
-        btnAddAccount.addActionListener(new java.awt.event.ActionListener() {
+        btnAccount.setBackground(new java.awt.Color(255, 51, 51));
+        btnAccount.setFont(new java.awt.Font("r0c0i Linotte", 0, 18)); // NOI18N
+        btnAccount.setForeground(new java.awt.Color(255, 255, 255));
+        btnAccount.setText("Tài khoản");
+        btnAccount.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddAccountActionPerformed(evt);
+                btnAccountActionPerformed(evt);
             }
         });
 
@@ -364,8 +364,8 @@ public class MainGUI extends javax.swing.JFrame {
                 .addGap(34, 34, 34)
                 .addGroup(gradientLayoutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnFluc, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
-                    .addComponent(btnAddStuff, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
-                    .addComponent(btnAddAccount, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+                    .addComponent(btnStuff, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+                    .addComponent(btnAccount, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
                     .addComponent(btnStat, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
                     .addComponent(btnSuggest, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
                     .addComponent(btnRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -378,9 +378,9 @@ public class MainGUI extends javax.swing.JFrame {
                 .addGap(45, 45, 45)
                 .addComponent(btnFluc, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27)
-                .addComponent(btnAddStuff, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnStuff, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27)
-                .addComponent(btnAddAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28)
                 .addComponent(btnStat, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26)
@@ -419,13 +419,13 @@ public class MainGUI extends javax.swing.JFrame {
 //        refreshComponents();
     }//GEN-LAST:event_btnFlucActionPerformed
 
-    private void btnAddStuffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddStuffActionPerformed
+    private void btnStuffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStuffActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnAddStuffActionPerformed
+    }//GEN-LAST:event_btnStuffActionPerformed
 
-    private void btnAddAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddAccountActionPerformed
+    private void btnAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccountActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnAddAccountActionPerformed
+    }//GEN-LAST:event_btnAccountActionPerformed
 
     private void lstStuffValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstStuffValueChanged
         // TODO add your handling code here:
@@ -567,11 +567,11 @@ public class MainGUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAboutUs;
-    private javax.swing.JButton btnAddAccount;
-    private javax.swing.JButton btnAddStuff;
+    private javax.swing.JButton btnAccount;
     private javax.swing.JButton btnFluc;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnStat;
+    private javax.swing.JButton btnStuff;
     private javax.swing.JButton btnSuggest;
     private keeptoo.KGradientPanel gradientLayout;
     private org.jfree.chart.ChartFactory chartMain;
