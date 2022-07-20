@@ -170,9 +170,7 @@ public class MainGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        kGradientPanel1 = new keeptoo.KGradientPanel();
-        panel0 = new javax.swing.JPanel();
-        panel1 = new javax.swing.JPanel();
+        gradientLayout = new keeptoo.KGradientPanel();
         tbPnl = new javax.swing.JTabbedPane();
         pnlStuff = new javax.swing.JPanel();
         scrPnlStuff = new javax.swing.JScrollPane();
@@ -181,7 +179,7 @@ public class MainGUI extends javax.swing.JFrame {
         scrPnlFluc = new javax.swing.JScrollPane();
         lstFluc = new javax.swing.JList<>();
         pnlAccount = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        scrPnlAccount = new javax.swing.JScrollPane();
         lstAccount = new javax.swing.JList<>();
         btnFluc = new javax.swing.JButton();
         btnAddStuff = new javax.swing.JButton();
@@ -195,9 +193,9 @@ public class MainGUI extends javax.swing.JFrame {
         setResizable(false);
         setSize(new java.awt.Dimension(960, 540));
 
-        kGradientPanel1.setkEndColor(new java.awt.Color(255, 175, 175));
-        kGradientPanel1.setkGradientFocus(100);
-        kGradientPanel1.setkStartColor(new java.awt.Color(255, 255, 255));
+        gradientLayout.setkEndColor(new java.awt.Color(255, 175, 175));
+        gradientLayout.setkGradientFocus(100);
+        gradientLayout.setkStartColor(new java.awt.Color(255, 255, 255));
         DefaultPieDataset[] dataset = getDataset();
         JFreeChart chart1 = ChartFactory.createPieChart("Tinh hinh thu", dataset[1], true, true, true);
         ChartPanel panel1 = new ChartPanel(chart1);
@@ -212,28 +210,6 @@ public class MainGUI extends javax.swing.JFrame {
         panel0.setBackground(new Color(0, 0, 0, 0));
         panel0.setPreferredSize(new java.awt.Dimension(308, 270));
         panel0.setSize(308, 270);
-
-        javax.swing.GroupLayout panel0Layout = new javax.swing.GroupLayout(panel0);
-        panel0.setLayout(panel0Layout);
-        panel0Layout.setHorizontalGroup(
-            panel0Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 308, Short.MAX_VALUE)
-        );
-        panel0Layout.setVerticalGroup(
-            panel0Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 270, Short.MAX_VALUE)
-        );
-
-        javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
-        panel1.setLayout(panel1Layout);
-        panel1Layout.setHorizontalGroup(
-            panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 308, Short.MAX_VALUE)
-        );
-        panel1Layout.setVerticalGroup(
-            panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 270, Short.MAX_VALUE)
-        );
 
         tbPnl.setToolTipText("");
         tbPnl.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -293,17 +269,17 @@ public class MainGUI extends javax.swing.JFrame {
                 lstAccountValueChanged(evt);
             }
         });
-        jScrollPane2.setViewportView(lstAccount);
+        scrPnlAccount.setViewportView(lstAccount);
 
         javax.swing.GroupLayout pnlAccountLayout = new javax.swing.GroupLayout(pnlAccount);
         pnlAccount.setLayout(pnlAccountLayout);
         pnlAccountLayout.setHorizontalGroup(
             pnlAccountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
+            .addComponent(scrPnlAccount, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
         );
         pnlAccountLayout.setVerticalGroup(
             pnlAccountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
+            .addComponent(scrPnlAccount, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
         );
 
         tbPnl.addTab("Tài khoản", pnlAccount);
@@ -378,20 +354,15 @@ public class MainGUI extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout kGradientPanel1Layout = new javax.swing.GroupLayout(kGradientPanel1);
-        kGradientPanel1.setLayout(kGradientPanel1Layout);
-        kGradientPanel1Layout.setHorizontalGroup(
-            kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(kGradientPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout gradientLayoutLayout = new javax.swing.GroupLayout(gradientLayout);
+        gradientLayout.setLayout(gradientLayoutLayout);
+        gradientLayoutLayout.setHorizontalGroup(
+            gradientLayoutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(gradientLayoutLayout.createSequentialGroup()
                 .addGap(29, 29, 29)
-                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(kGradientPanel1Layout.createSequentialGroup()
-                        .addComponent(panel0, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(37, 37, 37)
-                        .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(tbPnl))
+                .addComponent(tbPnl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(34, 34, 34)
-                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(gradientLayoutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnFluc, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
                     .addComponent(btnAddStuff, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
                     .addComponent(btnAddAccount, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
@@ -401,26 +372,21 @@ public class MainGUI extends javax.swing.JFrame {
                     .addComponent(btnAboutUs, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
-        kGradientPanel1Layout.setVerticalGroup(
-            kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(kGradientPanel1Layout.createSequentialGroup()
+        gradientLayoutLayout.setVerticalGroup(
+            gradientLayoutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(gradientLayoutLayout.createSequentialGroup()
                 .addGap(45, 45, 45)
-                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(panel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(panel0, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(kGradientPanel1Layout.createSequentialGroup()
-                        .addComponent(btnFluc, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(27, 27, 27)
-                        .addComponent(btnAddStuff, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(27, 27, 27)
-                        .addComponent(btnAddAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(28, 28, 28)
-                        .addComponent(btnStat, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(btnFluc, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
+                .addComponent(btnAddStuff, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
+                .addComponent(btnAddAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(28, 28, 28)
+                .addComponent(btnStat, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
+                .addGroup(gradientLayoutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tbPnl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(kGradientPanel1Layout.createSequentialGroup()
+                    .addGroup(gradientLayoutLayout.createSequentialGroup()
                         .addComponent(btnSuggest, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(28, 28, 28)
                         .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -433,11 +399,11 @@ public class MainGUI extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(kGradientPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(gradientLayout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(kGradientPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(gradientLayout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -607,17 +573,15 @@ public class MainGUI extends javax.swing.JFrame {
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnStat;
     private javax.swing.JButton btnSuggest;
-    private javax.swing.JScrollPane jScrollPane2;
-    private keeptoo.KGradientPanel kGradientPanel1;
+    private keeptoo.KGradientPanel gradientLayout;
     private org.jfree.chart.ChartFactory chartMain;
     private javax.swing.JList<AccountDTO> lstAccount;
     private javax.swing.JList<FluctuationDTO> lstFluc;
     private javax.swing.JList<StuffDTO> lstStuff;
-    private javax.swing.JPanel panel0;
-    private javax.swing.JPanel panel1;
     private javax.swing.JPanel pnlAccount;
     private javax.swing.JPanel pnlFluc;
     private javax.swing.JPanel pnlStuff;
+    private javax.swing.JScrollPane scrPnlAccount;
     private javax.swing.JScrollPane scrPnlFluc;
     private javax.swing.JScrollPane scrPnlStuff;
     private javax.swing.JTabbedPane tbPnl;
