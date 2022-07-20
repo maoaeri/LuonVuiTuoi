@@ -406,6 +406,9 @@ public class StatisticsGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         LocalDate dateStart = Converter.fromDatetoLocalDate(dateStartDate.getDate()).minusDays(1);
         LocalDate dateEnd = Converter.fromDatetoLocalDate(dateEndDate.getDate()).plusDays(1);
+        if (dateStart.plusDays(1).isAfter(dateEnd.minusDays(1))){
+            JOptionPane.showMessageDialog(this, "Ngày bắt đầu lớn hơn ngày kết thúc", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
         DefaultPieDataset[] dataset = getDataset(dateStart, dateEnd);
         createStatFrame(dataset, "Thống kê từ ngày " + dateStartDate.getDate().toString() + " đến ngày " + dateEndDate.getDate().toString());
 
@@ -420,6 +423,7 @@ public class StatisticsGUI extends javax.swing.JFrame {
         //create the table
         tblDate.setModel(model);
         tblDate.repaint();
+        }
     }//GEN-LAST:event_btnStatDateActionPerformed
 
     public void createStatFrame(DefaultPieDataset[] dataset, String title){
