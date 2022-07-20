@@ -12,41 +12,27 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FluctuationBLL implements BLLInterface<FluctuationDTO>{//bien dong so du//
-    private final FluctuationDAO flucDAO;
-    private final AccountDAO accDAO;
-    private final CategoryDAO catDAO;
 
     public FluctuationBLL() {
-        flucDAO = new FluctuationDAO();
-        accDAO = new AccountDAO();
-        catDAO = new CategoryDAO();
     }
 
-    public static void main(String[] args) {
-        FluctuationBLL flucBLL = new FluctuationBLL();
-        double[] a = null;
-        try {
-            a = flucBLL.PercentCategories(LocalDate.of(2022,6,30), LocalDate.of(2022,8,1));
-        } catch (SQLException ex) {
-            Logger.getLogger(FluctuationBLL.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        for (double i : a) {
-            System.err.println(i);
-        }
-    }
-    
     @Override
     public FluctuationDTO get(int id) throws SQLException {
+        FluctuationDAO flucDAO = new FluctuationDAO();
         return flucDAO.get(id);
     }
     
     public FluctuationDTO[] getAll() throws SQLException{
+        FluctuationDAO flucDAO = new FluctuationDAO();
         return flucDAO.getAll();
     }
     
     //get fluc from GUI, add category id and insert to database
     @Override
     public void addFromGUI(FluctuationDTO fluc) throws SQLException{
+        FluctuationDAO flucDAO = new FluctuationDAO();
+        AccountDAO accDAO = new AccountDAO();
+        CategoryDAO catDAO = new CategoryDAO();
         int catId = catDAO.getCategoryId(fluc.getCategory());
         fluc.getCategory().setCategoryId(catId);
         flucDAO.add(fluc);
@@ -61,6 +47,9 @@ public class FluctuationBLL implements BLLInterface<FluctuationDTO>{//bien dong 
 
     @Override
     public void updateFromGUI(FluctuationDTO fluc) throws SQLException{
+        FluctuationDAO flucDAO = new FluctuationDAO();
+        AccountDAO accDAO = new AccountDAO();
+        CategoryDAO catDAO = new CategoryDAO();
         FluctuationDTO fluc1 = flucDAO.get(fluc.getID());//get from database to compare
         fluc.getCategory().setCategoryId(catDAO.getCategoryId(fluc.getCategory()));
         if (fluc.getCategory() == null){
@@ -83,6 +72,9 @@ public class FluctuationBLL implements BLLInterface<FluctuationDTO>{//bien dong 
     
     @Override
     public void deleteFromGUI(FluctuationDTO fluc) throws SQLException {
+        FluctuationDAO flucDAO = new FluctuationDAO();
+        AccountDAO accDAO = new AccountDAO();
+        CategoryDAO catDAO = new CategoryDAO();
         FluctuationDTO fluc1 = flucDAO.get(fluc.getID());    
         int catId = catDAO.getCategoryId(fluc1.getCategory());
         fluc1.getCategory().setCategoryId(catId);
@@ -98,6 +90,7 @@ public class FluctuationBLL implements BLLInterface<FluctuationDTO>{//bien dong 
     }
     
     public FluctuationDTO[] getAllByCategoryAndAccount(String catName, String accName) throws SQLException{
+        FluctuationDAO flucDAO = new FluctuationDAO();
         FluctuationDTO[] flucList = null;
         if (accName.equals("Tất cả")){
             flucList = flucDAO.getAllByCategory(catName);
@@ -112,6 +105,7 @@ public class FluctuationBLL implements BLLInterface<FluctuationDTO>{//bien dong 
      * @return
      */
     public Boolean WarningBalance() throws SQLException { //canh bao
+        AccountDAO accDAO = new AccountDAO();
         AccountDTO acc = accDAO.get(1);
         double save_per_month = acc.getSave_per_month(); // account lấy từ database
         double balance = acc.getBalance();
@@ -119,6 +113,7 @@ public class FluctuationBLL implements BLLInterface<FluctuationDTO>{//bien dong 
     }
 
     public double[][] SumCategories(LocalDate date1, LocalDate date2) throws SQLException{
+        FluctuationDAO flucDAO = new FluctuationDAO();
         double[] sumInitCategories = new double[26];
         double[] sumAfterCategories = new double[26];
         
@@ -176,6 +171,7 @@ public class FluctuationBLL implements BLLInterface<FluctuationDTO>{//bien dong 
     }
 
     public List<DatasetDTO> getStatDatasetByDate(LocalDate date1, LocalDate date2) throws SQLException {
+        CategoryDAO catDAO = new CategoryDAO();
         List<DatasetDTO> arrList = new ArrayList<DatasetDTO>();
 
         CategoryDTO[] listCategory = null;
@@ -231,6 +227,7 @@ public class FluctuationBLL implements BLLInterface<FluctuationDTO>{//bien dong 
     }
     
     public List<FluctuationDTO> getAllFlucDataset() throws SQLException {
+        FluctuationDAO flucDAO = new FluctuationDAO();
         List<FluctuationDTO> arrList = new ArrayList<FluctuationDTO>();
 
         FluctuationDTO[] listFluc = flucDAO.getAll();
@@ -245,7 +242,9 @@ public class FluctuationBLL implements BLLInterface<FluctuationDTO>{//bien dong 
     /**
      * sum per month
      */
-    public void SumPerMonth(int Year) throws SQLException {
+    public double[][] SumPerMonth(int Year) throws SQLException {
+        FluctuationDAO flucDAO = new FluctuationDAO();
+        double[][] sum = new double[2];
         double[] sumIncome = new double[13]; // tổng thu của 12 tháng
         double[] sumSpending = new double[13]; // tổng chi của 12 tháng
         for (int j = 1; j <= 12; j++) {
@@ -260,9 +259,14 @@ public class FluctuationBLL implements BLLInterface<FluctuationDTO>{//bien dong 
                 else sumSpending[j] += i.getAmount(); // tổng chi từng tháng
             }
         }
+        sum[1] = sumIncome;
+        sum[0] = sumSpending;
+        return sum;
     }
 
     public double AutoCal() throws SQLException {
+        FluctuationDAO flucDAO = new FluctuationDAO();
+        AccountDAO accDAO = new AccountDAO();
         AccountDTO acc = accDAO.get(1);
         Calendar cal = Calendar.getInstance();
         double balance = acc.getBalance();
