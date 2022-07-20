@@ -16,7 +16,11 @@ public class AccountDTO {
 
     public AccountDTO() {
     }
-    
+
+    public AccountDTO(int Id) {
+        this.Id = Id;
+    }
+
     public int getId() {
         return Id;
     }

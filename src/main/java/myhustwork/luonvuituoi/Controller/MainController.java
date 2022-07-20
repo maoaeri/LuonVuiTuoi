@@ -74,9 +74,7 @@ public class MainController {
             System.out.println(1);
             if (mainGUI.getStuffId() != 0 && !e.getValueIsAdjusting()){
                sc = new StuffController(mainGUI.getStuffId());
-               mainGUI.setStuffId(0);
             }
-            mainGUI.setStuffId(0);
 //            sc = new StuffController(mainGUI.getStuffId());     
         }
     }
@@ -100,9 +98,7 @@ public class MainController {
             System.out.println(1);
             if (mainGUI.getAccId() != 0 && !e.getValueIsAdjusting()){
                ac = new AccountController(mainGUI.getAccId());
-               mainGUI.setAccId(0);
             }
-            mainGUI.setAccId(0);
 //            sc = new FlucController(mainGUI.getFlucId());     
         }
     }
