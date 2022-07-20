@@ -62,6 +62,7 @@ public class FluctuationBLL implements BLLInterface<FluctuationDTO>{//bien dong 
     @Override
     public void updateFromGUI(FluctuationDTO fluc) throws SQLException{
         FluctuationDTO fluc1 = flucDAO.get(fluc.getID());//get from database to compare
+        fluc.getCategory().setCategoryId(catDAO.getCategoryId(fluc.getCategory()));
         if (fluc.getCategory() == null){
             fluc.setCategory(fluc1.getCategory());
         } 

@@ -695,9 +695,8 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
 
     private void lstAccountValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstAccountValueChanged
         // TODO add your handling code here:
-        if (!evt.getValueIsAdjusting()){
             accId = lstAccount.getSelectedValue().getId();
-        }
+        
     }//GEN-LAST:event_lstAccountValueChanged
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
