@@ -244,7 +244,7 @@ public class FluctuationBLL implements BLLInterface<FluctuationDTO>{//bien dong 
      */
     public double[][] SumPerMonth(int Year) throws SQLException {
         FluctuationDAO flucDAO = new FluctuationDAO();
-        double[][] sum = new double[2];
+        double[][] sum = new double[2][];
         double[] sumIncome = new double[13]; // tổng thu của 12 tháng
         double[] sumSpending = new double[13]; // tổng chi của 12 tháng
         for (int j = 1; j <= 12; j++) {
@@ -264,12 +264,11 @@ public class FluctuationBLL implements BLLInterface<FluctuationDTO>{//bien dong 
         return sum;
     }
 
-    public double AutoCal() throws SQLException {
+    public long AutoCal(AccountDTO acc) throws SQLException {
         FluctuationDAO flucDAO = new FluctuationDAO();
         AccountDAO accDAO = new AccountDAO();
-        AccountDTO acc = accDAO.get(1);
         Calendar cal = Calendar.getInstance();
-        double balance = acc.getBalance();
+        long balance = acc.getBalance();
         if (cal.get(Calendar.DAY_OF_MONTH) == 1) { // sang thang moi
             FluctuationDTO[] flucArr = flucDAO.getAll();
             for (FluctuationDTO i : flucArr) {
