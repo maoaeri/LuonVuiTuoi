@@ -139,8 +139,10 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
                 }
             }
             String categoryName = selectedNode2.getUserObject().toString();
-            CategoryDTO cat = new CategoryDTO(categoryType, categoryName);
-            fluc.setCategory(cat); 
+            if (categoryName != "Hạng mục"){
+                CategoryDTO cat = new CategoryDTO(categoryType, categoryName);
+                fluc.setCategory(cat); 
+            }
         }
         fluc.setDate(Converter.fromDatetoLocalDate(txtDate.getDate()));
         fluc.setNote(txtNote.getText());
@@ -610,7 +612,7 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
                 JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
                 ex.printStackTrace();
             }
-        
+        JOptionPane.showMessageDialog(this, "Xóa thông tin thành công", "Success", JOptionPane.INFORMATION_MESSAGE);
         refreshComponents();
     }//GEN-LAST:event_btnDeleteActionPerformed
 
@@ -626,6 +628,7 @@ public class FluctuationGUI extends javax.swing.JFrame implements InforInterface
         JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         }
+        JOptionPane.showMessageDialog(this, "Sửa thông tin thành công", "Success", JOptionPane.INFORMATION_MESSAGE);
         refreshComponents();
     }//GEN-LAST:event_btnUpdateActionPerformed
 

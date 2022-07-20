@@ -320,6 +320,7 @@ public class AccountGUI extends javax.swing.JFrame implements InforInterface<Acc
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
             }
+        JOptionPane.showMessageDialog(this, "Sửa thông tin thành công", "Success", JOptionPane.INFORMATION_MESSAGE);
         refreshComponents();
     }//GEN-LAST:event_btnUpdateActionPerformed
 
@@ -333,6 +334,7 @@ public class AccountGUI extends javax.swing.JFrame implements InforInterface<Acc
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(this, "An error occured", "Error", JOptionPane.ERROR_MESSAGE);
             }
+        JOptionPane.showMessageDialog(this, "Xóa thông tin thành công", "Success", JOptionPane.INFORMATION_MESSAGE);
         refreshComponents();
     }//GEN-LAST:event_btnDeleteActionPerformed
 
@@ -472,7 +474,6 @@ class AccountListRenderer extends JPanel implements ListCellRenderer<AccountDTO>
             this.setForeground(list.getForeground());
             this.setBackground(list.getBackground());
         }
-
         this.setBorder(cellHasFocus ? lineBorder : emptyBorder);
         return this;
     }
